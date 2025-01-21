@@ -1,0 +1,35 @@
+<!-- Modal des intégrations -->
+<div class="modal fade" id="integrationsModal" tabindex="-1" aria-labelledby="integrationsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="integrationsModalLabel">Gérer les intégrations</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    {% for integration in integrations %}
+                    <div class="integration-item d-flex align-items-center p-3 border-bottom">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">{{ integration.name }}</h6>
+                            <p class="text-muted small mb-0">{{ integration.description }}</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="{{ integration.id }}"
+                                data-integration-name="{{ integration.name }}">
+                            <i class="fas fa-cog"></i> Configurer
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+var INTEGRATION_CONFIGS = JSON.parse('{{ integration_configs|safe }}');
+</script>

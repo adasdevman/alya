@@ -1,0 +1,149 @@
+{% extends 'alyawebapp/base.html' %}
+
+{% block title %}ALYA - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white active" href="#overview">
+                            <i class="fas fa-home me-2"></i>Vue d'ensemble
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#users">
+                            <i class="fas fa-users me-2"></i>Utilisateurs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#analytics">
+                            <i class="fas fa-chart-bar me-2"></i>Analytiques
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#settings">
+                            <i class="fas fa-cog me-2"></i>Paramètres
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Dashboard</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <button type="button" class="btn btn-sm btn-outline-dark me-2">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                    <button type="button" class="btn btn-sm btn-dark">
+                        <i class="fas fa-plus me-1"></i>Ajouter
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card animate__animated animate__fadeIn">
+                        <div class="card-body">
+                            <h5 class="card-title">Utilisateurs</h5>
+                            <h2 class="card-text">150</h2>
+                            <small class="text-success">
+                                <i class="fas fa-arrow-up"></i> +12% ce mois
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card animate__animated animate__fadeIn" style="animation-delay: 0.1s">
+                        <div class="card-body">
+                            <h5 class="card-title">Requêtes API</h5>
+                            <h2 class="card-text">1,234</h2>
+                            <small class="text-success">
+                                <i class="fas fa-arrow-up"></i> +25% ce mois
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card animate__animated animate__fadeIn" style="animation-delay: 0.2s">
+                        <div class="card-body">
+                            <h5 class="card-title">Temps moyen</h5>
+                            <h2 class="card-text">2.5s</h2>
+                            <small class="text-danger">
+                                <i class="fas fa-arrow-down"></i> -5% ce mois
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card animate__animated animate__fadeIn" style="animation-delay: 0.3s">
+                        <div class="card-body">
+                            <h5 class="card-title">Satisfaction</h5>
+                            <h2 class="card-text">98%</h2>
+                            <small class="text-success">
+                                <i class="fas fa-arrow-up"></i> +2% ce mois
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card animate__animated animate__fadeIn" style="animation-delay: 0.4s">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Activité récente</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Utilisateur</th>
+                                    <th>Action</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>API Request</td>
+                                    <td>Il y a 5 min</td>
+                                    <td><span class="badge bg-success">Succès</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Jane Smith</td>
+                                    <td>Nouvelle inscription</td>
+                                    <td>Il y a 15 min</td>
+                                    <td><span class="badge bg-info">En cours</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+.sidebar {
+    min-height: calc(100vh - 56px);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+}
+
+.sidebar .nav-link.active {
+    color: #2470dc;
+}
+</style>
+{% endblock %} 

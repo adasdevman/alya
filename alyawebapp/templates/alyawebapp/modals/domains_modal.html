@@ -1,0 +1,62 @@
+<!-- Modal pour éditer les domaines -->
+<div class="modal fade" id="editDomainsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Secteurs d'activité</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="domainsForm">
+                    {% csrf_token %}
+                    <div class="domains-grid">
+                        {% for domain in all_domains %}
+                        <div class="domain-card">
+                            <input type="checkbox" 
+                                   class="domain-checkbox" 
+                                   name="domains" 
+                                   value="{{ domain.id }}"
+                                   id="domain_{{ domain.id }}"
+                                   {% if domain in user_domains %}checked{% endif %}>
+                            <label class="domain-label" for="domain_{{ domain.id }}">
+                                <div class="domain-icon">
+                                    {% if domain.name == "Analytics" %}
+                                        <i class="fa-solid fa-chart-pie"></i>
+                                    {% elif domain.name == "Logistic" %}
+                                        <i class="fa-solid fa-truck"></i>
+                                    {% elif domain.name == "Legal" %}
+                                        <i class="fa-solid fa-scale-balanced"></i>
+                                    {% elif domain.name == "Marketing" %}
+                                        <i class="fa-solid fa-bullhorn"></i>
+                                    {% elif domain.name == "Automation" %}
+                                        <i class="fa-solid fa-robot"></i>
+                                    {% elif domain.name == "Support" %}
+                                        <i class="fa-solid fa-headset"></i>
+                                    {% elif domain.name == "Finance" %}
+                                        <i class="fa-solid fa-money-bill-trend-up"></i>
+                                    {% elif domain.name == "RH" %}
+                                        <i class="fa-solid fa-users"></i>
+                                    {% elif domain.name == "Projet" %}
+                                        <i class="fa-solid fa-diagram-project"></i>
+                                    {% elif domain.name == "CRM" %}
+                                        <i class="fa-solid fa-handshake"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="domain-name">{{ domain.name }}</div>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-xmark"></i> Annuler
+                </button>
+                <button type="submit" form="domainsForm" class="btn btn-dark">
+                    <i class="fa-solid fa-check"></i> Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div> 

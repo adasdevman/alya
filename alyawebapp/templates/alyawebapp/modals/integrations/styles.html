@@ -1,0 +1,67 @@
+<!-- Styles communs pour les intégrations -->
+<style>
+    .integration-item {
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+    .integration-item:last-child {
+        border-bottom: none;
+    }
+    .integration-item:hover {
+        background-color: rgba(0,0,0,0.02);
+    }
+    .form-check.form-switch {
+        padding-left: 0;
+        margin: 0 1.5rem;
+        min-width: 3rem;
+    }
+    .form-check-input {
+        height: 1.5rem;
+        width: 2.75rem !important;
+        background-color: #fff;
+        border: 2px solid #212529;
+        cursor: pointer;
+        margin-top: 0;
+    }
+    .form-check-input:checked {
+        background-color: #212529;
+        border-color: #212529;
+    }
+    .form-check-input:focus {
+        border-color: #212529;
+        box-shadow: 0 0 0 0.2rem rgba(33, 37, 41, 0.25);
+    }
+    .integration-content {
+        flex-grow: 1;
+        margin-right: 1rem;
+    }
+    .integration-title {
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    .integration-description {
+        margin-bottom: 0;
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+</style>
+
+<!-- Template pour les éléments d'intégration -->
+<template id="integration-item-template">
+    <div class="integration-item">
+        <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input integration-switch">
+        </div>
+        <div class="integration-content">
+            <h6 class="integration-title"></h6>
+            <p class="integration-description"></p>
+        </div>
+        <button class="btn btn-outline-dark btn-sm config-integration">
+            <i class=""></i> Configurer
+        </button>
+    </div>
+</template> 

@@ -1,0 +1,73 @@
+{% extends 'alyawebapp/base.html' %}
+
+{% block title %}ALYA - Connexion{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="text-center mb-4 fw-bold">Connexion</h2>
+                        
+                        <form method="post" class="mb-4">
+                            {% csrf_token %}
+                            
+                            {% if form.errors %}
+                            <div class="alert alert-danger">
+                                Nom d'utilisateur ou mot de passe incorrect.
+                            </div>
+                            {% endif %}
+
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Nom d'utilisateur</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mot de passe</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-dark">Se connecter</button>
+                            </div>
+                        </form>
+
+                        <div class="text-center">
+                            <p class="text-muted">Ou connectez-vous avec</p>
+                            <div class="mb-4">
+                                <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-outline-dark me-2">
+                                    <i class="fab fa-google me-2"></i>Google
+                                </a>
+                                <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-outline-dark">
+                                    <i class="fab fa-facebook-f me-2"></i>Facebook
+                                </a>
+                            </div>
+                            <p class="mb-0">Pas encore de compte ? <a href="{% url 'register' %}" class="text-dark fw-bold">Inscrivez-vous</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-container {
+    min-height: calc(100vh - 56px);
+    padding-top: 100px; /* Espace entre navbar et formulaire */
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+}
+
+.card-body {
+    padding: 2.5rem;
+}
+</style>
+{% endblock %} 

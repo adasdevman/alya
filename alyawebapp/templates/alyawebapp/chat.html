@@ -1,0 +1,42 @@
+{% extends 'alyawebapp/base.html' %}
+{% load static %}
+
+{% block title %}ALYA - Chat{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-wrapper">
+    <div class="messages-wrapper">
+        <div id="chat-messages" class="chat-messages">
+            <!-- Messages dynamiques -->
+        </div>
+    </div>
+    
+    <div class="chat-input-container">
+        <form id="chat-form" class="chat-form">
+            <div class="input-group">
+                <input type="text" 
+                       id="prompt" 
+                       class="form-control" 
+                       placeholder="Écrivez votre message..."
+                       autocomplete="off"
+                       required>
+                <button type="submit" class="btn btn-dark">
+                    <i class="ph ph-paper-plane-right"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<button id="new-chat" class="btn btn-outline-light btn-sm">
+    <i class="ph ph-plus"></i> Nouveau chat
+</button>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/chat.js' %}"></script>
+{% endblock %} 

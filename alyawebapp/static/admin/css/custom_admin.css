@@ -1,0 +1,150 @@
+:root {
+  --primary: #333333;
+  --secondary: #666666;
+  --accent: #444444;
+  --primary-fg: #fff;
+}
+
+/* Header principal */
+#header {
+    width: auto !important;
+    height: auto !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 10px 40px !important;
+    background: #333333 !important;
+    color: white !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+/* Navigation bar */
+.module caption, .inline-group h2, 
+#nav-sidebar .current-model, 
+#nav-sidebar .current-app .section:link, 
+#nav-sidebar .current-app .section:visited,
+#changelist-filter h2 {
+    background: #333333 !important;
+    color: white !important;
+}
+
+/* Liens dans la navbar */
+#nav-sidebar a:link, #nav-sidebar a:visited {
+    color: #333333 !important;
+}
+
+/* Liens actifs/hover dans la navbar */
+#nav-sidebar a:focus, #nav-sidebar a:hover {
+    background-color: #666666 !important;
+    color: white !important;
+}
+
+/* Fil d'ariane */
+div.breadcrumbs {
+    background: #666666 !important;
+    color: white !important;
+}
+
+/* Boutons */
+.button, input[type=submit], input[type=button], 
+.submit-row input, a.button {
+    background: #333333 !important;
+    color: white !important;
+}
+
+/* Boutons hover */
+.button:hover, input[type=submit]:hover, 
+input[type=button]:hover {
+    background: #666666 !important;
+}
+
+/* Bouton par défaut */
+.button.default, input[type=submit].default, 
+.submit-row input.default {
+    background: #444444 !important;
+}
+
+/* Titre de l'application */
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+    color: white !important;
+}
+
+/* Titre du site */
+#branding #site-name a {
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 1.2em !important;
+}
+
+/* Outils utilisateur */
+#user-tools {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    color: rgba(255,255,255,0.8) !important;
+    font-size: 0.9em !important;
+}
+
+#user-tools a {
+    color: white !important;
+    border-bottom: 1px solid rgba(255,255,255,0.3) !important;
+    margin: 0 5px !important;
+}
+
+#user-tools a:hover {
+    color: white !important;
+    border-bottom-color: white !important;
+}
+
+/* Bouton de déconnexion */
+#logout-form button {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+    text-decoration: underline !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+}
+
+#logout-form button:hover {
+    color: rgba(255,255,255,0.8) !important;
+}
+
+/* Bouton de thème */
+.theme-toggle {
+    background: transparent !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    border-radius: 4px !important;
+    padding: 4px 8px !important;
+    color: white !important;
+}
+
+.theme-toggle:hover {
+    background: rgba(255,255,255,0.1) !important;
+}
+
+/* Icônes de thème */
+.theme-toggle svg {
+    fill: white !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* Nom d'utilisateur */
+#user-tools strong {
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+/* Séparateur */
+#user-tools a:not(:last-child)::after {
+    content: "/" !important;
+    margin-left: 10px !important;
+    color: rgba(255,255,255,0.5) !important;
+}
+
+/* Enlever le séparateur après le dernier lien */
+#user-tools a:last-of-type::after {
+    display: none !important;
+} 

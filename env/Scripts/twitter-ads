@@ -1,0 +1,53 @@
+#!C:\Users\Nevada Man\CascadeProjects\alya\env\Scripts\python.exe
+
+import os
+import yaml
+import code
+import sys
+import readline
+import rlcompleter
+import atexit
+
+try:
+    import twitter_ads
+    print('[INFO] using pip installed twitter-ads.')
+except ImportError:
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+    import twitter_ads
+    print('[INFO] using local clone of twitter-ads.')
+
+from twitter_ads.client import Client
+
+CLIENT = None
+BANNER = '** Twitter Ads API SDK for Python v{0} (twitter-ads) **'
+
+# if twurl config is present, create client instance
+twurl_path = os.path.expanduser('~/.twurlrc')
+if os.path.isfile(twurl_path):
+    with open(twurl_path, 'r') as stream:
+        twurl_config = yaml.load(stream)
+        profile_name = twurl_config['configuration']['default_profile'][0]
+        profile_key = twurl_config['configuration']['default_profile'][1]
+        default_profile = twurl_config['profiles'][profile_name][profile_key]
+
+        CLIENT = Client(default_profile['consumer_key'],
+                        default_profile['consumer_secret'],
+                        default_profile['token'],
+                        default_profile['secret'])
+
+# tab completion
+readline.parse_and_bind('tab: complete')
+
+# history file
+histfile = os.path.join(os.environ['HOME'], '.pythonhistory')
+try:
+    readline.read_history_file(histfile)
+except IOError:
+    pass
+atexit.register(readline.write_history_file, histfile)
+del os, histfile, readline, rlcompleter
+
+# start interactive session
+init_with = { 'CLIENT': CLIENT } if CLIENT else {}
+code.InteractiveConsole(locals=init_with).interact(
+    BANNER.format(twitter_ads.utils.get_version()))

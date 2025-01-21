@@ -1,0 +1,735 @@
+{% include "alyawebapp/modals/integrations/marketing.html" %}
+{% include "alyawebapp/modals/integrations/analytics.html" %}
+{% include "alyawebapp/modals/integrations/support.html" %}
+{% include "alyawebapp/modals/integrations/finance.html" %}
+{% include "alyawebapp/modals/integrations/rh.html" %}
+{% include "alyawebapp/modals/integrations/projet.html" %}
+{% include "alyawebapp/modals/integrations/crm.html" %}
+
+<!-- Styles communs pour les intégrations -->
+<style>
+    .integration-item {
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+    .integration-item:last-child {
+        border-bottom: none;
+    }
+    .integration-item:hover {
+        background-color: rgba(0,0,0,0.02);
+    }
+    .form-check.form-switch {
+        padding-left: 0;
+        margin: 0 1.5rem;
+        min-width: 3rem;
+    }
+    .form-check-input {
+        height: 1.5rem;
+        width: 2.75rem !important;
+        background-color: #fff;
+        border: 2px solid #212529;
+        cursor: pointer;
+        margin-top: 0;
+    }
+    .form-check-input:checked {
+        background-color: #212529;
+        border-color: #212529;
+    }
+    .form-check-input:focus {
+        border-color: #212529;
+        box-shadow: 0 0 0 0.2rem rgba(33, 37, 41, 0.25);
+    }
+    .integration-content {
+        flex-grow: 1;
+        margin-right: 1rem;
+    }
+    .integration-title {
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    .integration-description {
+        margin-bottom: 0;
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+</style>
+
+<!-- Template pour les éléments d'intégration -->
+<template id="integration-item-template">
+    <div class="integration-item">
+        <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input integration-switch">
+        </div>
+        <div class="integration-content">
+            <h6 class="integration-title"></h6>
+            <p class="integration-description"></p>
+        </div>
+        <button class="btn btn-outline-dark btn-sm config-integration">
+            <i class=""></i> Configurer
+        </button>
+    </div>
+</template>
+
+<!-- Modal Analytics -->
+<div class="modal fade" id="analyticsModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Analytics</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="10">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Google Analytics</h6>
+                            <p class="integration-description">Analysez le trafic de votre site web</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="10">
+                            <i class="fab fa-google"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="11">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Amplitude</h6>
+                            <p class="integration-description">Analysez le comportement des utilisateurs</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="11">
+                            <i class="fas fa-chart-line"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="12">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Mixpanel</h6>
+                            <p class="integration-description">Analysez les interactions utilisateurs</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="12">
+                            <i class="fas fa-chart-bar"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Marketing -->
+<div class="modal fade" id="marketingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Marketing</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="1">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Mailchimp</h6>
+                            <p class="integration-description">Gérez vos campagnes email marketing</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="1">
+                            <i class="fab fa-mailchimp"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="2">
+                </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Sendinblue</h6>
+                            <p class="integration-description">Automatisez vos communications marketing</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="2">
+                            <i class="fas fa-mail-bulk"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="3">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">HubSpot Marketing</h6>
+                            <p class="integration-description">Plateforme complète de marketing</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="3">
+                            <i class="fas fa-h-square"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="4">
+                </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">ActiveCampaign</h6>
+                            <p class="integration-description">Automatisation et marketing par email</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="4">
+                            <i class="fas fa-envelope-open-text"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="5">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Facebook Ads</h6>
+                            <p class="integration-description">Publicité sur Facebook</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="5">
+                            <i class="fab fa-facebook"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="6">
+                </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Google Ads</h6>
+                            <p class="integration-description">Publicité sur Google</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="6">
+                            <i class="fab fa-google"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="7">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">LinkedIn Ads</h6>
+                            <p class="integration-description">Publicité sur LinkedIn</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="7">
+                            <i class="fab fa-linkedin"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="8">
+                </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Twitter Ads</h6>
+                            <p class="integration-description">Publicité sur Twitter</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="8">
+                            <i class="fab fa-twitter"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="9">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Buffer</h6>
+                            <p class="integration-description">Gestion des réseaux sociaux</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="9">
+                            <i class="fas fa-share-alt"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Finance -->
+<div class="modal fade" id="financeModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Finance</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="quickbooks">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">QuickBooks</h6>
+                            <p class="integration-description">Logiciel de comptabilité et gestion financière</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="quickbooks">
+                            <i class="fas fa-calculator"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="xero">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Xero</h6>
+                            <p class="integration-description">Plateforme de comptabilité en ligne</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="xero">
+                            <i class="fas fa-file-invoice-dollar"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="stripe">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Stripe</h6>
+                            <p class="integration-description">Plateforme de paiements en ligne</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="stripe">
+                            <i class="fab fa-stripe"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Legal -->
+<div class="modal fade" id="legalModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Juridique</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="16">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">DocuSign</h6>
+                            <p class="integration-description">Signature électronique de documents</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="16">
+                            <i class="fas fa-file-signature"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="17">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">HelloSign</h6>
+                            <p class="integration-description">Signature électronique sécurisée</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="17">
+                            <i class="fas fa-pen-fancy"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="18">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Clio</h6>
+                            <p class="integration-description">Gestion juridique</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="18">
+                            <i class="fas fa-balance-scale"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="19">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">LexisNexis</h6>
+                            <p class="integration-description">Recherche juridique</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="19">
+                            <i class="fas fa-gavel"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Logistic -->
+<div class="modal fade" id="logisticModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Logistique</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="20">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">ShipStation</h6>
+                            <p class="integration-description">Gestion des expéditions</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="20">
+                            <i class="fas fa-shipping-fast"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="21">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Freightview</h6>
+                            <p class="integration-description">Gestion du fret</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="21">
+                            <i class="fas fa-truck"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="22">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Odoo</h6>
+                            <p class="integration-description">Gestion d'entreprise intégrée</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="22">
+                            <i class="fas fa-boxes"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Automation -->
+<div class="modal fade" id="automationModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Automatisation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="24">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Zapier</h6>
+                            <p class="integration-description">Automatisez les tâches entre applications</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="24">
+                            <i class="fas fa-bolt"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="25">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Make</h6>
+                            <p class="integration-description">Créez des workflows d'automatisation</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="25">
+                            <i class="fas fa-cogs"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal HR -->
+<div class="modal fade" id="rhModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Ressources Humaines</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="workday">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Workday</h6>
+                            <p class="integration-description">Gestion des ressources humaines et de la paie</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="workday">
+                            <i class="fas fa-calendar-check"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="bamboohr">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">BambooHR</h6>
+                            <p class="integration-description">Logiciel de gestion RH pour PME</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="bamboohr">
+                            <i class="fas fa-users-gear"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="linkedin_recruiter">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">LinkedIn Recruiter</h6>
+                            <p class="integration-description">Recrutement et recherche de talents</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="linkedin_recruiter">
+                            <i class="fab fa-linkedin"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Project -->
+<div class="modal fade" id="projetModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Gestion de Projet</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="jira">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Jira</h6>
+                            <p class="integration-description">Gestion de projets et suivi des tâches</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="jira">
+                            <i class="fab fa-jira"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="trello">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Trello</h6>
+                            <p class="integration-description">Organisation visuelle des projets et tâches</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="trello">
+                            <i class="fab fa-trello"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="asana">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Asana</h6>
+                            <p class="integration-description">Gestion de projets et collaboration d'équipe</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="asana">
+                            <i class="fas fa-tasks"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal CRM -->
+<div class="modal fade" id="crmModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">CRM</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="hubspot">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">HubSpot</h6>
+                            <p class="integration-description">Gérez vos relations clients et vos ventes</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="hubspot">
+                            <i class="fas fa-h-square"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="salesforce">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Salesforce</h6>
+                            <p class="integration-description">Plateforme complète de gestion de la relation client</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="salesforce">
+                            <i class="fas fa-cloud"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="pipedrive">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Pipedrive</h6>
+                            <p class="integration-description">Gestion de pipeline de ventes</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="pipedrive">
+                            <i class="fas fa-funnel-dollar"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Support -->
+<div class="modal fade" id="supportModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Support Client</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="13">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Zendesk</h6>
+                            <p class="integration-description">Gérez le support client</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="13">
+                            <i class="fas fa-headset"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="14">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Intercom</h6>
+                            <p class="integration-description">Messagerie et support client</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="14">
+                            <i class="fas fa-comments"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="15">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Freshdesk</h6>
+                            <p class="integration-description">Plateforme de support client</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="15">
+                            <i class="fas fa-ticket-alt"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Autres modals pour chaque secteur... --> 

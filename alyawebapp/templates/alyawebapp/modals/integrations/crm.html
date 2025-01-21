@@ -1,0 +1,59 @@
+{% include "alyawebapp/modals/integrations/styles.html" %}
+
+<!-- Modal CRM -->
+<div class="modal fade" id="crmModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">CRM</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="35">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Salesforce</h6>
+                            <p class="integration-description">Gestion de la relation client</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="35">
+                            <i class="fas fa-cloud"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="36">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">HubSpot</h6>
+                            <p class="integration-description">CRM et marketing automation</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="36">
+                            <i class="fas fa-h-square"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="37">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Pipedrive</h6>
+                            <p class="integration-description">CRM pour équipes commerciales</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="37">
+                            <i class="fas fa-funnel-dollar"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div> 

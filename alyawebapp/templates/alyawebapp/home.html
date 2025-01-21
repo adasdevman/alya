@@ -1,0 +1,258 @@
+{% extends 'alyawebapp/base.html' %}
+{% load static %}
+
+{% block title %}ALYA - Accueil{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container-fluid">
+        <div class="container">
+            <div class="content-wrapper">
+                <!-- Section supérieure -->
+                <div class="row align-items-center mb-5">
+                    <div class="col-lg-6 text-center text-lg-start animate__animated animate__fadeInLeft">
+                        <h1 class="display-4 fw-bold mb-4">Bienvenue sur ALYA</h1>
+                        <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">
+                            Votre assistant intelligent pour optimiser votre entreprise
+                        </p>
+                        {% if not user.is_authenticated %}
+                            <div class="animate__animated animate__fadeInUp animate__delay-2s">
+                                <a href="{% url 'register' %}" class="btn btn-dark btn-lg me-3 action-btn">
+                                    <i class="fa-solid fa-user-plus"></i> S'inscrire
+                                </a>
+                                <a href="{% url 'login' %}" class="btn btn-outline-dark btn-lg action-btn">
+                                    <i class="fa-solid fa-right-to-bracket"></i> Se connecter
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="animate__animated animate__fadeInUp animate__delay-2s">
+                                <a href="{% url 'compte' %}" class="btn btn-dark btn-lg action-btn">
+                                    <i class="fa-solid fa-user"></i> Mon Compte
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-6 d-none d-lg-block animate__animated animate__fadeInRight">
+                        <div class="hero-image">
+                            <img src="{% static 'images/ALYA.png' %}" alt="ALYA Illustration" class="img-fluid rounded-3 shadow-lg">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section des features -->
+                <div class="row g-4 mt-4 animate__animated animate__fadeInUp">
+                    <div class="col-md-4" data-animation-delay="0.2s">
+                        <div class="feature-card">
+                            <div class="icon-wrapper mb-4">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <h3>Intelligence Artificielle</h3>
+                            <p>Profitez d'une IA avancée pour optimiser vos processus et prendre de meilleures décisions.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-animation-delay="0.4s">
+                        <div class="feature-card">
+                            <div class="icon-wrapper mb-4">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <h3>Analyse Prédictive</h3>
+                            <p>Anticipez les tendances et optimisez votre stratégie grâce à nos analyses détaillées.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-animation-delay="0.6s">
+                        <div class="feature-card">
+                            <div class="icon-wrapper mb-4">
+                                <i class="fa-solid fa-users-gear"></i>
+                            </div>
+                            <h3>Support Personnalisé</h3>
+                            <p>Bénéficiez d'un accompagnement sur mesure pour atteindre vos objectifs business.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Mise à jour des styles */
+.hero-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 4rem 0;
+    position: relative;
+    z-index: 10;
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 50;
+    padding: 2rem 0;
+}
+
+/* Ajustement des cartes */
+.feature-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    padding: 2rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+/* Ajustement de l'espacement */
+.mb-5 {
+    margin-bottom: 3rem !important;
+}
+
+.mt-4 {
+    margin-top: 2rem !important;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    .hero-section {
+        padding: 2rem 0;
+    }
+    
+    .content-wrapper {
+        padding: 1rem 0;
+    }
+    
+    .mb-5 {
+        margin-bottom: 2rem !important;
+    }
+}
+
+/* ... autres styles existants ... */
+
+.feature-card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1);
+}
+
+.feature-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-title {
+    color: var(--primary-color);
+}
+
+.feature-description {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Animation d'apparition au chargement */
+.feature-card {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Délai d'animation différent pour chaque carte */
+.feature-card:nth-child(1) { animation-delay: 0.1s; }
+.feature-card:nth-child(2) { animation-delay: 0.2s; }
+.feature-card:nth-child(3) { animation-delay: 0.3s; }
+.feature-card:nth-child(4) { animation-delay: 0.4s; }
+.feature-card:nth-child(5) { animation-delay: 0.5s; }
+.feature-card:nth-child(6) { animation-delay: 0.6s; }
+</style>
+
+<!-- Ajoutez le lien vers Animate.css dans le head de votre base.html si ce n'est pas déjà fait -->
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+{% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Création des particules en arrière-plan
+    const particles = document.createElement('div');
+    particles.className = 'particles';
+    document.querySelector('.hero-section').appendChild(particles);
+
+    for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.width = Math.random() * 20 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.opacity = Math.random() * 0.5;
+        particles.appendChild(particle);
+    }
+
+    // Animation au scroll
+    const observerOptions = {
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate__animated', entry.target.dataset.animation);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('[data-animation]').forEach(el => observer.observe(el));
+});
+
+// Ajout de l'animation au scroll pour les features
+document.addEventListener('DOMContentLoaded', function() {
+    const features = document.querySelectorAll('.feature-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const delay = entry.target.closest('[data-animation-delay]').getAttribute('data-animation-delay');
+                entry.target.style.animationDelay = delay;
+                entry.target.closest('.animate__animated').style.opacity = '1';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    features.forEach(feature => observer.observe(feature));
+});
+</script>
+{% endblock %} 

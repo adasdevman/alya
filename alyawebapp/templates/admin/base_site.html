@@ -1,0 +1,87 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | Administration ALYA{% endblock %}
+
+{% block extrastyle %}
+<style>
+/* Variables */
+:root {
+    --dark-gray: #333333;
+    --medium-gray: #666666;
+    --light-gray: #444444;
+}
+
+/* Header */
+#header {
+    background: var(--dark-gray);
+    color: white;
+    padding: 10px 40px;
+}
+
+/* Fieldsets et en-têtes */
+fieldset .fieldset-heading, 
+fieldset .inline-heading, 
+:not(.inline-related) .collapse summary,
+.module h2, 
+.module caption, 
+.inline-group h2 {
+    background: var(--dark-gray) !important;
+    border-color: var(--dark-gray) !important;
+    color: white !important;
+}
+
+/* Reste des styles... */
+#branding h1 {
+    color: white;
+}
+
+div.breadcrumbs {
+    background: var(--medium-gray);
+}
+
+a:link, a:visited {
+    color: var(--dark-gray);
+}
+
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: var(--dark-gray);
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover {
+    background: var(--medium-gray);
+}
+
+.button.default, input[type=submit].default, .submit-row input.default {
+    background: var(--light-gray);
+}
+
+#user-tools {
+    color: white;
+}
+
+#user-tools a {
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+}
+
+#user-tools a:hover {
+    color: white;
+    border-bottom-color: white;
+}
+
+#logout-form button {
+    background: transparent;
+    border: none;
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+}
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Administration ALYA</a></h1>
+{% endblock %} 

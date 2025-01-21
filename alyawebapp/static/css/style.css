@@ -1,0 +1,44 @@
+/* Ajustement des espacements dans les formulaires */
+.form-group {
+    margin-bottom: 0.5rem;
+}
+
+.form-group label {
+    margin-bottom: 0.25rem;
+}
+
+.form-group .form-control {
+    margin-bottom: 0.25rem;
+}
+
+.form-text {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+}
+
+/* Ajustement spécifique pour le modal de configuration */
+#configFields .form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Styles spécifiques pour le formulaire d'inscription */
+.register-form .form-group {
+    margin-bottom: 0.75rem;
+}
+
+.register-form .form-control {
+    height: 40px;
+    padding: 8px 12px;
+}
+
+.register-form .form-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Ajustement de l'espacement des messages d'erreur */
+.register-form .invalid-feedback {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+} 

@@ -1,0 +1,54 @@
+<!-- Modal pour éditer les objectifs -->
+<div class="modal fade" id="editObjectifsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Objectifs métier</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="objectifsForm">
+                    {% csrf_token %}
+                    <div class="domains-grid">
+                        {% for objectif in all_objectifs %}
+                        <div class="domain-card">
+                            <input type="checkbox" 
+                                   class="domain-checkbox" 
+                                   name="objectifs" 
+                                   value="{{ objectif.id }}"
+                                   id="objectif_{{ objectif.id }}"
+                                   {% if objectif in user_objectifs %}checked{% endif %}>
+                            <label class="domain-label" for="objectif_{{ objectif.id }}">
+                                <div class="domain-icon">
+                                    {% if objectif.name == "Croissance" %}
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    {% elif objectif.name == "Innovation" %}
+                                        <i class="fa-solid fa-lightbulb"></i>
+                                    {% elif objectif.name == "Optimisation" %}
+                                        <i class="fa-solid fa-gear"></i>
+                                    {% elif objectif.name == "Expansion" %}
+                                        <i class="fa-solid fa-globe"></i>
+                                    {% elif objectif.name == "Digitalisation" %}
+                                        <i class="fa-solid fa-desktop"></i>
+                                    {% elif objectif.name == "Formation" %}
+                                        <i class="fa-solid fa-graduation-cap"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="domain-name">{{ objectif.name }}</div>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-xmark"></i> Annuler
+                </button>
+                <button type="submit" form="objectifsForm" class="btn btn-dark">
+                    <i class="fa-solid fa-check"></i> Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div> 

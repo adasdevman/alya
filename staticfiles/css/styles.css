@@ -1,0 +1,21 @@
+/* Styles communs */
+:root {
+    --primary-color: #000;
+    --secondary-color: #fff;
+    font-size: 14px;
+}
+
+/* Styles de base */
+body {
+    font-size: 0.9rem;
+}
+
+/* Styles des cartes */
+.card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+/* ... tous les autres styles ... */ 

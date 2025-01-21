@@ -1,0 +1,42 @@
+<!-- Modal pour éditer la taille de l'entreprise -->
+<div class="modal fade" id="editTailleModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Taille de l'entreprise</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="tailleForm">
+                    {% csrf_token %}
+                    <div class="domains-grid">
+                        {% for taille in company_sizes %}
+                        <div class="domain-card">
+                            <input type="radio" 
+                                   class="domain-checkbox" 
+                                   name="company_size" 
+                                   value="{{ taille.value }}"
+                                   id="taille_{{ taille.value }}"
+                                   {% if user.company_size == taille.value %}checked{% endif %}>
+                            <label class="domain-label" for="taille_{{ taille.value }}">
+                                <div class="domain-icon">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                                <div class="domain-name">{{ taille.label }}</div>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-xmark"></i> Annuler
+                </button>
+                <button type="submit" form="tailleForm" class="btn btn-dark">
+                    <i class="fa-solid fa-check"></i> Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div> 

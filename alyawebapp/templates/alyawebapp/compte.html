@@ -1,0 +1,246 @@
+{% extends 'alyawebapp/base.html' %}
+{% load static %}
+
+{% block title %}ALYA - Mon Compte{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/compte.css' %}">
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+<link rel="stylesheet" href="{% static 'css/components/info-tag.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Colonne de gauche : Secteurs d'activité, Objectifs métier et Taille de l'entreprise -->
+        <div class="col-md-3">
+            <!-- Secteurs d'activité -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 text-white">Secteurs d'activité</h6>
+                        <button type="button" 
+                                class="btn btn-link text-white p-0" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editDomainsModal"
+                                onclick="console.log('Clic sur le bouton des domaines')">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="domains-grid">
+                        {% for domain in user_domains %}
+                            <div class="info-tag" 
+                                 role="button"
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#{{ domain.name|lower }}Modal"
+                                 style="cursor: pointer;">
+                                <i class="{% if domain.name == 'Analytics' %}fa-solid fa-chart-pie
+                                {% elif domain.name == 'Logistic' %}fa-solid fa-truck
+                                {% elif domain.name == 'Legal' %}fa-solid fa-scale-balanced
+                                {% elif domain.name == 'Marketing' %}fa-solid fa-bullhorn
+                                {% elif domain.name == 'Automation' %}fa-solid fa-robot
+                                {% elif domain.name == 'Support' %}fa-solid fa-headset
+                                {% elif domain.name == 'Finance' %}fa-solid fa-money-bill-trend-up
+                                {% elif domain.name == 'RH' %}fa-solid fa-users
+                                {% elif domain.name == 'Projet' %}fa-solid fa-diagram-project
+                                {% elif domain.name == 'CRM' %}fa-solid fa-handshake
+                                {% endif %}"></i>
+                                <span class="info-name">{{ domain.name }}</span>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted small text-center">
+                                <i class="fa-solid fa-circle-info"></i>
+                                Aucun secteur d'activité sélectionné
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Objectifs métier -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 text-white">Objectifs métier</h6>
+                        <button type="button" class="btn btn-link text-white p-0" data-bs-toggle="modal" data-bs-target="#editObjectifsModal">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        {% for objectif in user_objectifs %}
+                            <div class="col-12">
+                                <div class="info-tag">
+                                    {% if objectif.name == "Croissance" %}
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    {% elif objectif.name == "Innovation" %}
+                                        <i class="fa-regular fa-lightbulb"></i>
+                                    {% elif objectif.name == "Optimisation" %}
+                                        <i class="fa-solid fa-gear"></i>
+                                    {% elif objectif.name == "Expansion" %}
+                                        <i class="fa-solid fa-globe"></i>
+                                    {% elif objectif.name == "Digitalisation" %}
+                                        <i class="fa-solid fa-desktop"></i>
+                                    {% elif objectif.name == "Formation" %}
+                                        <i class="fa-solid fa-graduation-cap"></i>
+                                    {% else %}
+                                        <i class="fa-solid fa-bullseye"></i>
+                                    {% endif %}
+                                    <span class="info-name">{{ objectif.name }}</span>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted small text-center">
+                                <i class="fa-regular fa-circle-info"></i>
+                                Aucun objectif défini
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Taille de l'entreprise -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 text-white">Taille de l'entreprise</h6>
+                        <button type="button" class="btn btn-link text-white p-0" data-bs-toggle="modal" data-bs-target="#editTailleModal">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if user.company_size %}
+                        <div class="info-tag">
+                            <i class="fa-regular fa-building"></i>
+                            <span class="info-name">{{ user.company_size }} employés</span>
+                        </div>
+                    {% else %}
+                        <p class="text-muted small text-center">
+                            <i class="fa-regular fa-circle-info"></i>
+                            Non spécifié
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Section principale : Chat -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="chat-wrapper">
+                    <div class="chat-header bg-dark text-white p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <i class="fa-solid fa-robot me-2"></i>
+                                <h5 class="mb-0">Chat avec ALYA</h5>
+                            </div>
+                            <button id="new-chat" class="btn btn-outline-light btn-sm">
+                                <i class="fa-solid fa-plus"></i> Nouveau chat
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="messages-wrapper">
+                        <div id="chat-messages" class="chat-messages">
+                            <!-- Messages dynamiques -->
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <form id="chat-form" class="chat-form">
+                            <div class="input-group">
+                                <input type="text" 
+                                       id="prompt" 
+                                       class="form-control" 
+                                       placeholder="Écrivez votre message..."
+                                       autocomplete="off"
+                                       required>
+                                <button type="submit" class="btn btn-dark">
+                                    <i class="fa-regular fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne de droite : Historique -->
+        <div class="col-md-3">
+            <!-- Historique des chats -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 text-white">Historique des chats</h6>
+                        <button class="btn btn-link text-white p-0" id="clearHistory">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="history-list">
+                        <!-- Les conversations seront ajoutées dynamiquement ici -->
+                        <div class="text-muted small text-center py-3">
+                            <i class="fa-solid fa-message"></i>
+                            Aucune conversation
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+{% include 'alyawebapp/modals/domains_modal.html' %}
+{% include 'alyawebapp/modals/objectifs_modal.html' %}
+{% include 'alyawebapp/modals/profile_modal.html' %}
+{% include 'alyawebapp/modals/taille_modal.html' %}
+{% include 'alyawebapp/modals/integrations_modal.html' %}
+{% include 'alyawebapp/modals/integration_config_modal.html' %}
+{% include 'alyawebapp/modals/domain_details_modals.html' %}
+
+<!-- Modal de configuration -->
+<div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="configModalLabel">Configuration de l'intégration</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="integrationConfigForm">
+                    <div id="configFields">
+                        <!-- Les champs seront générés dynamiquement -->
+                    </div>
+                    <div class="mt-3">
+                        <a id="integrationDocLink" href="#" target="_blank" class="text-muted">
+                            <i class="fas fa-book me-1"></i>Documentation
+                        </a>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-xmark"></i> Annuler
+                </button>
+                <button type="submit" form="integrationConfigForm" class="btn btn-dark">
+                    <i class="fa-solid fa-check"></i> Sauvegarder
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Nos scripts -->
+<script src="{% static 'js/modals.js' %}"></script>
+<script src="{% static 'js/chat.js' %}"></script>
+<script src="{% static 'js/integrations.js' %}"></script>
+{% endblock %} 

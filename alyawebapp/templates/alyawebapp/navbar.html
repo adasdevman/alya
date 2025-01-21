@@ -1,0 +1,111 @@
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">ALYA</a>
+        {% if user.is_authenticated %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_admin or user.is_moderator %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'chat' %}">
+                                <i class="fa-regular fa-comments"></i> Chat
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'compte' %}">
+                            <i class="fa-regular fa-user"></i> Mon Compte
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <div class="user-avatar me-3">
+                        {{ user.first_name|make_list|first|default:user.username|make_list|first|upper }}
+                    </div>
+                    <div class="text-white me-4">
+                        <span class="me-2">{{ user.get_full_name|default:user.username }}</span>
+                        <small class="text-light-50">{{ user.email }}</small>
+                        <button class="btn btn-link text-white p-0 ms-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </button>
+                    </div>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-light border-light">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</nav>
+
+<style>
+.navbar {
+    background-color: #000;
+    padding: 1rem 2rem;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    animation: avatarPop 0.3s ease-out;
+}
+
+@keyframes avatarPop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.text-white.me-4 {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255,255,255,0.8) !important;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: white !important;
+}
+
+.btn-outline-light {
+    transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+    background-color: white;
+    color: #000;
+}
+</style> 

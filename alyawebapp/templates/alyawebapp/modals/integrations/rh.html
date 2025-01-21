@@ -1,0 +1,59 @@
+{% include "alyawebapp/modals/integrations/styles.html" %}
+
+<!-- Modal RH -->
+<div class="modal fade" id="rhModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Ressources Humaines</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="29">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">LinkedIn Recruiter</h6>
+                            <p class="integration-description">Recrutement et sourcing de talents</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="29">
+                            <i class="fab fa-linkedin"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="30">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Workday</h6>
+                            <p class="integration-description">Gestion des ressources humaines</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="30">
+                            <i class="fas fa-calendar-check"></i> Configurer
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="31">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">BambooHR</h6>
+                            <p class="integration-description">Logiciel de gestion RH</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="31">
+                            <i class="fas fa-users-gear"></i> Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div> 

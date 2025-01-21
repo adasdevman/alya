@@ -1,0 +1,31 @@
+Django>=4.2.0
+python-dotenv
+openai
+psycopg2-binary
+social-auth-app-django
+
+# Analytics
+
+# Marketing
+mailchimp-marketing==3.0.8
+
+# CRM
+simple-salesforce==1.12.4
+
+# RH
+
+# Support
+zenpy==2.0.25
+
+# Finance
+stripe==5.4.0
+
+# Projet
+asana==3.2.1
+jira==3.5.1
+
+# Legal
+docusign-esign==3.20.0
+
+# Automation
+- uipath-orchestrator-api==1.0.0 

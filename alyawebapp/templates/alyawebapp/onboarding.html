@@ -1,0 +1,97 @@
+{% extends 'alyawebapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="text-center mb-4 fw-bold">Sélectionnez vos domaines</h2>
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            {% for domain in domains %}
+                            <div class="col-md-4 col-sm-6">
+                                <div class="domain-option">
+                                    <input type="checkbox" 
+                                           name="domains" 
+                                           value="{{ domain.id }}" 
+                                           id="domain_{{ domain.id }}"
+                                           {% if domain in user_domains %}checked{% endif %}
+                                           class="domain-checkbox">
+                                    <label for="domain_{{ domain.id }}" class="domain-label">
+                                        <div class="text-center">
+                                            <i class="{{ domain.icon }} mb-3"></i>
+                                            <div>{{ domain.name }}</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-dark">
+                                <i class="fas fa-check me-2"></i>Valider mes domaines
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.domain-card {
+    position: relative;
+}
+
+.domain-checkbox {
+    display: none;
+}
+
+.domain-label {
+    display: block;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    height: 100%;
+}
+
+.domain-label i {
+    font-size: 2em;
+    display: block;
+    margin-bottom: 10px;
+    color: #212529;
+}
+
+.domain-label:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.domain-checkbox:checked + .domain-label {
+    background-color: #f8f9fa;
+    border: 2px solid #212529;
+}
+
+.domain-checkbox:checked + .domain-label i,
+.domain-checkbox:checked + .domain-label div {
+    color: #212529;
+}
+</style>
+{% endblock %} 

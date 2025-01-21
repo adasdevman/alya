@@ -1,0 +1,374 @@
+.domain-item, .objectif-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.domain-item:hover, .objectif-item:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.domain-item i, .objectif-item i {
+    margin-right: 0.5rem;
+    width: 20px;
+    text-align: center;
+}
+
+.form-check-input {
+    margin-right: 1rem;
+}
+
+.form-check-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Style du modal */
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.modal-header {
+    border-bottom: none;
+    padding: 1.0rem;
+}
+
+.modal-body {
+    padding: 1.0rem;
+}
+
+.modal-footer {
+    border-top: none;
+    padding: 1.0rem;
+}
+
+.modal-header.bg-dark {
+    background-color: #1a1a1a !important;
+}
+
+/* Grille des domaines */
+.domains-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.6rem;
+    padding: 0.6rem;
+}
+
+/* Style des cartes */
+.domain-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 3rem;  /* Espace pour le bouton */
+    transition: all 0.3s ease;
+}
+
+.domain-card.expanded {
+    grid-column: 1 / -1;  /* Prend toute la largeur */
+}
+
+.domain-checkbox {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.domain-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 100%;
+    width: 100%;  /* Prend toute la largeur disponible */
+    margin-bottom: 0.5rem;  /* Espace entre la carte et le bouton */
+}
+
+.domain-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.domain-name {
+    font-weight: 500;
+    text-align: center;
+    color: #333;
+}
+
+/* États des cartes */
+.domain-checkbox:checked + .domain-label {
+    background: #f8f9fa;
+    border-color: #333;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.domain-checkbox:checked + .domain-label .domain-icon,
+.domain-checkbox:checked + .domain-label .domain-name {
+    color: #1a1a1a;
+}
+
+.domain-label:hover {
+    border-color: #333;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Animation de sélection */
+.domain-checkbox:checked + .domain-label::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #1a1a1a;
+    font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .domains-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+    
+    .domain-label {
+        padding: 0.4rem;
+    }
+    
+    .domain-icon {
+        font-size: 1.5rem;
+    }
+}
+
+/* Grille des domaines dans les modals */
+.modal .domains-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) !important; /* 4 colonnes pour les modals */
+    gap: 0.6rem;
+    padding: 0.6rem;
+}
+
+/* Responsive pour les modals */
+@media (max-width: 992px) {
+    .modal .domains-grid {
+        grid-template-columns: repeat(3, 1fr) !important; /* 3 colonnes sur tablette */
+    }
+}
+
+@media (max-width: 768px) {
+    .modal .domains-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* 2 colonnes sur petit écran */
+    }
+}
+
+@media (max-width: 576px) {
+    .modal .domains-grid {
+        grid-template-columns: 1fr !important; /* 1 colonne sur très petit écran */
+    }
+}
+
+#configurationZone {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+#configurationZone h6 {
+    color: #333;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.config-field {
+    margin-bottom: 1rem;
+}
+
+.config-field label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.3rem;
+}
+
+.config-field input {
+    font-size: 0.85rem;
+}
+
+/* Configuration dans la carte */
+.integration-config {
+    display: none;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 1rem;
+    border: 1px solid #e0e0e0;
+}
+
+.domain-card.expanded .integration-config {
+    display: block;
+}
+
+.integration-config h6 {
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.integration-config .form-control {
+    font-size: 0.85rem;
+}
+
+.btn-configure {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;  /* Centre horizontalement */
+    transform: translateX(-50%);  /* Ajuste le centrage */
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    width: auto;
+    min-width: 120px;  /* Largeur minimale pour uniformité */
+    text-align: center;
+}
+
+.btn-configure:hover {
+    background-color: #e9ecef;
+    border-color: #000;
+    color: #000;
+}
+
+.btn-configure i {
+    margin-right: 5px;
+}
+
+/* Fond sombre du modal */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.7) !important;  /* Plus sombre et transparent */
+}
+
+.modal-backdrop.show {
+    opacity: 1 !important;  /* Assure que l'opacité est appliquée */
+}
+
+/* Animation du modal */
+.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    transition: transform 0.2s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+}
+
+/* Effet de flou sur le contenu derrière */
+.modal-open .container-fluid {
+    filter: blur(3px);
+    transition: filter 0.2s ease-out;
+}
+
+/* Style spécifique pour le modal de configuration */
+#integrationConfigModal .modal-content {
+    border: 3px solid #000;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    background-color: #fff;
+}
+
+#integrationConfigModal .modal-header {
+    background-color: #000 !important;
+    color: white;
+    padding: 1.2rem;
+}
+
+#integrationConfigModal .modal-body {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+}
+
+#integrationConfigModal .form-control {
+    border: 2px solid #dee2e6;
+    padding: 0.8rem;
+    border-radius: 8px;
+}
+
+#integrationConfigModal .form-control:focus {
+    border-color: #000;
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.15);
+}
+
+#integrationConfigModal .modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 1.2rem;
+}
+
+#integrationConfigModal .btn-dark {
+    background-color: #000;
+    border-color: #000;
+    padding: 0.6rem 1.2rem;
+}
+
+#integrationConfigModal .btn-dark:hover {
+    background-color: #333;
+    border-color: #333;
+}
+
+/* Style commun pour les deux modals */
+#integrationsModal .modal-content,
+#integrationConfigModal .modal-content {
+    border: 3px solid #000;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    background-color: #fff;
+}
+
+#integrationsModal .modal-header,
+#integrationConfigModal .modal-header {
+    background-color: #000 !important;
+    color: white;
+    padding: 1.2rem;
+}
+
+#integrationsModal .modal-body,
+#integrationConfigModal .modal-body {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+}
+
+#integrationsModal .modal-footer,
+#integrationConfigModal .modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 1.2rem;
+}
+
+#integrationsModal .btn-dark,
+#integrationConfigModal .btn-dark {
+    background-color: #000;
+    border-color: #000;
+    padding: 0.6rem 1.2rem;
+}
+
+#integrationsModal .btn-dark:hover,
+#integrationConfigModal .btn-dark:hover {
+    background-color: #333;
+    border-color: #333;
+} 
