@@ -6,6 +6,8 @@ from django.dispatch import receiver
 import logging
 from django.core.exceptions import ValidationError
 from .integrations.config import INTEGRATION_CONFIGS
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -101,26 +103,31 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 class ChatHistory(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    prompt = models.TextField()
-    response = models.TextField()
+    chat = models.ForeignKey(
+        Chat, 
+        on_delete=models.CASCADE,
+        related_name='history',
+        default=1  # ID du chat par défaut
+    )
+    content = models.TextField('Contenu')
+    is_user = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['created_at']
         verbose_name_plural = 'Chat histories'
-
+    
     def __str__(self):
-        return f"{self.user.username} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+        return f"{self.chat.id} - {'User' if self.is_user else 'Assistant'} - {self.created_at}"
 
 class Integration(models.Model):
     name = models.CharField(max_length=100)
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
-    icon_class = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
-    
+    icon_class = models.CharField(max_length=50)
+
     def __str__(self):
-        return f"{self.name} ({self.domain.name})"
+        return self.name
 
     class Meta:
         ordering = ['name']
@@ -129,9 +136,12 @@ class UserIntegration(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     integration = models.ForeignKey(Integration, on_delete=models.CASCADE)
     enabled = models.BooleanField(default=False)
-    config = models.JSONField(default=dict, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
+    config = models.JSONField(default=dict)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    access_token = models.TextField(null=True, blank=True)
+    refresh_token = models.TextField(null=True, blank=True)
+    token_expires_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ('user', 'integration')
@@ -164,6 +174,15 @@ class UserIntegration(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.integration.name}"
+
+    def update_tokens(self, access_token, refresh_token=None, expires_in=None):
+        """Met à jour les tokens OAuth"""
+        self.access_token = access_token
+        if refresh_token:
+            self.refresh_token = refresh_token
+        if expires_in:
+            self.token_expires_at = timezone.now() + timedelta(seconds=expires_in)
+        self.save()
 
 @receiver(pre_save, sender=UserIntegration)
 def ensure_config_is_dict(sender, instance, **kwargs):

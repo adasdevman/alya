@@ -1,6 +1,10 @@
 from pathlib import Path
 import os
 import environ
+import logging
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 # Initialize environment variables
 env = environ.Env()
@@ -163,3 +167,17 @@ LOGGING = {
         },
     },
 }
+
+# HubSpot OAuth settings
+HUBSPOT_CLIENT_ID = os.getenv('HUBSPOT_CLIENT_ID')
+HUBSPOT_CLIENT_SECRET = os.getenv('HUBSPOT_CLIENT_SECRET')
+HUBSPOT_REDIRECT_URI = os.getenv('HUBSPOT_REDIRECT_URI')
+
+# Vérification au démarrage
+if not all([HUBSPOT_CLIENT_ID, HUBSPOT_CLIENT_SECRET, HUBSPOT_REDIRECT_URI]):
+    logger.warning("Configuration HubSpot incomplète!")
+
+# Session configuration
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 86400  # 24 heures en secondes
+SESSION_COOKIE_SECURE = False  # Mettre à True en production

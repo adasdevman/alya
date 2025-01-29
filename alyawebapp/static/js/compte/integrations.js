@@ -1,5 +1,30 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM chargé, initialisation du script integrations.js');
+    // Configuration des intégrations
+    const INTEGRATION_CONFIGS = {
+        'hubspot crm': {
+            auth_type: 'oauth',
+            oauth_url: '/integrations/hubspot/oauth/',
+            documentation_url: 'https://developers.hubspot.com/docs/api/overview'
+        },
+        'zoho crm': {
+            auth_type: 'api_key',
+            fields: [
+                { name: 'client_id', label: 'Client ID', type: 'text' },
+                { name: 'client_secret', label: 'Client Secret', type: 'password' },
+                { name: 'domain', label: 'Domaine', type: 'text' }
+            ],
+            documentation_url: 'https://www.zoho.com/crm/developer/docs/'
+        }
+    };
+
+    // Vérifier si on est sur une page avec des intégrations
+    const switches = document.querySelectorAll('.integration-switch');
+    if (switches.length === 0) {
+        console.log('Aucun switch d\'intégration trouvé, arrêt du script');
+        return; // Sortir si pas de switches trouvés
+    }
+
+    console.log('DOM chargé, ' + switches.length + ' switches trouvés');
 
     // Gestionnaire de clic pour les secteurs d'activité
     const sectorsCard = document.querySelector('.card:first-child');
@@ -11,10 +36,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
         infoTags.forEach(tag => {
             tag.addEventListener('click', function(e) {
-                console.log('Tag cliqué:', this);
                 const domainName = this.querySelector('.info-name').textContent;
-                console.log('Nom du domaine:', domainName);
+                console.log('Chargement des intégrations pour:', domainName);
+                
+                fetch(`/get-integrations/${domainName}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Réponse reçue:', data);
+                    if (data.status === 'success') {
+                        // Traitement normal des données
                 loadIntegrations(domainName);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des intégrations:', error);
+                    // Ne montrer l'erreur que si ce n'est pas une erreur 404
+                    if (!error.message.includes('404')) {
+                        showNotification('Erreur lors du chargement des intégrations', 'danger');
+                    }
+                });
             });
         });
     } else {
@@ -23,59 +69,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Fonction pour charger les intégrations
     function loadIntegrations(domainName) {
-        console.log('Chargement des intégrations pour:', domainName);
+        console.log('Chargement des intégrations pour le domaine:', domainName);
+        const modalElement = document.getElementById(`${domainName.toLowerCase()}Modal`);
         
-        const modalElement = document.getElementById('integrationsModal');
-        console.log('Modal element trouvé:', modalElement);
-
-        fetch(`/get-integrations/${domainName}/`)
-            .then(response => {
-                console.log('Réponse reçue:', response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Données reçues:', data);
-                
-                if (data.status === 'success') {
-                    console.log('Mise à jour du modal avec les données');
-                    document.getElementById('domain-name').textContent = domainName;
-                    const grid = document.querySelector('#integrationsModal .domains-grid');
-                    
-                    if (!grid) {
-                        console.error('Grid element non trouvé');
-                        return;
-                    }
-
-                    grid.innerHTML = '';
-
-                    if (!data.integrations || Object.keys(data.integrations).length === 0) {
-                        console.log('Aucune intégration disponible');
-                        grid.innerHTML = `
-                            <div class="text-center text-muted p-3">
-                                <i class="fa-solid fa-info-circle"></i>
-                                Aucune intégration disponible
-                            </div>`;
-                    } else {
-                        console.log('Création des cartes d\'intégration');
-                        Object.entries(data.integrations).forEach(([id, integration]) => {
-                            grid.appendChild(createIntegrationCard(id, integration));
-                        });
-                    }
-
-                    try {
-                        console.log('Tentative d\'affichage du modal');
-                        const myModal = new bootstrap.Modal(modalElement);
-                        myModal.show();
-                        console.log('Modal affiché avec succès');
-                    } catch (error) {
-                        console.error('Erreur lors de l\'affichage du modal:', error);
-                    }
+        if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+           
+            // Nettoyer le backdrop lors de la fermeture du modal
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
                 }
-            })
-            .catch(error => {
-                console.error('Erreur fetch:', error);
-                alert('Erreur lors du chargement des intégrations');
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
             });
+        }
     }
 
     // Fonction pour créer une carte d'intégration
@@ -127,10 +138,40 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function showConfigurationModal(id, integration) {
+        const config = INTEGRATION_CONFIGS[integration.name.toLowerCase()];
+        if (!config) {
+            console.warn(`Configuration non trouvée pour ${integration.name}`);
+            return;
+        }
+
+        // Si c'est une intégration OAuth, rediriger directement
+        if (config.auth_type === 'oauth' && config.oauth_url) {
+            console.log('Redirection OAuth vers:', config.oauth_url);
+            window.location.href = config.oauth_url;
+            return;
+        }
+
+        // Pour les intégrations avec configuration manuelle
         const configModal = new bootstrap.Modal(document.getElementById('integrationConfigModal'));
         document.getElementById('integration-name').textContent = integration.name;
         document.getElementById('integration-id').value = id;
-        document.getElementById('configFields').innerHTML = getConfigurationFields(integration.name, integration.config);
+        document.getElementById('configFields').innerHTML = config.fields.map(field => `
+            <div class="mb-3">
+                <label class="form-label" for="${field.name}">${field.label}</label>
+                <input type="${field.type}" 
+                       class="form-control" 
+                       id="${field.name}" 
+                       name="${field.name}"
+                       required>
+            </div>
+        `).join('');
+
+        // Mettre à jour le lien de documentation
+        const docLink = document.getElementById('docLink');
+        if (docLink && config.documentation_url) {
+            docLink.href = config.documentation_url;
+        }
+
         configModal.show();
     }
 
@@ -365,9 +406,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener pour les boutons de configuration
     const configButtons = document.querySelectorAll('.config-integration');
     configButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const integrationId = this.dataset.integrationId;
-            loadIntegrationConfig(integrationId);
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Empêcher le comportement par défaut
+            
+            // Si c'est une intégration OAuth
+            if (this.getAttribute('data-integration-type') === 'oauth') {
+                const integrationName = this.closest('.integration-item')
+                    .querySelector('.integration-title').textContent.toLowerCase();
+                
+                if (integrationName === 'hubspot crm') {
+                    window.location.href = '/integrations/hubspot/oauth/';
+                    return;
+                }
+            }
+            
+            // Pour les autres intégrations, afficher le modal de configuration normal
+            const integrationId = this.getAttribute('data-integration-id');
+            const integrationName = this.closest('.integration-item')
+                .querySelector('.integration-title').textContent;
+            showConfigurationModal(integrationId, { name: integrationName });
         });
     });
 
@@ -386,4 +443,120 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return cookieValue;
     }
+
+    // Fonction pour afficher les notifications
+    function showNotification(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center text-white bg-${type} border-0`;
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.setAttribute('aria-atomic', 'true');
+        
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+        
+        const container = document.getElementById('toast-container');
+        if (!container) {
+            const newContainer = document.createElement('div');
+            newContainer.id = 'toast-container';
+            newContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+            document.body.appendChild(newContainer);
+            newContainer.appendChild(toast);
+        } else {
+            container.appendChild(toast);
+        }
+        
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+    }
+
+    // Fonction pour charger l'état initial des intégrations
+    function loadInitialState() {
+        console.log('Chargement de l\'état initial des intégrations');
+        // Vérifier que tous les switches sont présents
+        const allSwitches = document.querySelectorAll('.integration-switch');
+        console.log('Nombre total de switches trouvés:', allSwitches.length);
+        allSwitches.forEach(sw => {
+            console.log('Switch trouvé:', sw.getAttribute('data-integration-id'));
+        });
+
+        fetch('/get-user-integrations-state/', {
+            method: 'GET',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.log('État des intégrations reçu:', data);
+            if (data.status === 'success' && data.enabled_integrations) {
+                data.enabled_integrations.forEach(integration_id => {
+                    const switchEl = document.querySelector(`input[data-integration-id="${integration_id}"]`);
+                    console.log('Recherche du switch pour l\'intégration', integration_id);
+                    if (switchEl) {
+                        console.log(`Activation de l'intégration ${integration_id}`);
+                        switchEl.checked = true;
+                    } else {
+                        console.warn(`Switch non trouvé pour l'intégration ${integration_id}`);
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Erreur détaillée lors du chargement des intégrations:', error);
+            // Ne montrer la notification que pour les vraies erreurs réseau
+            if (!error.message.includes('HTTP error! status: 404')) {
+                showNotification('Erreur lors du chargement des intégrations', 'danger');
+            }
+        });
+    }
+
+    // Gérer les switches d'intégration
+    document.querySelectorAll('.integration-switch').forEach(switchEl => {
+        switchEl.addEventListener('change', function() {
+            const integrationId = this.getAttribute('data-integration-id');
+            console.log('Switch basculé:', integrationId, 'Nouvel état:', this.checked);
+            
+            fetch('/toggle-integration/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    integration_id: integrationId,
+                    enabled: this.checked
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showNotification(
+                        this.checked ? 
+                        'L\'intégration a été activée avec succès' : 
+                        'L\'intégration a été désactivée'
+                    );
+                } else {
+                    this.checked = !this.checked;
+                    showNotification(data.message || 'Une erreur est survenue', 'danger');
+                }
+            });
+        });
+    });
+
+    // Charger l'état initial des intégrations au chargement de la page
+    loadInitialState();
+
+    // Vérifier que les éléments sont bien trouvés au chargement
+    console.log('Switches trouvés:', document.querySelectorAll('.integration-switch').length);
+    console.log('Toast container trouvé:', document.getElementById('toast-container'));
 }); 

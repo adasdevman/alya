@@ -5,48 +5,65 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title">Finance</h5>
+                <h5 class="modal-title">Comptabilité & Finance</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="integrations-list">
+                    <!-- QuickBooks -->
                     <div class="integration-item">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="26">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="10"
+                                   id="switch-10">
                         </div>
                         <div class="integration-content">
                             <h6 class="integration-title">QuickBooks</h6>
-                            <p class="integration-description">Logiciel de comptabilité et gestion financière</p>
+                            <p class="integration-description">Gestion comptable complète</p>
                         </div>
                         <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="26">
-                            <i class="fas fa-calculator"></i> Configurer
+                                data-integration-id="10"
+                                id="config-btn-10">
+                            <i class="fas fa-calculator"></i> Connecter
                         </button>
                     </div>
+
+                    <!-- Xero -->
                     <div class="integration-item">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="27">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="11"
+                                   id="switch-11">
                         </div>
                         <div class="integration-content">
                             <h6 class="integration-title">Xero</h6>
-                            <p class="integration-description">Plateforme de comptabilité en ligne</p>
+                            <p class="integration-description">Solution comptable en ligne</p>
                         </div>
                         <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="27">
-                            <i class="fas fa-file-invoice-dollar"></i> Configurer
+                                data-integration-id="11"
+                                id="config-btn-11">
+                            <i class="fas fa-file-invoice-dollar"></i> Connecter
                         </button>
                     </div>
+
+                    <!-- Stripe -->
                     <div class="integration-item">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="28">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="12"
+                                   id="switch-12">
                         </div>
                         <div class="integration-content">
                             <h6 class="integration-title">Stripe</h6>
-                            <p class="integration-description">Plateforme de paiements en ligne</p>
+                            <p class="integration-description">Paiements en ligne</p>
                         </div>
                         <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="28">
-                            <i class="fab fa-stripe"></i> Configurer
+                                data-integration-id="12"
+                                id="config-btn-12">
+                            <i class="fab fa-stripe"></i> Connecter
                         </button>
                     </div>
                 </div>

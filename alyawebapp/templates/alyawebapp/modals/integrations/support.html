@@ -10,43 +10,60 @@
             </div>
             <div class="modal-body">
                 <div class="integrations-list">
+                    <!-- Freshdesk -->
                     <div class="integration-item">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="23">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="17"
+                                   id="switch-17">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Freshdesk</h6>
+                            <p class="integration-description">Support client et helpdesk</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="17"
+                                id="config-btn-17">
+                            <i class="fas fa-headset"></i> Connecter
+                        </button>
+                    </div>
+
+                    <!-- Zendesk -->
+                    <div class="integration-item">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="16"
+                                   id="switch-16">
                         </div>
                         <div class="integration-content">
                             <h6 class="integration-title">Zendesk</h6>
-                            <p class="integration-description">Gérez le support client</p>
+                            <p class="integration-description">Plateforme de service client</p>
                         </div>
                         <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="23">
-                            <i class="fas fa-headset"></i> Configurer
+                                data-integration-id="16"
+                                id="config-btn-16">
+                            <i class="fas fa-life-ring"></i> Connecter
                         </button>
                     </div>
+
+                    <!-- Intercom -->
                     <div class="integration-item">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="24">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="18"
+                                   id="switch-18">
                         </div>
                         <div class="integration-content">
                             <h6 class="integration-title">Intercom</h6>
                             <p class="integration-description">Messagerie et support client</p>
                         </div>
                         <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="24">
-                            <i class="fas fa-comments"></i> Configurer
-                        </button>
-                    </div>
-                    <div class="integration-item">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="25">
-                        </div>
-                        <div class="integration-content">
-                            <h6 class="integration-title">Freshdesk</h6>
-                            <p class="integration-description">Plateforme de support client</p>
-                        </div>
-                        <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="25">
-                            <i class="fas fa-ticket-alt"></i> Configurer
+                                data-integration-id="18"
+                                id="config-btn-18">
+                            <i class="fab fa-intercom"></i> Connecter
                         </button>
                     </div>
                 </div>

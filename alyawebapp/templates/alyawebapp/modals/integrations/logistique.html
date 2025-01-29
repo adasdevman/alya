@@ -1,69 +1,64 @@
 {% include "alyawebapp/modals/integrations/styles.html" %}
 
-<!-- Modal RH -->
-<div class="modal fade" id="rhModal" tabindex="-1">
+<!-- Modal Logistique -->
+<div class="modal fade" id="logistiqueModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title">RH & Recrutement</h5>
+                <h5 class="modal-title">Logistique</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="integrations-list">
-                    <!-- LinkedIn Recruiter -->
                     <div class="integration-item">
                         <div class="form-check form-switch me-3">
                             <input type="checkbox" 
                                     class="form-check-input integration-switch" 
-                                    data-integration-id="1"
-                                    id="switch-1">
+                                    data-integration-id="22"
+                                    id="switch-22">
                         </div>
                         <div class="integration-content">
-                            <h6 class="integration-title">LinkedIn Recruiter</h6>
-                            <p class="integration-description">Gérez vos recrutements</p>
+                            <h6 class="integration-title">ShipStation</h6>
+                            <p class="integration-description">Gestion des expéditions e-commerce</p>
                         </div>
                         <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="1"
-                                id="config-btn-1">
-                            <i class="fab fa-linkedin"></i> Connecter
+                                data-integration-id="22"
+                                id="config-btn-22">
+                            <i class="fas fa-shipping-fast"></i> Connecter
                         </button>
                     </div>
-
-                    <!-- Workday -->
                     <div class="integration-item">
                         <div class="form-check form-switch me-3">
                             <input type="checkbox" 
                                     class="form-check-input integration-switch" 
-                                    data-integration-id="2"
-                                    id="switch-2">
+                                    data-integration-id="23"
+                                    id="switch-23">
                         </div>
                         <div class="integration-content">
-                            <h6 class="integration-title">Workday</h6>
-                            <p class="integration-description">Gestion RH complète</p>
+                            <h6 class="integration-title">Freightview</h6>
+                            <p class="integration-description">Gestion du transport de marchandises</p>
                         </div>
                         <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="2"
-                                id="config-btn-2">
-                            <i class="fas fa-users"></i> Connecter
+                                data-integration-id="23"
+                                id="config-btn-23">
+                            <i class="fas fa-truck"></i> Connecter
                         </button>
                     </div>
-
-                    <!-- BambooHR -->
                     <div class="integration-item">
                         <div class="form-check form-switch me-3">
                             <input type="checkbox" 
                                     class="form-check-input integration-switch" 
-                                    data-integration-id="3"
-                                    id="switch-3">
+                                    data-integration-id="24"
+                                    id="switch-24">
                         </div>
                         <div class="integration-content">
-                            <h6 class="integration-title">BambooHR</h6>
-                            <p class="integration-description">Solution RH pour PME</p>
+                            <h6 class="integration-title">Odoo</h6>
+                            <p class="integration-description">Gestion des stocks et logistique</p>
                         </div>
                         <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="3"
-                                id="config-btn-3">
-                            <i class="fas fa-user-tie"></i> Connecter
+                                data-integration-id="24"
+                                id="config-btn-24">
+                            <i class="fas fa-boxes"></i> Connecter
                         </button>
                     </div>
                 </div>

@@ -1,0 +1,53 @@
+{% include "alyawebapp/modals/integrations/styles.html" %}
+
+<!-- Modal Legal -->
+<div class="modal fade" id="legalModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Legal</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <div class="integration-item">
+                        <div class="integration-content">
+                            <h6 class="integration-title">DocuSign</h6>
+                            <p class="integration-description">Signature électronique de documents</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="17"
+                                id="config-btn-17">
+                            <i class="fas fa-file-signature"></i> Connecter
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="integration-content">
+                            <h6 class="integration-title">Clio</h6>
+                            <p class="integration-description">Gestion de cabinet juridique</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="18"
+                                id="config-btn-18">
+                            <i class="fas fa-balance-scale"></i> Connecter
+                        </button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="integration-content">
+                            <h6 class="integration-title">LexisNexis</h6>
+                            <p class="integration-description">Base de données juridique</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="19"
+                                id="config-btn-19">
+                            <i class="fas fa-gavel"></i> Connecter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div> 

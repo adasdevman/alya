@@ -3,11 +3,14 @@ from django.conf import settings
 import logging
 import json
 import traceback
+from ..utils.openai_utils import call_openai_api, get_system_prompt
+from ..models import Chat, ChatHistory
 
 logger = logging.getLogger(__name__)
 
 class AIOrchestrator:
-    def __init__(self):
+    def __init__(self, user):
+        self.user = user
         try:
             api_key = settings.OPENAI_API_KEY
             if not api_key:
@@ -17,6 +20,38 @@ class AIOrchestrator:
         except Exception as e:
             logger.error(f"Erreur d'initialisation OpenAI: {str(e)}")
             logger.error(traceback.format_exc())
+            raise
+
+    def process_message(self, message: str, chat_id: int = None) -> str:
+        """
+        Traite un message utilisateur et retourne la réponse de l'IA
+        """
+        try:
+            # Appeler l'API OpenAI
+            response = call_openai_api(message)  # Supprimer le deuxième argument
+            
+            # Sauvegarder dans l'historique si un chat_id est fourni
+            if chat_id:
+                chat = Chat.objects.get(id=chat_id)
+                
+                # Sauvegarder le message utilisateur
+                ChatHistory.objects.create(
+                    chat=chat,
+                    content=message,
+                    is_user=True
+                )
+                
+                # Sauvegarder la réponse de l'assistant
+                ChatHistory.objects.create(
+                    chat=chat,
+                    content=response.get('response', ''),
+                    is_user=False
+                )
+            
+            return response
+            
+        except Exception as e:
+            logger.error(f"Erreur dans AIOrchestrator.process_message: {str(e)}")
             raise
 
     def process_request(self, user_request, user_domains):

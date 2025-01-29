@@ -3,6 +3,8 @@ from typing import Dict, Any, List
 import json
 import os
 import logging
+from openai import OpenAI
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -16,71 +18,111 @@ def format_chat_history(chat_history: List[Dict[str, Any]]) -> str:
         formatted_history.append(f"{prefix} {message.get('content', '')}")
     return "\n".join(formatted_history)
 
-def call_openai_api(prompt: str, context: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Appelle l'API OpenAI avec un prompt et un contexte enrichi.
-    """
+def call_openai_api(message):
+    """Appelle l'API OpenAI et gère la réponse"""
     try:
-        # Construire le message système avec le contexte des intégrations
-        system_message = """Tu es un assistant qui peut interagir avec différentes intégrations.
-Les intégrations suivantes sont disponibles : {integrations}.
-
-Historique de la conversation :
-{chat_history}
-
-Quand un utilisateur demande une action qui nécessite une intégration :
-1. Identifie l'intégration appropriée
-2. Détermine l'action à effectuer
-3. Prépare les paramètres nécessaires
-4. Retourne une réponse structurée avec l'action à effectuer
-
-Format de réponse pour une action d'intégration :
-{{
-    "message": "Votre message à l'utilisateur",
-    "integration_action": {{
-        "integration": "nom_integration",
-        "method": "nom_methode",
-        "params": {{
-            "param1": "valeur1"
-        }}
-    }}
-}}""".format(
-            integrations=", ".join(context['available_integrations']),
-            chat_history=format_chat_history(context.get('chat_history', []))
-        )
-
-        # Construire les messages pour l'API
+        client = OpenAI(api_key=settings.OPENAI_API_KEY)
+        
+        # Créer le contexte du chat
         messages = [
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": prompt}
+            {"role": "system", "content": get_system_prompt()},
+            {"role": "user", "content": message}
         ]
-
-        # Appeler l'API OpenAI
-        client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+        
+        # Appeler OpenAI avec les fonctions
         response = client.chat.completions.create(
             model="gpt-4",
             messages=messages,
-            temperature=0.7,
-            max_tokens=1000
+            functions=get_function_definitions(),
+            function_call="auto"
         )
-
-        # Extraire la réponse
-        assistant_message = response.choices[0].message.content
-        logger.info(f"Réponse OpenAI: {assistant_message}")
-
-        try:
-            # Tenter de parser la réponse comme JSON
-            parsed_response = json.loads(assistant_message)
-            return parsed_response
-        except json.JSONDecodeError:
-            logger.warning(f"Impossible de parser la réponse JSON: {assistant_message}")
-            # Si ce n'est pas du JSON, retourner un format standard
+        
+        # Récupérer la réponse de l'assistant
+        assistant_message = response.choices[0].message
+        
+        # Si l'assistant veut appeler une fonction
+        if hasattr(assistant_message, 'function_call') and assistant_message.function_call:
             return {
-                "message": assistant_message
+                "response": assistant_message.content,
+                "function_call": {
+                    "name": assistant_message.function_call.name,
+                    "arguments": json.loads(assistant_message.function_call.arguments)
+                }
             }
-
+        
+        # Sinon, retourner juste la réponse
+        return {
+            "response": assistant_message.content
+        }
+        
     except Exception as e:
         logger.error(f"Erreur lors de l'appel à OpenAI: {str(e)}")
-        return {
-            "message": "Désolé, une erreur est survenue lors du traitement de votre demande."
-        } 
+        raise
+
+def get_system_prompt():
+    return """Tu es ALYA, un assistant intelligent qui aide à gérer les contacts et les compagnies dans HubSpot.
+    
+    Tu peux :
+    1. Créer des contacts (email et prénom obligatoires)
+    2. Créer des compagnies (nom obligatoire)
+    
+    Pour créer un contact : "créer contact email=test@test.com nom=test"
+    Pour créer une compagnie : "créer compagnie nom=WorldPos domain=worldpos.com industry=Technology"
+    
+    Demande toujours les informations manquantes avant d'exécuter une action.
+    """
+
+def get_function_definitions():
+    return [{
+        "name": "execute_hubspot_action",
+        "description": "Exécute une action dans HubSpot",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": ["create_contact", "create_company"],
+                    "description": "Type d'action à effectuer"
+                },
+                "params": {
+                    "type": "object",
+                    "properties": {
+                        "email": {
+                            "type": "string",
+                            "description": "Email du contact"
+                        },
+                        "firstname": {
+                            "type": "string",
+                            "description": "Prénom du contact"
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "Nom de la compagnie"
+                        },
+                        "domain": {
+                            "type": "string",
+                            "description": "Domaine de la compagnie"
+                        },
+                        "industry": {
+                            "type": "string",
+                            "description": "Secteur d'activité"
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "Description de la compagnie"
+                        },
+                        "employees": {
+                            "type": "string",
+                            "description": "Nombre d'employés"
+                        },
+                        "website": {
+                            "type": "string",
+                            "description": "Site web de la compagnie"
+                        }
+                    },
+                    "required": ["name"]  # Seul le nom est obligatoire pour la compagnie
+                }
+            },
+            "required": ["action", "params"]
+        }
+    }] 

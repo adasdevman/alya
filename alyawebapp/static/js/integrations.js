@@ -1,3 +1,68 @@
+// Fonction pour récupérer le token CSRF (à l'extérieur de DOMContentLoaded)
+function getCsrfToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
+// Fonction pour gérer l'intégration HubSpot
+function toggleHubspotIntegration(button, event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const integrationId = button.dataset.integrationId;
+    const buttonText = button.querySelector('.button-text');
+    const isEnabled = button.classList.contains('btn-dark');
+
+    // Vérifier d'abord si l'intégration est déjà activée
+    fetch('/get-integrations-state/')
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const integration = data.integrations.find(i => i.id === parseInt(integrationId));
+            
+            if (integration && integration.enabled) {
+                // Si déjà activée, rediriger directement vers OAuth
+                window.location.href = '/integrations/hubspot/oauth/';
+            } else {
+                // Sinon, activer l'intégration puis rediriger
+                return fetch('/toggle-integration/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify({
+                        integration_id: integrationId,
+                        enabled: true
+                    })
+                });
+            }
+        }
+    })
+    .then(response => {
+        if (response && !response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        if (response) return response.json();
+    })
+    .then(data => {
+        if (data && data.status === 'success') {
+            // Changer l'apparence du bouton
+            button.classList.remove('btn-outline-dark');
+            button.classList.add('btn-dark');
+            buttonText.textContent = 'Connecter';
+            
+            // Rediriger vers OAuth
+            setTimeout(() => {
+                window.location.href = '/integrations/hubspot/oauth/';
+            }, 500);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Erreur lors de l\'ajout de l\'intégration');
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     let currentIntegrationId = null;
 
@@ -201,91 +266,76 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Event listener pour les boutons de configuration
-    const configButtons = document.querySelectorAll('.config-integration');
-    configButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault(); // Empêcher le comportement par défaut
-            e.stopPropagation(); // Empêcher la propagation de l'événement
-            const integrationId = this.dataset.integrationId;
-            openConfigModal(integrationId);
+    // Gérer les clics sur les boutons de configuration
+    document.querySelectorAll('.config-integration').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const integrationId = this.getAttribute('data-integration-id');
+            const switchEl = document.querySelector(`input[data-integration-id="${integrationId}"]`);
+            
+            if (!switchEl || !switchEl.checked) {
+                e.preventDefault();
+                alert('Veuillez d\'abord activer l\'intégration avant de la configurer.');
+                return;
+            }
         });
     });
 
-    // Fonction pour récupérer le cookie CSRF
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    // Gestionnaire d'événements pour les switches d'intégration
-    document.querySelectorAll('.integration-switch').forEach(switchElement => {
-        switchElement.addEventListener('change', async function() {
-            const integrationId = this.dataset.integrationId;
-            const enabled = this.checked;
+    // Gérer les switches d'intégration
+    document.querySelectorAll('.integration-switch').forEach(switchEl => {
+        switchEl.addEventListener('change', function() {
+            const integrationId = this.getAttribute('data-integration-id');
             
-            try {
-                const response = await fetch('/toggle-integration/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: JSON.stringify({
-                        integration_id: integrationId,
-                        enabled: enabled
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (data.status === 'warning') {
-                    // Si une configuration est requise, ouvrir le modal de configuration
-                    openConfigModal(integrationId);
-                    showNotification(data.message, 'warning');
-                } else if (data.status === 'success') {
-                    showNotification(data.message, 'success');
-                } else {
-                    throw new Error(data.message || 'Une erreur est survenue');
+            fetch('/toggle-integration/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({
+                    integration_id: integrationId,
+                    enabled: this.checked
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.status === 'success') {
+                    this.checked = !this.checked;
+                    console.error('Erreur lors de la mise à jour:', data.message);
                 }
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Erreur:', error);
-                this.checked = !enabled; // Remettre le switch dans son état précédent
-                showNotification(error.message, 'danger');
-            }
+                this.checked = !this.checked;
+            });
         });
     });
 
     // Charger l'état initial des intégrations
-    async function loadIntegrationsState() {
-        try {
-            const response = await fetch('/get-integrations-state/');
-            const data = await response.json();
-            
+    function loadIntegrationsState() {
+        fetch('/get-integrations-state/')
+        .then(response => response.json())
+        .then(data => {
             if (data.status === 'success') {
                 data.integrations.forEach(integration => {
-                    const switchEl = document.querySelector(`.integration-switch[data-integration-id="${integration.id}"]`);
-                    if (switchEl) {
+                    const switchEl = document.querySelector(`#switch-${integration.id}`);
+                    const configBtn = document.querySelector(`#config-btn-${integration.id}`);
+                    console.log('Loading state for integration:', integration.id, integration.enabled); // Debug
+                    if (switchEl && configBtn) {
                         switchEl.checked = integration.enabled;
+                        configBtn.disabled = !integration.enabled;
+                        console.log('Elements found and updated'); // Debug
                     }
                 });
             }
-        } catch (error) {
-            console.error('Erreur lors du chargement des états:', error);
-            showNotification('Erreur lors du chargement des états', 'error');
-        }
+        })
+        .catch(error => console.error('Erreur lors de l\'initialisation des switches:', error));
     }
 
-    // Charger l'état initial
+    // Charger l'état initial au chargement de la page
     loadIntegrationsState();
+
+    // Fonction pour démarrer l'OAuth HubSpot
+    function startHubspotOAuth(button) {
+        window.location.href = '/integrations/hubspot/oauth/';
+    }
 }); 

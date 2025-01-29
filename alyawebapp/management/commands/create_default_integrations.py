@@ -18,7 +18,7 @@ class Command(BaseCommand):
             ],
             'CRM': [
                 {'name': 'Salesforce', 'icon_class': 'fas fa-cloud', 'description': 'Gestion de la relation client'},
-                {'name': 'HubSpot', 'icon_class': 'fas fa-h-square', 'description': 'Marketing et ventes'},
+                {'name': 'HubSpot CRM', 'icon_class': 'fab fa-hubspot', 'description': 'Gérez vos contacts et vos ventes'},
                 {'name': 'Pipedrive', 'icon_class': 'fas fa-funnel-dollar', 'description': 'Pipeline commercial'}
             ]
         }
@@ -37,4 +37,6 @@ class Command(BaseCommand):
                     )
                 self.stdout.write(
                     self.style.SUCCESS(f'Intégrations créées pour {domain_name}')
-                ) 
+                )
+
+        self.stdout.write(self.style.SUCCESS('Intégrations créées avec succès')) 

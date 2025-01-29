@@ -22,6 +22,9 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-light">
+    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3">
+        <!-- Les notifications seront injectées ici -->
+    </div>
     {% include 'alyawebapp/navbar.html' %}
     
     {% if messages %}

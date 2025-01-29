@@ -2,29 +2,36 @@
 <div class="modal fade" id="integrationsModal" tabindex="-1" aria-labelledby="integrationsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="integrationsModalLabel">Gérer les intégrations</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="integrationsModalLabel">Intégrations disponibles</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="integrations-list">
+                <div class="row g-3">
                     {% for integration in integrations %}
-                    <div class="integration-item d-flex align-items-center p-3 border-bottom">
-                        <div class="flex-grow-1">
-                            <h6 class="mb-1">{{ integration.name }}</h6>
-                            <p class="text-muted small mb-0">{{ integration.description }}</p>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">
+                                            <i class="{{ integration.icon_class }} me-2"></i>
+                                            {{ integration.name }}
+                                        </h5>
+                                        <p class="card-text small text-muted">{{ integration.description }}</p>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-dark mt-2 config-integration"
+                                        data-integration-id="{{ integration.id }}"
+                                        id="config-btn-{{ integration.id }}">
+                                    <i class="fas fa-cog me-1"></i>
+                                    Configurer
+                                </button>
+                            </div>
                         </div>
-                        <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="{{ integration.id }}"
-                                data-integration-name="{{ integration.name }}">
-                            <i class="fas fa-cog"></i> Configurer
-                        </button>
                     </div>
                     {% endfor %}
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
             </div>
         </div>
     </div>

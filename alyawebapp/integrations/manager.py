@@ -5,6 +5,7 @@ from .marketing.mailchimp import MailchimpIntegration
 from .marketing.brevo import BrevoIntegration
 from .crm.salesforce import SalesforceIntegration
 from .crm.hubspot import HubspotIntegration
+from .hubspot.manager import HubSpotManager
 from .rh.bamboohr import BambooHRIntegration
 from .rh.workday import WorkdayIntegration
 from .finance.stripe import StripeIntegration
@@ -17,7 +18,13 @@ from .logistic.shipstation import ShipStationIntegration
 from .legal.clio import ClioIntegration
 from .legal.docusign import DocuSignIntegration
 from .legal.lexisnexis import LexisNexisIntegration
-# ... autres imports
+from ..models import Integration, UserIntegration
+from .hubspot.handler import HubSpotHandler
+from django.conf import settings
+import logging
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 class IntegrationManager:
     INTEGRATION_CLASSES = {
@@ -27,7 +34,7 @@ class IntegrationManager:
         'Mailchimp': MailchimpIntegration,
         'Brevo': BrevoIntegration,
         'Salesforce': SalesforceIntegration,
-        'HubSpot': HubspotIntegration,
+        'HubSpot': HubSpotHandler,
         'BambooHR': BambooHRIntegration,
         'Workday': WorkdayIntegration,
         'Stripe': StripeIntegration,
@@ -63,11 +70,6 @@ class IntegrationManager:
         """
         Récupère la liste des intégrations disponibles pour un utilisateur.
         """
-        from ..models import UserIntegration, Integration
-        import logging
-
-        logger = logging.getLogger(__name__)
-        
         # Récupérer les intégrations activées pour l'utilisateur
         user_integrations = UserIntegration.objects.filter(
             user_id=user_id,
@@ -85,3 +87,30 @@ class IntegrationManager:
                 continue
         
         return available_integrations
+
+    @classmethod
+    def execute_integration_action(cls, user, integration_name, method_name, params):
+        """
+        Exécute une action d'intégration pour un utilisateur donné
+        """
+        try:
+            # Récupérer l'intégration
+            integration = Integration.objects.get(
+                name__iexact=integration_name
+            )
+            
+            # Vérifier que l'utilisateur a activé cette intégration
+            user_integration = UserIntegration.objects.get(
+                user=user,
+                integration=integration,
+                enabled=True
+            )
+
+            # Récupérer le gestionnaire approprié
+            if integration_name.lower() == 'hubspot crm':
+                return HubSpotManager.execute_action(user_integration, method_name, params)
+            # ... autres gestionnaires ...
+
+        except Integration.DoesNotExist:
+            logger.error(f"Integration {integration_name} non trouvée")
+            raise

@@ -10,7 +10,8 @@ from .models import (
     Interaction,
     UserDomain,
     Integration,
-    UserIntegration
+    UserIntegration,
+    Chat
 )
 
 # Changer le titre de l'administration
@@ -38,27 +39,24 @@ admin.site.register(UserDomain)
 class IntegrationAdmin(admin.ModelAdmin):
     list_display = ('name', 'domain', 'icon_class')
     list_filter = ('domain',)
-    search_fields = ('name', 'domain__name')
+    search_fields = ('name', 'description')
     ordering = ('domain', 'name')
 
 @admin.register(UserIntegration)
 class UserIntegrationAdmin(admin.ModelAdmin):
-    list_display = ('user', 'integration', 'enabled')
-    list_filter = ('enabled', 'integration__domain')
-    search_fields = ('user__email', 'integration__name')
-    raw_id_fields = ('user', 'integration')
-    ordering = ('integration__name',)
-
-    def get_config_display(self, obj):
-        return obj.config
-    get_config_display.short_description = 'Configuration'
-
+    list_display = ('user', 'integration', 'enabled', 'access_token', 'token_expires_at', 'created_at', 'updated_at')
+    list_filter = ('enabled', 'integration', 'created_at')
+    search_fields = ('user__username', 'integration__name')
+    readonly_fields = ('created_at', 'updated_at')
     fieldsets = (
         (None, {
-            'fields': ('user', 'integration', 'enabled')
+            'fields': ('user', 'integration', 'enabled', 'config')
         }),
-        ('Configuration', {
-            'fields': ('config',),
+        ('OAuth Information', {
+            'fields': ('access_token', 'refresh_token', 'token_expires_at')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         })
     )

@@ -10,43 +10,62 @@
             </div>
             <div class="modal-body">
                 <div class="integrations-list">
+                    <!-- HubSpot CRM -->
                     <div class="integration-item">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="35">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="8"
+                                   id="switch-8">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">HubSpot CRM</h6>
+                            <p class="integration-description">Gérez vos contacts et vos ventes</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="8"
+                                id="config-btn-8"
+                                data-integration-type="oauth">
+                            <i class="fab fa-hubspot"></i> Connecter
+                        </button>
+                    </div>
+
+                    <!-- Salesforce -->
+                    <div class="integration-item">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="7"
+                                   id="switch-7">
                         </div>
                         <div class="integration-content">
                             <h6 class="integration-title">Salesforce</h6>
-                            <p class="integration-description">Gestion de la relation client</p>
+                            <p class="integration-description">Solution CRM complète</p>
                         </div>
                         <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="35">
-                            <i class="fas fa-cloud"></i> Configurer
+                                data-integration-id="7"
+                                id="config-btn-7">
+                            <i class="fab fa-salesforce"></i> Connecter
                         </button>
                     </div>
+
+                    <!-- Zoho CRM -->
                     <div class="integration-item">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="36">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="9"
+                                   data-integration-name="zoho crm"
+                                   id="switch-9">
                         </div>
                         <div class="integration-content">
-                            <h6 class="integration-title">HubSpot</h6>
-                            <p class="integration-description">CRM et marketing automation</p>
+                            <h6 class="integration-title">Zoho CRM</h6>
+                            <p class="integration-description">Solution CRM flexible</p>
                         </div>
                         <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="36">
-                            <i class="fas fa-h-square"></i> Configurer
-                        </button>
-                    </div>
-                    <div class="integration-item">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input integration-switch" data-integration-id="37">
-                        </div>
-                        <div class="integration-content">
-                            <h6 class="integration-title">Pipedrive</h6>
-                            <p class="integration-description">CRM pour équipes commerciales</p>
-                        </div>
-                        <button class="btn btn-outline-dark btn-sm config-integration" 
-                                data-integration-id="37">
-                            <i class="fas fa-funnel-dollar"></i> Configurer
+                                data-integration-id="9"
+                                id="config-btn-9">
+                            <i class="fas fa-building"></i> Connecter
                         </button>
                     </div>
                 </div>
