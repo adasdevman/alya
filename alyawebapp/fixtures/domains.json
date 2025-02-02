@@ -1,0 +1,74 @@
+[
+    {
+        "model": "alyawebapp.domain",
+        "pk": 1,
+        "fields": {
+            "name": "RH",
+            "icon": "fas fa-users"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 2,
+        "fields": {
+            "name": "Marketing",
+            "icon": "fas fa-bullhorn"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 3,
+        "fields": {
+            "name": "CRM",
+            "icon": "fas fa-address-book"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 4,
+        "fields": {
+            "name": "Finance",
+            "icon": "fas fa-chart-line"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 5,
+        "fields": {
+            "name": "Analytics",
+            "icon": "fas fa-chart-bar"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 6,
+        "fields": {
+            "name": "Support",
+            "icon": "fas fa-headset"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 7,
+        "fields": {
+            "name": "Legal",
+            "icon": "fas fa-balance-scale"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 8,
+        "fields": {
+            "name": "Logistique",
+            "icon": "fas fa-truck-moving"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 9,
+        "fields": {
+            "name": "Projet",
+            "icon": "fas fa-tasks"
+        }
+    }
+] 

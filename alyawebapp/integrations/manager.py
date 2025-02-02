@@ -1,4 +1,4 @@
-from .analytics.amplitude import AmplitudeIntegration
+# from .analytics.amplitude import AmplitudeIntegration
 from .analytics.google_analytics import GoogleAnalyticsIntegration
 from .analytics.mixpanel import MixpanelIntegration
 from .marketing.mailchimp import MailchimpIntegration
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 class IntegrationManager:
     INTEGRATION_CLASSES = {
-        'Amplitude': AmplitudeIntegration,
+        # 'Amplitude': AmplitudeIntegration,  # Commenté temporairement
         'Google Analytics': GoogleAnalyticsIntegration,
         'Mixpanel': MixpanelIntegration,
         'Mailchimp': MailchimpIntegration,

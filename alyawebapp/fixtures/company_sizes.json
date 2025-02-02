@@ -1,0 +1,42 @@
+[
+    {
+        "model": "alyawebapp.companysize",
+        "pk": 1,
+        "fields": {
+            "label": "1-10 employés",
+            "value": "XS"
+        }
+    },
+    {
+        "model": "alyawebapp.companysize",
+        "pk": 2,
+        "fields": {
+            "label": "11-50 employés",
+            "value": "S"
+        }
+    },
+    {
+        "model": "alyawebapp.companysize",
+        "pk": 3,
+        "fields": {
+            "label": "51-200 employés",
+            "value": "M"
+        }
+    },
+    {
+        "model": "alyawebapp.companysize",
+        "pk": 4,
+        "fields": {
+            "label": "201-1000 employés",
+            "value": "L"
+        }
+    },
+    {
+        "model": "alyawebapp.companysize",
+        "pk": 5,
+        "fields": {
+            "label": "1000+ employés",
+            "value": "XL"
+        }
+    }
+] 

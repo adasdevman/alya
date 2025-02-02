@@ -121,32 +121,28 @@
 
         <!-- Section principale : Chat -->
         <div class="col-md-6">
-            <div class="card h-100 d-flex flex-column">
-                <div class="card-header bg-dark text-white">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-dark">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <i class="fa-solid fa-robot me-2"></i>
-                            <h6 class="mb-0">Chat avec ALYA</h6>
-                            </div>
-                            <button id="new-chat" class="btn btn-outline-light btn-sm">
-                                <i class="fa-solid fa-plus"></i> Nouveau chat
+                        <h6 class="mb-0 text-white">Chat avec ALYA</h6>
+                        <button class="btn btn-link text-white p-0" id="new-chat">
+                            <i class="fa-solid fa-plus"></i>
                             </button>
                         </div>
                     </div>
-                <div class="card-body p-0 d-flex flex-column" style="height: calc(100vh - 200px); overflow: hidden;">
-                    <div class="messages-wrapper flex-grow-1" id="chatMessages">
-                        <!-- Les messages seront ajoutés ici -->
+                <div class="card-body p-0 d-flex flex-column">
+                    <div class="messages-wrapper">
+                        <div id="chatMessages" class="chat-messages">
+                            <!-- Les messages s'afficheront ici -->
+                        </div>
                     </div>
                     <div class="chat-input-wrapper">
-                        <form id="chat-form" class="chat-form">
-                            {% csrf_token %}
+                        <form class="chat-form">
                             <div class="input-group">
                                 <input type="text" 
-                                    id="messageInput" 
+                                       id="chat-input" 
                                        class="form-control" 
-                                    placeholder="Tapez votre message..."
-                                       autocomplete="off"
-                                       required>
+                                       placeholder="Tapez votre message...">
                                 <button type="submit" class="btn btn-dark">
                                     <i class="fas fa-paper-plane"></i>
                                 </button>
@@ -159,8 +155,7 @@
 
         <!-- Colonne de droite : Historique -->
         <div class="col-md-3">
-            <!-- Historique des chats -->
-            <div class="card shadow-sm mb-4">
+            <div class="card shadow-sm h-100">
                 <div class="card-header bg-dark">
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="mb-0 text-white">Historique des chats</h6>
@@ -171,11 +166,7 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="history-list">
-                        <!-- Les conversations seront ajoutées dynamiquement ici -->
-                        <div class="text-muted small text-center py-3">
-                            <i class="fa-solid fa-message"></i>
-                            Aucune conversation
-                        </div>
+                        <!-- L'historique des conversations s'affichera ici -->
                     </div>
                 </div>
             </div>
@@ -203,8 +194,354 @@
 {% endblock %}
 
 {% block extra_scripts %}
-    <script src="{% static 'js/compte/integrations.js' %}"></script>
-    <style>
+<!-- Configurations -->
+<script type="text/javascript">
+    if (typeof window.INTEGRATION_CONFIGS === 'undefined') {
+        window.INTEGRATION_CONFIGS = JSON.parse(document.getElementById('integration-configs-data').textContent);
+    }
+</script>
+
+<script id="integration-configs-data" type="application/json">
+    {{ integration_configs_data|json_script:"integration-configs-data" }}
+</script>
+
+<!-- Scripts pour la gestion des formulaires -->
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    // Fonction utilitaire pour obtenir le token CSRF
+    function getCsrfToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]').value;
+    }
+
+    // Fonction utilitaire pour les requêtes fetch
+    function sendFormData(url, formData) {
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken()
+            },
+            body: formData
+        });
+    }
+
+    // Fonction pour ajouter un message dans le chat
+    function appendMessage(role, content) {
+        const messagesContainer = document.querySelector('.chat-messages');
+        if (messagesContainer) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            messageDiv.textContent = content;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    }
+
+    // Afficher le message de bienvenue initial
+    appendMessage('assistant', 'Bonjour! Je suis ALYA, votre assistant personnel. Comment puis-je vous aider aujourd\'hui?');
+
+    // Gestion du formulaire des domaines
+    const editDomainsForm = document.getElementById('editDomainsForm');
+    if (editDomainsForm) {
+        editDomainsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            sendFormData('/update-domains/', formData)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editDomainsModal'));
+                        if (modal) modal.hide();
+                        window.location.href = '/compte/';  // Redirection sans paramètres
+                    } else {
+                        alert('Erreur: ' + (data.message || 'Une erreur est survenue'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Erreur lors de la mise à jour des domaines');
+                });
+        });
+    }
+
+    // Gestion du formulaire des objectifs
+    const editObjectifsForm = document.getElementById('editObjectifsForm');
+    if (editObjectifsForm) {
+        editObjectifsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            sendFormData('/update-objectifs/', formData)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editObjectifsModal'));
+                        if (modal) modal.hide();
+                        window.location.href = '/compte/';  // Redirection sans paramètres
+                    } else {
+                        alert('Erreur: ' + (data.message || 'Une erreur est survenue'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Erreur lors de la mise à jour des objectifs');
+                });
+        });
+    }
+
+    // Gestion du formulaire de profil
+    const editProfileForm = document.getElementById('editProfileForm');
+    if (editProfileForm) {
+        editProfileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            sendFormData('/update-profile/', formData)
+                .then(response => {
+                    if (response.ok) {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
+                        if (modal) modal.hide();
+                        window.location.href = '/compte/';  // Redirection sans paramètres
+                    } else {
+                        throw new Error('Erreur lors de la mise à jour du profil');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Erreur lors de la mise à jour du profil');
+                });
+        });
+    }
+
+    // Gestion du formulaire de taille d'entreprise
+    const editTailleForm = document.getElementById('editTailleForm');
+    if (editTailleForm) {
+        editTailleForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            sendFormData('/update-company-size/', formData)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editTailleModal'));
+                        if (modal) modal.hide();
+                        window.location.href = '/compte/';
+                    } else {
+                        alert('Erreur: ' + (data.message || 'Une erreur est survenue'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Erreur lors de la mise à jour de la taille de l\'entreprise');
+                });
+        });
+    }
+
+    // Variable pour stocker l'ID du chat actuel
+    let currentChatId = null;
+
+    // Fonction pour faire défiler jusqu'au dernier message
+    function scrollToBottom() {
+        const messagesWrapper = document.querySelector('.messages-wrapper');
+        if (messagesWrapper) {
+            messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
+        }
+    }
+
+    // Fonction pour afficher l'animation de typing
+    function showTypingIndicator() {
+        const chatMessages = document.getElementById('chatMessages');
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message assistant loading';
+        typingDiv.innerHTML = `
+            <div class="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        `;
+        chatMessages.appendChild(typingDiv);
+        scrollToBottom();
+        return typingDiv;
+    }
+
+    // Fonction pour charger une conversation
+    function loadConversation(chatId) {
+        if (!chatId) return;
+        
+        currentChatId = chatId;
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.innerHTML = '';
+        
+        const typingIndicator = showTypingIndicator();
+        
+        fetch(`/get-conversation/${chatId}/`)
+            .then(response => response.json())
+            .then(data => {
+                typingIndicator.remove();
+                if (data.status === 'success') {
+                    data.messages.forEach(message => {
+                        appendMessage(message.is_user ? 'user' : 'assistant', message.content);
+                    });
+                    scrollToBottom();
+                }
+            })
+            .catch(error => {
+                typingIndicator.remove();
+                console.error('Erreur lors du chargement de la conversation:', error);
+                scrollToBottom();
+            });
+    }
+
+    // Gestion de la soumission du chat
+    const chatForm = document.querySelector('.chat-form');
+    const chatInput = document.getElementById('chat-input');
+
+    if (chatForm && chatInput) {
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = chatInput.value.trim();
+            if (message) {
+                appendMessage('user', message);
+                chatInput.value = '';
+                scrollToBottom();
+
+                const typingIndicator = showTypingIndicator();
+
+                fetch('/chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        chat_id: currentChatId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    typingIndicator.remove();
+                    if (data.status === 'success') {
+                        currentChatId = data.chat_id;
+                        appendMessage('assistant', data.response);
+                        scrollToBottom();
+                        loadChatHistory();
+                    }
+                })
+                .catch(error => {
+                    typingIndicator.remove();
+                    console.error('Error:', error);
+                    appendMessage('system', 'Une erreur est survenue');
+                    scrollToBottom();
+                });
+            }
+        });
+    }
+
+    // Gestion du nouveau chat
+    const newChatBtn = document.getElementById('new-chat');
+    if (newChatBtn) {
+        newChatBtn.addEventListener('click', function() {
+            currentChatId = null;
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = '';
+            
+            // Ajouter le message de bienvenue
+            appendMessage('assistant', 'Bonjour ! Je suis ALYA, votre assistant. Comment puis-je vous aider aujourd\'hui ?');
+            scrollToBottom();
+            
+            loadChatHistory();
+        });
+    }
+
+    // Fonction pour charger l'historique des chats
+    function loadChatHistory() {
+        const historyList = document.querySelector('.history-list');
+        if (!historyList) return;
+
+        fetch('/get-chat-history/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.chats) {
+                    historyList.innerHTML = '';
+                    
+                    if (data.chats.length > 0) {
+                        data.chats.forEach(chat => {
+                            const chatItem = document.createElement('div');
+                            chatItem.className = 'p-2 border-bottom chat-history-item' + 
+                                (chat.id === currentChatId ? ' active' : '');
+                            chatItem.style.cursor = 'pointer';
+                            chatItem.dataset.chatId = chat.id;
+                            chatItem.innerHTML = `
+                                <div class="chat-preview">
+                                    <div class="text-truncate">
+                                        <small class="text-muted">${new Date(chat.created_at).toLocaleString()}</small>
+                                        <div class="text-truncate preview-text">${chat.preview}</div>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            chatItem.onclick = function() {
+                                document.querySelectorAll('.chat-history-item').forEach(item => {
+                                    item.classList.remove('active');
+                                });
+                                this.classList.add('active');
+                                loadConversation(chat.id);
+                            };
+                            
+                            historyList.appendChild(chatItem);
+                        });
+                    } else {
+                        historyList.innerHTML = `
+                            <div class="text-muted small text-center py-3">
+                                <i class="fa-solid fa-message"></i>
+                                Aucune conversation
+                            </div>
+                        `;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors du chargement de l\'historique:', error);
+            });
+    }
+
+    // Charger l'historique au chargement initial de la page
+    loadChatHistory();
+
+    // Gestion du bouton clear history
+    const clearHistoryBtn = document.getElementById('clearHistory');
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', function() {
+            if (confirm('Voulez-vous vraiment effacer tout l\'historique ?')) {
+                fetch('/clear-chat-history/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCsrfToken()
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        loadChatHistory();  // Recharger l'historique vide
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la suppression de l\'historique:', error);
+                });
+            }
+        });
+    }
+});
+</script>
+
+<!-- Autres scripts -->
+<script src="{% static 'js/compte/integrations.js' %}"></script>
+
+<!-- Vos styles existants -->
+<style>
     /* Animation de chargement */
     .loading {
         display: flex;
@@ -249,7 +586,35 @@
         }
     }
 
-    /* Styles existants du chat */
+    /* Structure du chat */
+    .card-body.p-0.d-flex.flex-column {
+        height: 100%;  /* Prendre toute la hauteur de la carte */
+        position: relative;  /* Pour le positionnement absolu de l'input */
+    }
+
+    .messages-wrapper {
+        flex: 1;  /* Prendre tout l'espace disponible */
+        overflow-y: auto;
+        background-color: white;
+        padding: 1rem;
+    }
+
+    .chat-messages {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-input-wrapper {
+        position: sticky;
+        bottom: 0;
+        width: 100%;
+        background: white;
+        padding: 1rem;
+        border-top: 1px solid #e0e0e0;
+        z-index: 10;
+    }
+
+    /* Messages */
     .message {
         margin-bottom: 1rem;
         padding: 0.75rem;
@@ -277,12 +642,7 @@
         font-style: italic;
     }
 
-    .messages-wrapper {
-        background-color: white;
-        overflow-y: auto;
-        padding: 1rem;
-    }
-
+    /* Scrollbar */
     .messages-wrapper::-webkit-scrollbar {
         width: 8px;
     }
@@ -300,275 +660,35 @@
         background: #555;
     }
 
-    .chat-messages {
-        display: flex;
-        flex-direction: column;
+    /* Styles pour l'historique des chats */
+    .chat-history-item {
+        cursor: pointer;
+        transition: background-color 0.2s ease;
     }
 
-    .chat-input-wrapper {
-        background: white;
-        padding: 1rem;
-        border-top: 1px solid #e0e0e0;
+    .chat-history-item:hover {
+        background-color: #f8f9fa;
     }
 
-    .chat-form {
+    .chat-history-item.active {
+        background-color: #e9ecef;
+    }
+
+    .chat-preview {
         width: 100%;
     }
 
-    /* Restaurer le bouton nouveau chat */
-    .message {
-        margin-bottom: 1rem;
-        padding: 0.75rem;
-        border-radius: 0.5rem;
-        max-width: 80%;
+    .preview-text {
+        color: #495057;
+        font-size: 0.9rem;
     }
 
-    .message.user {
-        background-color: #e9ecef;
-        margin-left: auto;
+    /* Empêcher la sélection de texte lors du clic */
+    .chat-history-item {
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
     }
-
-    .message.assistant {
-        background-color: #343541;
-        color: white;
-        margin-right: auto;
-    }
-    </style>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM chargé');
-        console.log('Form trouvé:', document.getElementById('chat-form'));
-        console.log('Input trouvé:', document.getElementById('messageInput'));
-        console.log('Messages div trouvé:', document.getElementById('chatMessages'));
-        
-        // Afficher le message de bienvenue initial
-        if (!currentChatId) {
-            appendMessage('assistant', 'Bonjour! Je suis ALYA, votre assistant personnel. Comment puis-je vous aider aujourd\'hui?');
-        }
-        
-        // Charger l'historique initial
-        loadChatHistory();
-        
-        // Gérer le bouton nouveau chat
-        const newChatBtn = document.getElementById('new-chat');
-        if (newChatBtn) {
-            newChatBtn.addEventListener('click', function() {
-                console.log('Nouveau chat demandé');
-                handleNewChat();
-            });
-        }
-        
-        // Gérer le bouton clear history
-        const clearHistoryBtn = document.getElementById('clearHistory');
-        if (clearHistoryBtn) {
-            clearHistoryBtn.addEventListener('click', function() {
-                console.log('Nettoyage historique demandé');
-                clearHistory();
-            });
-        }
-        
-        // Attacher l'événement submit au formulaire
-        const form = document.getElementById('chat-form');
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                console.log('Formulaire soumis');
-                sendMessage();
-            });
-        }
-    });
-
-    let currentChatId = null;
-
-    function handleNewChat() {
-        const messagesDiv = document.getElementById('chatMessages');
-        messagesDiv.innerHTML = '';
-        currentChatId = null;
-        appendMessage('assistant', 'Bonjour! Je suis ALYA, votre assistant personnel. Comment puis-je vous aider aujourd\'hui?');
-    }
-
-    function loadChatHistory() {
-        console.log('Chargement de l\'historique');
-        fetch('/chat-history/')
-            .then(response => response.json())
-            .then(data => {
-                console.log('Historique reçu:', data);
-                const historyList = document.querySelector('.history-list');
-                if (historyList) {
-                    historyList.innerHTML = '';
-                    if (data.chats && data.chats.length > 0) {
-                        data.chats.forEach(chat => {
-                            const chatElement = createHistoryItem(chat);
-                            historyList.appendChild(chatElement);
-                        });
-                    } else {
-                        historyList.innerHTML = `
-                            <div class="text-muted small text-center py-3">
-                                <i class="fa-solid fa-message"></i>
-                                Aucune conversation
-                            </div>`;
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Erreur chargement historique:', error);
-            });
-    }
-
-    function createHistoryItem(chat) {
-        const div = document.createElement('div');
-        div.className = 'chat-history-item p-3 border-bottom';
-        const date = new Date(chat.created_at);
-        div.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="chat-preview">
-                    <div class="chat-date small text-muted">
-                        ${date.toLocaleDateString()} à ${date.toLocaleTimeString()}
-                    </div>
-                    <div class="chat-text">${chat.preview}</div>
-                </div>
-                <button class="btn btn-link text-dark p-0">
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </div>`;
-
-        div.querySelector('button').addEventListener('click', () => loadConversation(chat.id));
-        return div;
-    }
-
-    function loadConversation(chatId) {
-        console.log('Chargement conversation:', chatId);
-        fetch(`/get-conversation/${chatId}/`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const messagesDiv = document.getElementById('chatMessages');
-                    messagesDiv.innerHTML = '';
-                    data.messages.forEach(msg => {
-                        appendMessage(msg.is_user ? 'user' : 'assistant', msg.content);
-                    });
-                    currentChatId = chatId;
-                }
-            })
-            .catch(error => {
-                console.error('Erreur chargement conversation:', error);
-                appendMessage('system', 'Erreur lors du chargement de la conversation');
-            });
-    }
-
-    function clearHistory() {
-        if (confirm('Voulez-vous vraiment effacer tout l\'historique des conversations ?')) {
-            // Implémenter la suppression de l'historique ici
-            handleNewChat();
-            loadChatHistory();
-        }
-    }
-
-    function sendMessage() {
-        console.log('Fonction sendMessage appelée');
-        const input = document.getElementById('messageInput');
-        const message = input.value;
-        console.log('Message à envoyer:', message);
-        if (!message) return;
-
-        // Afficher le message de l'utilisateur
-        appendMessage('user', message);
-        input.value = '';
-
-        // Ajouter l'animation de chargement
-        const loadingDiv = document.createElement('div');
-        loadingDiv.className = 'message assistant loading';
-        loadingDiv.innerHTML = `
-            <div class="typing-indicator">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        `;
-        document.getElementById('chatMessages').appendChild(loadingDiv);
-
-        // Envoyer au serveur
-        console.log('Envoi de la requête au serveur');
-        fetch('/chat/message/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken()
-            },
-            body: JSON.stringify({ 
-                message: message,
-                chat_id: currentChatId,
-                integration_context: {
-                    hubspot: {
-                        enabled: true,
-                        action: 'create_contact'
-                    }
-                }
-            })
-        })
-        .then(response => {
-            console.log('Réponse reçue:', response.status);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Données reçues:', data);
-            // Supprimer l'animation de chargement
-            const loadingElement = document.querySelector('.loading');
-            if (loadingElement) {
-                loadingElement.remove();
-            }
-            appendMessage('assistant', data.response);
-            if (data.chat_id) {
-                currentChatId = data.chat_id;
-                loadChatHistory();
-            }
-            if (data.action_result) {
-                let actionMessage = 'Action HubSpot : ';
-                if (data.action_result.success) {
-                    actionMessage += `Contact créé avec succès (ID: ${data.action_result.contact_id})`;
-                } else {
-                    actionMessage += `Erreur: ${data.action_result.error}`;
-                }
-                appendMessage('system', actionMessage);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            console.log('Stack trace:', error.stack);
-            // Supprimer l'animation de chargement en cas d'erreur
-            const loadingElement = document.querySelector('.loading');
-            if (loadingElement) {
-                loadingElement.remove();
-            }
-            appendMessage('system', `Erreur: ${error.message || 'Une erreur est survenue lors de la communication avec le serveur'}`);
-        });
-    }
-
-    function appendMessage(role, content) {
-        console.log('Ajout message:', role, content);
-        const messagesDiv = document.getElementById('chatMessages');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${role}`;
-        messageDiv.textContent = content;
-        messagesDiv.appendChild(messageDiv);
-        // Scroll vers le bas avec une petite animation
-        const messagesWrapper = document.querySelector('.messages-wrapper');
-        if (messagesWrapper) {
-            messagesWrapper.scrollTo({
-                top: messagesWrapper.scrollHeight,
-                behavior: 'smooth'
-            });
-        }
-    }
-
-    function getCsrfToken() {
-        const token = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        console.log('CSRF Token trouvé:', token ? 'Oui' : 'Non');
-        return token;
-    }
-    </script>
+</style>
 {% endblock %} 

@@ -1,14 +1,14 @@
 from pathlib import Path
 import os
-import environ
+from dotenv import load_dotenv
 import logging
+import dj_database_url
 
 # Initialize logger
 logger = logging.getLogger(__name__)
 
-# Initialize environment variables
-env = environ.Env()
-environ.Env.read_env()  # This reads the .env file
+# Load environment variables
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,12 +17,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('DJANGO_SECRET_KEY', default='django-insecure-8$5$hs$_hs$_hs$_hs$_hs$_hs$_hs$_hs$_hs$_hs$_hs$')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-8$5$hs$_hs$_hs$_hs$_hs$_hs$_hs$_hs$_hs$_hs$_hs$_hs$')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=True)
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else []
+
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+}
 
 # Application definition
 
@@ -129,7 +133,7 @@ LOGIN_REDIRECT_URL = 'compte'
 LOGOUT_REDIRECT_URL = 'home'
 
 # OpenAI Configuration
-OPENAI_API_KEY = env('OPENAI_API_KEY')  # Load from .env file
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')  # Load from .env file
 
 ADMIN_STYLE = {
     'css': 'admin/css/custom_admin.css',

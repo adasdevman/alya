@@ -1,0 +1,154 @@
+[
+    {
+        "model": "alyawebapp.domain",
+        "pk": 1,
+        "fields": {
+            "name": "RH",
+            "icon": "fas fa-users"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 2,
+        "fields": {
+            "name": "Marketing",
+            "icon": "fas fa-bullhorn"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 3,
+        "fields": {
+            "name": "CRM",
+            "icon": "fas fa-address-book"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 4,
+        "fields": {
+            "name": "Finance",
+            "icon": "fas fa-chart-line"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 5,
+        "fields": {
+            "name": "Analytics",
+            "icon": "fas fa-chart-bar"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 6,
+        "fields": {
+            "name": "Support",
+            "icon": "fas fa-headset"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 7,
+        "fields": {
+            "name": "Legal",
+            "icon": "fas fa-balance-scale"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 8,
+        "fields": {
+            "name": "Logistique",
+            "icon": "fas fa-truck-moving"
+        }
+    },
+    {
+        "model": "alyawebapp.domain",
+        "pk": 9,
+        "fields": {
+            "name": "Projet",
+            "icon": "fas fa-tasks"
+        }
+    },
+    {
+        "model": "alyawebapp.businessobjective",
+        "pk": 1,
+        "fields": {
+            "name": "Augmenter les ventes",
+            "icon": "fas fa-chart-line"
+        }
+    },
+    {
+        "model": "alyawebapp.businessobjective",
+        "pk": 2,
+        "fields": {
+            "name": "Réduire les coûts",
+            "icon": "fas fa-piggy-bank"
+        }
+    },
+    {
+        "model": "alyawebapp.businessobjective",
+        "pk": 3,
+        "fields": {
+            "name": "Améliorer la satisfaction client",
+            "icon": "fas fa-smile"
+        }
+    },
+    {
+        "model": "alyawebapp.businessobjective",
+        "pk": 4,
+        "fields": {
+            "name": "Optimiser les processus",
+            "icon": "fas fa-cogs"
+        }
+    },
+    {
+        "model": "alyawebapp.businessobjective",
+        "pk": 5,
+        "fields": {
+            "name": "Développer la marque",
+            "icon": "fas fa-bullseye"
+        }
+    },
+    {
+        "model": "alyawebapp.companysize",
+        "pk": 1,
+        "fields": {
+            "label": "1-10 employés",
+            "value": "XS"
+        }
+    },
+    {
+        "model": "alyawebapp.companysize",
+        "pk": 2,
+        "fields": {
+            "label": "11-50 employés",
+            "value": "S"
+        }
+    },
+    {
+        "model": "alyawebapp.companysize",
+        "pk": 3,
+        "fields": {
+            "label": "51-200 employés",
+            "value": "M"
+        }
+    },
+    {
+        "model": "alyawebapp.companysize",
+        "pk": 4,
+        "fields": {
+            "label": "201-1000 employés",
+            "value": "L"
+        }
+    },
+    {
+        "model": "alyawebapp.companysize",
+        "pk": 5,
+        "fields": {
+            "label": "1000+ employés",
+            "value": "XL"
+        }
+    }
+] 

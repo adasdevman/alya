@@ -1,0 +1,35 @@
+<div class="modal fade" id="editDomainsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Modifier les domaines</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editDomainsForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="domains-grid">
+                        {% for domain in all_domains %}
+                        <div class="form-check mb-2">
+                            <input type="checkbox" 
+                                   class="form-check-input" 
+                                   name="domains" 
+                                   value="{{ domain.id }}"
+                                   id="domain_{{ domain.id }}"
+                                   {% if domain in user_domains %}checked{% endif %}>
+                            <label class="form-check-label" for="domain_{{ domain.id }}">
+                                <i class="{{ domain.icon }} me-2"></i>
+                                {{ domain.name }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 

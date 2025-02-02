@@ -41,6 +41,8 @@ from django.conf import settings
 import uuid
 from django.utils import timezone
 from django.urls import reverse
+from django.core.serializers.json import DjangoJSONEncoder
+from django.utils.safestring import mark_safe
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -124,14 +126,28 @@ def compte(request):
         profile, created = UserProfile.objects.get_or_create(user=request.user)
         
         # Récupérer les données
+        user_domains = profile.domains.all()
+        all_domains = Domain.objects.all()
+        user_objectifs = profile.business_objectives.all()
+        all_objectifs = BusinessObjective.objects.all()
+        company_sizes = CompanySize.objects.all()
+        integrations = Integration.objects.all()
+        
+        # Sérialiser les configurations
+        integration_configs_json = json.dumps(
+            INTEGRATION_CONFIGS,
+            cls=DjangoJSONEncoder,
+            ensure_ascii=False
+        )
+        
         context = {
-            'user_domains': profile.domains.all(),
-            'all_domains': Domain.objects.all(),
-            'user_objectifs': profile.business_objectives.all(),
-            'all_objectifs': BusinessObjective.objects.all(),
-            'company_sizes': CompanySize.objects.all(),
-            'integrations': Integration.objects.all(),
-            'integration_configs': json.dumps(INTEGRATION_CONFIGS)
+            'user_domains': user_domains,
+            'all_domains': all_domains,
+            'user_objectifs': user_objectifs,
+            'all_objectifs': all_objectifs,
+            'company_sizes': company_sizes,
+            'integrations': integrations,
+            'integration_configs_data': integration_configs_json
         }
         
         return render(request, 'alyawebapp/compte.html', context)
@@ -247,20 +263,23 @@ def chat(request):
     return render(request, 'alyawebapp/chat.html')
 
 @login_required
-def chat_history(request):
-    """Vue pour récupérer l'historique des chats"""
+def get_chat_history(request):
     try:
         # Récupérer tous les chats de l'utilisateur avec leur dernier message
         chats = Chat.objects.filter(user=request.user).order_by('-created_at')
         chat_list = []
         
         for chat in chats:
-            # Récupérer le dernier message de ce chat
-            last_message = ChatHistory.objects.filter(chat=chat).last()
-            if last_message:
+            # Récupérer le premier message utilisateur de ce chat
+            first_message = ChatHistory.objects.filter(
+                chat=chat,
+                is_user=True
+            ).first()
+            
+            if first_message:
                 chat_list.append({
                     'id': chat.id,
-                    'preview': last_message.content[:100] + '...' if len(last_message.content) > 100 else last_message.content,
+                    'preview': first_message.content[:100] + '...' if len(first_message.content) > 100 else first_message.content,
                     'created_at': chat.created_at.isoformat()
                 })
         
@@ -277,23 +296,17 @@ def chat_history(request):
 
 @login_required
 def get_conversation(request, chat_id):
-    """Vue pour récupérer une conversation spécifique"""
     try:
-        # Vérifier que le chat appartient à l'utilisateur
         chat = Chat.objects.get(id=chat_id, user=request.user)
-        
-        # Récupérer tous les messages de ce chat
         messages = ChatHistory.objects.filter(chat=chat).order_by('created_at')
-        
-        message_list = [{
-            'content': msg.content,
-            'is_user': msg.is_user,
-            'timestamp': msg.created_at.isoformat()
-        } for msg in messages]
         
         return JsonResponse({
             'status': 'success',
-            'messages': message_list
+            'messages': [{
+                'content': msg.content,
+                'is_user': msg.is_user,
+                'created_at': msg.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            } for msg in messages]
         })
     except Chat.DoesNotExist:
         return JsonResponse({
@@ -308,56 +321,23 @@ def get_conversation(request, chat_id):
         }, status=500)
 
 @login_required
-def get_chat_history(request):
-    try:
-        # Récupérer l'historique des conversations pour l'utilisateur connecté
-        recent_chats = ChatHistory.objects.filter(user=request.user).order_by('-created_at')[:10]
-        
-        conversations = []
-        for chat in recent_chats:
-            conversations.append({
-                'id': str(chat.id),  # Convertir en string pour le JSON
-                'created_at': chat.created_at.isoformat(),
-                'first_message': chat.prompt[:50],  # Limiter à 50 caractères
-                'messages': [
-                    {
-                        'content': chat.prompt,
-                        'is_user': True
-                    },
-                    {
-                        'content': chat.response,
-                        'is_user': False
-                    } if chat.response else None
-                ]
-            })
-        
-        return JsonResponse({
-            'status': 'success',
-            'conversations': conversations
-        })
-    except Exception as e:
-        logger.error(f"Erreur lors de la récupération de l'historique: {str(e)}")
-        return JsonResponse({
-            'status': 'error',
-            'message': 'Erreur lors de la récupération de l\'historique'
-        }, status=500)
-
-@login_required
 def update_company_size(request):
     if request.method == 'POST':
         try:
             company_size = request.POST.get('company_size')
             if company_size:
+                # Mettre à jour directement la valeur de company_size
                 request.user.company_size = company_size
                 request.user.save()
-                return JsonResponse({
-                    'status': 'success',
-                    'message': 'Taille de l\'entreprise mise à jour avec succès!'
-                })
+                
+                messages.success(request, 'Taille de l\'entreprise mise à jour avec succès!')
+                return JsonResponse({'status': 'success'})
+            
             return JsonResponse({
                 'status': 'error',
                 'message': 'Veuillez sélectionner une taille d\'entreprise.'
             })
+            
         except Exception as e:
             logger.error(f"ERREUR DE MISE À JOUR DE LA TAILLE: {str(e)}")
             return JsonResponse({
@@ -401,33 +381,28 @@ def update_objectifs(request):
 def update_domains(request):
     if request.method == 'POST':
         try:
-            profile = UserProfile.objects.get(user=request.user)
-            selected_domain_ids = request.POST.getlist('domains')
+            selected_domains = request.POST.getlist('domains')
             
-            # Nettoyer les domaines existants
+            # Récupérer ou créer le profil utilisateur
+            profile, created = UserProfile.objects.get_or_create(user=request.user)
+            
+            # Mettre à jour les domaines
             profile.domains.clear()
+            if selected_domains:
+                domains = Domain.objects.filter(id__in=selected_domains)
+                profile.domains.add(*domains)
             
-            if selected_domain_ids:
-                domains_to_add = Domain.objects.filter(id__in=selected_domain_ids)
-                profile.domains.add(*domains_to_add)
-                
-                return JsonResponse({
-                    'status': 'success',
-                    'message': 'Secteurs d\'activité mis à jour avec succès!'
-                })
-            
-            return JsonResponse({
-                'status': 'error',
-                'message': 'Veuillez sélectionner au moins un secteur d\'activité.'
-            })
+            messages.success(request, 'Domaines mis à jour avec succès!')
+            return JsonResponse({'status': 'success'})
             
         except Exception as e:
-            logger.error(f"ERREUR DE MISE À JOUR DES DOMAINES: {str(e)}")
+            logger.error(f"Erreur lors de la mise à jour des domaines: {str(e)}")
             return JsonResponse({
                 'status': 'error',
-                'message': 'Une erreur est survenue lors de la mise à jour.'
-            })
-    return JsonResponse({'status': 'error', 'message': 'Méthode non autorisée'})
+                'message': str(e)
+            }, status=400)
+    
+    return JsonResponse({'status': 'error', 'message': 'Méthode non autorisée'}, status=405)
 
 @login_required
 @require_http_methods(["POST"])
@@ -941,161 +916,74 @@ def hubspot_callback(request):
         return redirect('compte')
 
 @login_required
-def chat_message(request):
+def chat_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             message = data.get('message')
             chat_id = data.get('chat_id')
             
-            # Créer un nouveau chat si nécessaire
-            if not chat_id:
-                chat = Chat.objects.create(user=request.user)
-                chat_id = chat.id
+            # Récupérer ou créer une conversation
+            if chat_id:
+                try:
+                    chat = Chat.objects.get(id=chat_id, user=request.user)
+                except Chat.DoesNotExist:
+                    chat = Chat.objects.create(user=request.user)
             else:
-                chat = Chat.objects.get(id=chat_id)
+                chat = Chat.objects.create(user=request.user)
 
-            # Enregistrer le message de l'utilisateur
+            # Sauvegarder le message de l'utilisateur
             ChatHistory.objects.create(
-                chat_id=chat_id,
+                user=request.user,
+                chat=chat,
                 content=message,
                 is_user=True
             )
-
-            # Vérifier si HubSpot est activé avant d'appeler OpenAI
-            try:
-                # Rechercher l'intégration de manière plus flexible
-                integration = Integration.objects.filter(
-                    name__iexact='HubSpot CRM'
-                ).first()
-                
-                # Debug - Liste toutes les intégrations
-                all_integrations = Integration.objects.all()
-                logger.info("Toutes les intégrations disponibles:")
-                for i in all_integrations:
-                    logger.info(f"ID: {i.id}, Name: {i.name}")
-                
-                if integration:
-                    hubspot_enabled = UserIntegration.objects.filter(
-                        user=request.user,
-                        integration=integration,
-                        enabled=True
-                    ).exists()
-                    
-                    # Debug logs
-                    logger.info(f"Integration trouvée: {integration.name}")
-                    logger.info(f"HubSpot enabled: {hubspot_enabled}")
-                    
-                    # Debug - Vérifier les UserIntegrations
-                    user_integrations = UserIntegration.objects.filter(user=request.user)
-                    logger.info("Intégrations de l'utilisateur:")
-                    for ui in user_integrations:
-                        logger.info(f"Integration: {ui.integration.name}, Enabled: {ui.enabled}")
-                else:
-                    logger.error("Aucune intégration HubSpot trouvée")
-                    hubspot_enabled = False
-                    
-            except Exception as e:
-                logger.error(f"Erreur lors de la vérification de l'intégration HubSpot: {str(e)}")
-                hubspot_enabled = False
-
-            if not hubspot_enabled and 'hubspot' in message.lower():
-                response_message = "Je ne peux pas effectuer d'actions HubSpot car l'intégration n'est pas activée. Veuillez d'abord activer HubSpot dans les paramètres d'intégration (section CRM)."
-                ChatHistory.objects.create(
-                    chat_id=chat_id,
-                    content=response_message,
-                    is_user=False
-                )
-                return JsonResponse({
-                    'status': 'error',
-                    'response': response_message,
-                    'chat_id': chat_id
-                })
-
-            # Si HubSpot est activé ou si le message ne concerne pas HubSpot, continuer normalement
-            openai_response = call_openai_api(message)
-            logger.info(f"Réponse OpenAI reçue: {openai_response}")
             
-            # Si une fonction doit être appelée
-            if 'function_call' in openai_response:
-                function_call = openai_response['function_call']
-                
-                if function_call['name'] == "execute_hubspot_action":
-                    try:
-                        # Utiliser la même logique de recherche
-                        integration = Integration.objects.filter(
-                            name__iexact='HubSpot CRM'
-                        ).first()
-                        
-                        if not integration:
-                            raise Integration.DoesNotExist("Intégration HubSpot non trouvée")
-                            
-                        user_integration = UserIntegration.objects.get(
-                            user=request.user,
-                            integration=integration,
-                            enabled=True
-                        )
-                        
-                        # Exécuter l'action HubSpot
-                        result = IntegrationManager.execute_integration_action(
-                            user=request.user,
-                            integration_name='HubSpot CRM',
-                            method_name='create_contact',
-                            params=function_call['arguments']['params']
-                        )
-                        
-                        # Enregistrer la réponse
-                        response_message = "Contact créé avec succès dans HubSpot!" if result.get('success') else f"Erreur: {result.get('error')}"
-                        ChatHistory.objects.create(
-                            chat_id=chat_id,
-                            content=response_message,
-                            is_user=False
-                        )
-                        
-                        return JsonResponse({
-                            "status": "success",
-                            "response": response_message,
-                            "action_result": result,
-                            "chat_id": chat_id
-                        })
-                        
-                    except (Integration.DoesNotExist, UserIntegration.DoesNotExist):
-                        error_message = "L'intégration HubSpot n'est pas activée. Veuillez l'activer dans les paramètres."
-                        ChatHistory.objects.create(
-                            chat_id=chat_id,
-                            content=error_message,
-                            is_user=False
-                        )
-                        return JsonResponse({
-                            "status": "error",
-                            "response": error_message,
-                            "chat_id": chat_id
-                        })
+            # Obtenir la réponse de l'assistant
+            orchestrator = AIOrchestrator(user=request.user)
+            response = orchestrator.process_message(message)
             
-            # Si pas de fonction à appeler
-            # Enregistrer la réponse de l'assistant
+            # Sauvegarder la réponse de l'assistant
             ChatHistory.objects.create(
-                chat_id=chat_id,
-                content=openai_response['response'],
+                user=request.user,
+                chat=chat,
+                content=response,
                 is_user=False
             )
             
             return JsonResponse({
                 'status': 'success',
-                'response': openai_response['response'],
-                'chat_id': chat_id
+                'response': response,
+                'chat_id': chat.id
             })
             
         except Exception as e:
-            logger.error(f"Erreur lors du traitement du message: {str(e)}")
+            logger.error(f"Erreur dans le chat: {str(e)}")
             return JsonResponse({
                 'status': 'error',
                 'message': str(e)
             }, status=500)
-            
+    
     return JsonResponse({'status': 'error', 'message': 'Méthode non autorisée'}, status=405)
 
+@login_required
+def clear_chat_history(request):
+    if request.method == 'POST':
+        try:
+            Chat.objects.filter(user=request.user).delete()
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            logger.error(f"Erreur lors de la suppression de l'historique: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    return JsonResponse({'status': 'error', 'message': 'Méthode non autorisée'}, status=405)
+
+@login_required
 def integration_success(request):
-    """Page de succès après l'intégration"""
+    """Vue pour afficher la page de succès après l'intégration"""
     return render(request, 'alyawebapp/integration_success.html')
 

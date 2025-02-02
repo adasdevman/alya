@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="objectifsForm">
+                <form id="editObjectifsForm" method="POST">
                     {% csrf_token %}
                     <div class="domains-grid">
                         {% for objectif in all_objectifs %}
@@ -45,7 +45,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fa-solid fa-xmark"></i> Annuler
                 </button>
-                <button type="submit" form="objectifsForm" class="btn btn-dark">
+                <button type="submit" form="editObjectifsForm" class="btn btn-dark">
                     <i class="fa-solid fa-check"></i> Enregistrer
                 </button>
             </div>

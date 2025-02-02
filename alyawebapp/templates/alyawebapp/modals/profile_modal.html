@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="profileForm">
+                <form id="editProfileForm" method="POST">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label class="form-label">Prénom</label>
@@ -27,7 +27,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fa-solid fa-xmark"></i> Annuler
                 </button>
-                <button type="submit" form="profileForm" class="btn btn-dark">
+                <button type="submit" form="editProfileForm" class="btn btn-dark">
                     <i class="fa-solid fa-check"></i> Enregistrer
                 </button>
             </div>

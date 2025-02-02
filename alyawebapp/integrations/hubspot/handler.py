@@ -5,6 +5,15 @@ import logging
 from urllib.parse import urlencode
 import uuid
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.shortcuts import redirect
+from django.http import HttpResponse
+
+# Importer le modèle UserIntegration
+from alyawebapp.models import UserIntegration
+from alyawebapp.services.ai_orchestrator import AIOrchestrator  # Import the orchestrator
 
 logger = logging.getLogger(__name__)
 
@@ -147,6 +156,7 @@ class HubSpotHandler(BaseIntegration):
     def refresh_access_token(self):
         """Rafraîchit le token d'accès en utilisant le refresh token"""
         try:
+            url = "https://api.hubapi.com/oauth/v1/token"
             data = {
                 'grant_type': 'refresh_token',
                 'client_id': self.client_id,
@@ -154,7 +164,11 @@ class HubSpotHandler(BaseIntegration):
                 'refresh_token': self.refresh_token
             }
             
-            response = requests.post(self.TOKEN_URL, data=data)
+            response = requests.post(
+                url,
+                headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                data=data
+            )
             response.raise_for_status()
             
             tokens = response.json()
@@ -164,11 +178,23 @@ class HubSpotHandler(BaseIntegration):
             # Mettre à jour les headers avec le nouveau token
             self.headers['Authorization'] = f'Bearer {self.access_token}'
             
-            # Retourner les nouveaux tokens pour mise à jour en base
+            # Mettre à jour la configuration dans la base de données
+            if hasattr(self, 'user') and hasattr(self, 'integration'):
+                user_integration = UserIntegration.objects.get(
+                    user=self.user,
+                    integration=self.integration
+                )
+                user_integration.config.update({
+                    'access_token': self.access_token,
+                    'refresh_token': self.refresh_token
+                })
+                user_integration.save()
+                logger.info("Token d'accès HubSpot rafraîchi avec succès")
+            
             return tokens
             
         except Exception as e:
-            logger.error(f"Erreur lors du rafraîchissement du token: {str(e)}")
+            logger.error(f"Erreur lors du rafraîchissement du token HubSpot: {str(e)}")
             raise
 
     def create_contact(self, properties):
@@ -178,34 +204,45 @@ class HubSpotHandler(BaseIntegration):
         """
         try:
             url = f"{self.base_url}/crm/v3/objects/contacts"
-            headers = {
-                'Authorization': f'Bearer {self.access_token}',
-                'Content-Type': 'application/json'
-            }
             
             # Formater les propriétés pour l'API HubSpot
             data = {
                 "properties": {
                     "email": properties.get('email'),
-                    "firstname": properties.get('firstname')
+                    "firstname": properties.get('firstname'),
+                    "lastname": properties.get('lastname'),
+                    "phone": properties.get('phone')
                 }
             }
             
+            # Premier essai
             try:
+                headers = {
+                    'Authorization': f'Bearer {self.access_token}',
+                    'Content-Type': 'application/json'
+                }
                 response = requests.post(url, headers=headers, json=data)
-                response.raise_for_status()
-            except requests.exceptions.HTTPError as e:
-                if e.response.status_code == 401:
-                    # Token expiré, essayer de le rafraîchir
+                
+                # Si le token est expiré, on le rafraîchit et on réessaie
+                if response.status_code == 401:
+                    logger.info("Token expiré, tentative de rafraîchissement...")
                     self.refresh_access_token()
-                    # Réessayer avec le nouveau token
+                    
+                    # Mettre à jour les headers avec le nouveau token
                     headers['Authorization'] = f'Bearer {self.access_token}'
+                    
+                    # Réessayer avec le nouveau token
                     response = requests.post(url, headers=headers, json=data)
-                    response.raise_for_status()
-                else:
-                    raise
-            
-            return response.json()
+                
+                response.raise_for_status()
+                return response.json()
+                
+            except requests.exceptions.RequestException as e:
+                error_message = str(e)
+                if hasattr(e, 'response') and e.response is not None:
+                    error_message = e.response.text
+                logger.error(f"Erreur lors de la création du contact: {error_message}")
+                raise Exception(f"Erreur lors de la création du contact: {error_message}")
             
         except Exception as e:
             logger.error(f"Erreur lors de la création du contact HubSpot: {str(e)}")
@@ -251,4 +288,61 @@ class HubSpotHandler(BaseIntegration):
             
         except Exception as e:
             logger.error(f"Erreur lors de la création de la compagnie HubSpot: {str(e)}")
-            raise 
+            raise
+
+    def refresh_access_token_silently(self, user_id):
+        try:
+            user_integration = UserIntegration.objects.get(user_id=user_id, integration__name__iexact='hubspot crm')
+            refresh_token = user_integration.config.get('refresh_token')
+            
+            if not refresh_token:
+                logger.error("No refresh token available")
+                return None
+
+            # Request a new access token using the refresh token
+            response = requests.post(
+                "https://api.hubapi.com/oauth/v1/token",
+                data={
+                    'grant_type': 'refresh_token',
+                    'client_id': 'YOUR_CLIENT_ID',
+                    'client_secret': 'YOUR_CLIENT_SECRET',
+                    'refresh_token': refresh_token
+                },
+                headers={'Content-Type': 'application/x-www-form-urlencoded'}
+            )
+
+            if response.status_code == 200:
+                new_token = response.json().get('access_token')
+                user_integration.access_token = new_token
+                user_integration.save()
+                logger.info("Access token refreshed silently")
+                return new_token
+            else:
+                logger.error(f"Failed to refresh token silently: {response.text}")
+                return None
+        except Exception as e:
+            logger.error(f"Error refreshing token silently: {e}")
+            return None
+
+def hubspot_callback(request):
+    code = request.GET.get('code')
+    state = request.GET.get('state')
+    
+    # Assuming you have a way to get the user_id from the state or session
+    user_id = request.session.get('_auth_user_id')  # Example of getting user_id from session
+    
+    # Exchange the authorization code for an access token
+    response = exchange_code_for_token(code)
+    if response.status_code == 200:
+        new_token = response.json().get('access_token')
+        # Update the token in the database
+        orchestrator = AIOrchestrator(user=User.objects.get(id=user_id))
+        orchestrator.update_access_token_manually(user_id, new_token)
+        return HttpResponse("Token updated successfully")
+    else:
+        return HttpResponse("Failed to update token", status=400)
+
+def exchange_code_for_token(code):
+    # Implement the logic to exchange the authorization code for an access token
+    # This typically involves making a POST request to HubSpot's token endpoint
+    pass 

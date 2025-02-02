@@ -62,8 +62,8 @@ class UserDomain(models.Model):
 class Chat(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    is_archived = models.BooleanField(default=False)
-    
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         ordering = ['-created_at']
 
@@ -103,20 +103,15 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 class ChatHistory(models.Model):
-    chat = models.ForeignKey(
-        Chat, 
-        on_delete=models.CASCADE,
-        related_name='history',
-        default=1  # ID du chat par défaut
-    )
-    content = models.TextField('Contenu')
-    is_user = models.BooleanField(default=False)
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField()
+    is_user = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         ordering = ['created_at']
-        verbose_name_plural = 'Chat histories'
-    
+
     def __str__(self):
         return f"{self.chat.id} - {'User' if self.is_user else 'Assistant'} - {self.created_at}"
 

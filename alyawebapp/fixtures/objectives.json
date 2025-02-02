@@ -1,0 +1,47 @@
+[
+    {
+        "model": "alyawebapp.businessobjective",
+        "pk": 1,
+        "fields": {
+            "name": "Augmenter les ventes",
+            "description": "Développer le chiffre d'affaires",
+            "icon": "fas fa-chart-line"
+        }
+    },
+    {
+        "model": "alyawebapp.businessobjective",
+        "pk": 2,
+        "fields": {
+            "name": "Réduire les coûts",
+            "description": "Optimiser les dépenses",
+            "icon": "fas fa-piggy-bank"
+        }
+    },
+    {
+        "model": "alyawebapp.businessobjective",
+        "pk": 3,
+        "fields": {
+            "name": "Améliorer la satisfaction client",
+            "description": "Augmenter la fidélisation",
+            "icon": "fas fa-smile"
+        }
+    },
+    {
+        "model": "alyawebapp.businessobjective",
+        "pk": 4,
+        "fields": {
+            "name": "Optimiser les processus",
+            "description": "Améliorer l'efficacité opérationnelle",
+            "icon": "fas fa-cogs"
+        }
+    },
+    {
+        "model": "alyawebapp.businessobjective",
+        "pk": 5,
+        "fields": {
+            "name": "Développer la marque",
+            "description": "Renforcer la présence sur le marché",
+            "icon": "fas fa-bullseye"
+        }
+    }
+] 

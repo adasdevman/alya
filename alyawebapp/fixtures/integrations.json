@@ -1,0 +1,272 @@
+[
+    {
+        "model": "alyawebapp.integration",
+        "pk": 1,
+        "fields": {
+            "name": "LinkedIn Recruiter",
+            "domain": 1,
+            "icon_class": "fab fa-linkedin",
+            "description": "Recrutement et gestion des talents"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 2,
+        "fields": {
+            "name": "Workday",
+            "domain": 1,
+            "icon_class": "fas fa-calendar-alt",
+            "description": "Gestion RH complète"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 3,
+        "fields": {
+            "name": "BambooHR",
+            "domain": 1,
+            "icon_class": "fas fa-users",
+            "description": "Solution RH pour PME"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 4,
+        "fields": {
+            "name": "HubSpot Marketing",
+            "domain": 2,
+            "icon_class": "fab fa-hubspot",
+            "description": "Marketing automation et analytics"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 5,
+        "fields": {
+            "name": "Mailchimp",
+            "domain": 2,
+            "icon_class": "fab fa-mailchimp",
+            "description": "Email marketing et automation"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 6,
+        "fields": {
+            "name": "Google Ads",
+            "domain": 2,
+            "icon_class": "fab fa-google",
+            "description": "Publicité en ligne"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 7,
+        "fields": {
+            "name": "Salesforce",
+            "domain": 3,
+            "icon_class": "fas fa-cloud",
+            "description": "Solution CRM complète"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 8,
+        "fields": {
+            "name": "HubSpot CRM",
+            "domain": 3,
+            "icon_class": "fab fa-hubspot",
+            "description": "Plateforme CRM complète"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 9,
+        "fields": {
+            "name": "Zoho CRM",
+            "domain": 3,
+            "icon_class": "fas fa-users-cog",
+            "description": "Solution CRM intégrée"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 10,
+        "fields": {
+            "name": "QuickBooks",
+            "domain": 4,
+            "icon_class": "fas fa-book",
+            "description": "Comptabilité"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 11,
+        "fields": {
+            "name": "Xero",
+            "domain": 4,
+            "icon_class": "fas fa-calculator",
+            "description": "Gestion financière"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 12,
+        "fields": {
+            "name": "Stripe",
+            "domain": 4,
+            "icon_class": "fas fa-credit-card",
+            "description": "Paiements en ligne"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 13,
+        "fields": {
+            "name": "Google Analytics",
+            "domain": 5,
+            "icon_class": "fab fa-google",
+            "description": "Analyse web"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 14,
+        "fields": {
+            "name": "Mixpanel",
+            "domain": 5,
+            "icon_class": "fas fa-chart-pie",
+            "description": "Analyse produit"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 15,
+        "fields": {
+            "name": "Amplitude",
+            "domain": 5,
+            "icon_class": "fas fa-wave-square",
+            "description": "Analytics produit"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 16,
+        "fields": {
+            "name": "Zendesk",
+            "domain": 6,
+            "icon_class": "fas fa-headset",
+            "description": "Service client et support omnicanal"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 17,
+        "fields": {
+            "name": "Freshdesk",
+            "domain": 6,
+            "icon_class": "fas fa-ticket-alt",
+            "description": "Gestion du support client"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 18,
+        "fields": {
+            "name": "Intercom",
+            "domain": 6,
+            "icon_class": "far fa-comment-dots",
+            "description": "Messagerie et support client"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 19,
+        "fields": {
+            "name": "DocuSign",
+            "domain": 7,
+            "icon_class": "fas fa-file-signature",
+            "description": "Signature électronique de documents"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 20,
+        "fields": {
+            "name": "Clio",
+            "domain": 7,
+            "icon_class": "fas fa-balance-scale",
+            "description": "Gestion de cabinet juridique"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 21,
+        "fields": {
+            "name": "LexisNexis",
+            "domain": 7,
+            "icon_class": "fas fa-gavel",
+            "description": "Base de données juridique"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 22,
+        "fields": {
+            "name": "ShipStation",
+            "domain": 8,
+            "icon_class": "fas fa-shipping-fast",
+            "description": "Gestion des expéditions e-commerce"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 23,
+        "fields": {
+            "name": "Freightview",
+            "domain": 8,
+            "icon_class": "fas fa-truck",
+            "description": "Gestion du transport de marchandises"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 24,
+        "fields": {
+            "name": "Odoo",
+            "domain": 8,
+            "icon_class": "fas fa-boxes",
+            "description": "Gestion des stocks et logistique"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 25,
+        "fields": {
+            "name": "Jira",
+            "domain": 9,
+            "icon_class": "fab fa-jira",
+            "description": "Gestion de projet agile"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 26,
+        "fields": {
+            "name": "Trello",
+            "domain": 9,
+            "icon_class": "fab fa-trello",
+            "description": "Gestion de projet visuelle"
+        }
+    },
+    {
+        "model": "alyawebapp.integration",
+        "pk": 27,
+        "fields": {
+            "name": "Asana",
+            "domain": 9,
+            "icon_class": "fas fa-tasks",
+            "description": "Gestion de projet collaborative"
+        }
+    }
+] 

@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="tailleForm">
+                <form id="editTailleForm" method="POST">
                     {% csrf_token %}
                     <div class="domains-grid">
                         {% for taille in company_sizes %}
@@ -33,7 +33,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fa-solid fa-xmark"></i> Annuler
                 </button>
-                <button type="submit" form="tailleForm" class="btn btn-dark">
+                <button type="submit" form="editTailleForm" class="btn btn-dark">
                     <i class="fa-solid fa-check"></i> Enregistrer
                 </button>
             </div>
