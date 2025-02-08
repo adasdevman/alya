@@ -1,10 +1,11 @@
-from openai import OpenAI, OpenAIError
+import openai
+from openai import OpenAIError
 from django.conf import settings
 import logging
 import json
 import traceback
 from ..utils.openai_utils import call_openai_api, get_system_prompt
-from ..models import Chat, ChatHistory
+from ..models import Chat, ChatHistory, Message
 import requests
 from alyawebapp.models import Integration, UserIntegration
 from django.urls import reverse
@@ -15,12 +16,14 @@ logger = logging.getLogger(__name__)
 class AIOrchestrator:
     # Variable de classe pour stocker les états de conversation par utilisateur
     conversation_states = {}
+    contact_types = {}  # Nouveau dictionnaire pour stocker les types de contact
+    contact_infos = {}  # Nouveau dictionnaire pour stocker les informations de contact
 
-    def __init__(self, user=None):
-        self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
-        self.user = user
-        self.user_id = user.id if user else None
-        logger.info(f"Initialisation d'AIOrchestrator pour user_id: {self.user_id}")
+    def __init__(self, user_id):
+        self.user_id = user_id
+        self.logger = logging.getLogger(__name__)
+        self.client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+        self.logger.info(f"Initialisation d'AIOrchestrator pour user_id: {self.user_id}")
 
     @property
     def conversation_state(self):
@@ -31,144 +34,69 @@ class AIOrchestrator:
         logger.info(f"Changement d'état pour user {self.user_id}: {self.conversation_state} -> {value}")
         self.conversation_states[self.user_id] = value
 
-    def process_message(self, message):
+    @property
+    def contact_type(self):
+        return self.contact_types.get(self.user_id)
+
+    @contact_type.setter
+    def contact_type(self, value):
+        self.contact_types[self.user_id] = value
+
+    @property
+    def contact_info(self):
+        return self.contact_infos.get(self.user_id, {})
+
+    @contact_info.setter
+    def contact_info(self, value):
+        self.contact_infos[self.user_id] = value
+
+    def reset_contact_state(self):
+        """Réinitialise l'état de la création de contact"""
+        if self.user_id in self.conversation_states:
+            del self.conversation_states[self.user_id]
+        if self.user_id in self.contact_types:
+            del self.contact_types[self.user_id]
+        if self.user_id in self.contact_infos:
+            del self.contact_infos[self.user_id]
+
+    def process_message(self, message, chat_id=None):
+        """Process a message and return the response"""
         try:
-            logger.info(f"Message reçu: {message}")
-            logger.info(f"État actuel de la conversation: {self.conversation_state}")
-
-            message_lower = message.lower()
-            create_contact_keywords = ['creer', 'créer', 'nouveau', 'ajouter', 'contact', 'hubspot']
-            is_create_contact_request = any(keyword in message_lower for keyword in create_contact_keywords)
-
-            # Si c'est une demande de création de contact HubSpot
-            if is_create_contact_request:
-                logger.info("Détection d'une demande de création de contact HubSpot")
-                if 'particulier' in message_lower:
-                    self.conversation_state = 'waiting_for_personal_info'
-                    response = """Pour créer un contact particulier, j'ai besoin des informations suivantes :
-
-- Nom
-- Prénom
-- Email
-- Numéro de téléphone (optionnel)
-
-Veuillez fournir ces informations dans l'ordre, une par ligne."""
-                    logger.info("Demande d'informations personnelles envoyée")
-                    return response
-                elif 'professionnel' in message_lower:
-                    self.conversation_state = 'waiting_for_pro_info'
-                    response = """Pour créer un contact professionnel, j'ai besoin des informations suivantes :
-
-- Nom de l'entreprise
-- Nom du contact
-- Prénom du contact
-- Email professionnel
-- Numéro de téléphone
-- Poste/Fonction
-- Site web de l'entreprise (optionnel)
-
-Veuillez fournir ces informations dans l'ordre, une par ligne."""
-                    logger.info("Demande d'informations professionnelles envoyée")
-                    return response
-                else:
-                    self.conversation_state = 'waiting_for_contact_type'
-                    response = """Je vais vous aider à créer un contact dans HubSpot. 
-
-Tout d'abord, s'agit-il d'un contact :
-1. Professionnel (entreprise)
-2. Particulier
-
-Veuillez répondre avec le numéro correspondant."""
-                    logger.info(f"Réponse envoyée (demande type contact): {response}")
-                    return response
-
-            # Si l'utilisateur répond 1 ou 2 et qu'on attend le type de contact
-            elif self.conversation_state == 'waiting_for_contact_type':
-                logger.info(f"Réception du type de contact: {message}")
-                if message.strip() == "1":
-                    self.conversation_state = 'waiting_for_pro_info'
-                    response = """Pour créer un contact professionnel, j'ai besoin des informations suivantes :
-
-- Nom de l'entreprise
-- Nom du contact
-- Prénom du contact
-- Email professionnel
-- Numéro de téléphone
-- Poste/Fonction
-- Site web de l'entreprise (optionnel)
-
-Veuillez fournir ces informations dans l'ordre, une par ligne."""
-                    logger.info("Demande d'informations professionnelles envoyée")
-                    return response
-                elif message.strip() == "2":
-                    self.conversation_state = 'waiting_for_personal_info'
-                    response = """Pour créer un contact particulier, j'ai besoin des informations suivantes :
-
-- Nom
-- Prénom
-- Email
-- Numéro de téléphone (optionnel)
-
-Veuillez fournir ces informations dans l'ordre, une par ligne."""
-                    logger.info("Demande d'informations personnelles envoyée")
-                    return response
-
-            # Si l'utilisateur fournit les informations du contact
-            elif self.conversation_state in ['waiting_for_pro_info', 'waiting_for_personal_info']:
-                logger.info("Réception des informations du contact")
-                contact_info = self.parse_contact_info(message)
-                logger.info(f"Informations parsées: {contact_info}")
-                
-                if contact_info:
-                    result = self.create_hubspot_contact(contact_info)
-                    self.conversation_state = None
-                    
-                    if result is True:
-                        response = "Le contact a été créé avec succès dans HubSpot ! Souhaitez-vous créer un autre contact ?"
-                    elif isinstance(result, str):
-                        response = result  # Utiliser le message d'erreur retourné
-                    else:
-                        response = "Désolé, une erreur est survenue lors de la création du contact. Voulez-vous réessayer ?"
-                else:
-                    response = "Je n'ai pas pu traiter toutes les informations. Pouvez-vous les fournir à nouveau, une par ligne ?"
-                
-                logger.info(f"Réponse envoyée: {response}")
-                return response
-
-            # Autres cas - utiliser GPT
+            # Récupérer ou créer le chat
+            if chat_id:
+                try:
+                    chat = Chat.objects.get(id=chat_id, user_id=self.user_id)
+                except Chat.DoesNotExist:
+                    # Si le chat n'existe pas, en créer un nouveau
+                    chat = Chat.objects.create(user_id=self.user_id)
+                    self.logger.info(f"Nouveau chat créé avec l'ID: {chat.id}")
             else:
-                logger.info("Message non lié à la création de contact, utilisation de GPT")
-                self.conversation_state = None
-                
-                # Appel à GPT
-                system_message = """Tu es Alya, une assistante IA experte. 
-                Réponds de manière claire, précise et détaillée aux questions des utilisateurs."""
-                
-                messages = [
-                    {"role": "system", "content": system_message},
-                    {"role": "user", "content": message}
-                ]
-                
-                logger.info("Envoi de la requête à GPT")
-                completion = self.client.chat.completions.create(
-                    model="gpt-3.5-turbo",
-                    messages=messages,
-                    temperature=0.7,
-                    max_tokens=500
-                )
-                
-                if completion.choices and len(completion.choices) > 0:
-                    response = completion.choices[0].message.content
-                    logger.info(f"Réponse GPT reçue: {response}")
-                    return response
-                
-                response = "Désolé, je n'ai pas pu générer une réponse."
-                logger.error("Aucune réponse reçue de GPT")
-                return response
+                # Créer un nouveau chat si aucun ID n'est fourni
+                chat = Chat.objects.create(user_id=self.user_id)
+                self.logger.info(f"Nouveau chat créé avec l'ID: {chat.id}")
+
+            # Sauvegarder le message de l'utilisateur
+            Message.objects.create(
+                chat=chat,
+                content=message,
+                is_user=True
+            )
+
+            # Générer la réponse
+            response = self.generate_response(message, chat)
+
+            # Sauvegarder la réponse de l'assistant
+            Message.objects.create(
+                    chat=chat,
+                content=response,
+                is_user=False
+            )
+
+            return response
 
         except Exception as e:
-            logger.error(f"Erreur dans le traitement du message: {str(e)}")
-            return "Désolé, une erreur est survenue. Pouvez-vous reformuler votre demande ?"
+            self.logger.error(f"Erreur lors du traitement du message: {str(e)}")
+            raise
 
     def process_request(self, user_request, user_domains):
         """
@@ -193,7 +121,7 @@ Veuillez fournir ces informations dans l'ordre, une par ligne."""
 
             try:
                 completion = self.client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="gpt-4o",
                     messages=messages,
                     temperature=0.7,
                     max_tokens=500
@@ -250,7 +178,7 @@ Veuillez fournir ces informations dans l'ordre, une par ligne."""
             # Vérifier si l'intégration HubSpot est active
             hubspot_integration = Integration.objects.get(name__iexact='hubspot crm')
             user_integration = UserIntegration.objects.get(
-                user=self.user,
+                user_id=self.user_id,
                 integration=hubspot_integration,
                 enabled=True
             )
@@ -356,7 +284,7 @@ Veuillez fournir ces informations dans l'ordre, une par ligne."""
             response = self.send_request_to_hubspot(contact_data)
             if response.status_code == 401:  # Token expired
                 logger.info("Token expired, attempting silent refresh")
-                new_token = self.refresh_access_token_silently(user_id)
+                new_token = self.refresh_hubspot_token(user_id)
                 if new_token:
                     logger.info("Token refreshed silently, retrying request")
                     response = self.send_request_to_hubspot(contact_data, token=new_token)
@@ -380,31 +308,51 @@ Veuillez fournir ces informations dans l'ordre, une par ligne."""
         return HttpResponseRedirect(auth_url)
 
     def refresh_hubspot_token(self, user_id):
+        """Rafraîchit le token HubSpot en utilisant le refresh token"""
         try:
-            # Logic to refresh the token using the refresh token
-            refresh_token = self.get_refresh_token_for_user(user_id)
+            # Récupérer l'intégration de l'utilisateur
+            user_integration = UserIntegration.objects.get(
+                user_id=user_id,
+                integration__name__iexact='hubspot crm'
+            )
+            
+            refresh_token = user_integration.refresh_token
             if not refresh_token:
-                logger.error("No refresh token available")
+                self.logger.error("Pas de refresh token disponible pour l'utilisateur")
                 return None
 
-            logger.info(f"Using refresh token: {refresh_token[:10]}...")  # Log only part of the token for security
-            logger.info("Requesting new access token using refresh token")
-            response = self.request_new_access_token(refresh_token)
-            logger.info(f"Token refresh response: {response.status_code}, {response.text}")
+            # Paramètres pour le rafraîchissement du token
+            url = "https://api.hubapi.com/oauth/v1/token"
+            data = {
+                "grant_type": "refresh_token",
+                "client_id": settings.HUBSPOT_CLIENT_ID,
+                "client_secret": settings.HUBSPOT_CLIENT_SECRET,
+                "refresh_token": refresh_token
+            }
+
+            self.logger.info("Tentative de rafraîchissement du token HubSpot...")
+            response = requests.post(url, data=data)
+            
             if response.status_code == 200:
-                new_token = response.json().get('access_token')
-                if new_token:
-                    logger.info("New access token received, storing it")
-                    # Store the new token
-                    self.store_new_access_token(user_id, new_token)
-                    return new_token
-                else:
-                    logger.error("No access token received in response")
+                tokens = response.json()
+                self.logger.info("Token HubSpot rafraîchi avec succès")
+                
+                # Mettre à jour les tokens dans la base de données
+                user_integration.access_token = tokens["access_token"]
+                if "refresh_token" in tokens:
+                    user_integration.refresh_token = tokens["refresh_token"]
+                user_integration.save()
+                
+                return tokens["access_token"]
             else:
-                logger.error(f"Failed to refresh token, status code: {response.status_code}, response: {response.text}")
+                self.logger.error(f"Échec du rafraîchissement du token HubSpot: {response.status_code} - {response.text}")
+                return None
+
+        except UserIntegration.DoesNotExist:
+            self.logger.error(f"Intégration HubSpot non trouvée pour l'utilisateur {user_id}")
             return None
         except Exception as e:
-            logger.error(f"Error refreshing HubSpot token: {e}")
+            self.logger.error(f"Erreur lors du rafraîchissement du token HubSpot: {str(e)}")
             return None
 
     def update_access_token_manually(self, user_id, new_access_token):
@@ -421,23 +369,229 @@ Veuillez fournir ces informations dans l'ordre, une par ligne."""
 
     def send_request_to_hubspot(self, contact_data, token=None):
         try:
-            # Use the provided token or fetch from the database
+            # Récupérer le token
             if not token:
-                user_integration = UserIntegration.objects.get(user=self.user, integration__name__iexact='hubspot crm')
+                user_integration = UserIntegration.objects.get(
+                    user_id=self.user_id, 
+                    integration__name__iexact='hubspot crm'
+                )
                 token = user_integration.access_token
+
+                # Vérifier si le token est expiré et le rafraîchir si nécessaire
+                if self.is_token_expired(token):
+                    self.logger.info("Token HubSpot expiré, tentative de rafraîchissement...")
+                    new_token = self.refresh_hubspot_token(self.user_id)
+                    if new_token:
+                        token = new_token
+                    else:
+                        self.logger.error("Impossible de rafraîchir le token HubSpot")
+                        return None
+
+            # Formater les données pour l'API HubSpot
+            formatted_data = {
+                "properties": {
+                    "firstname": contact_data.get('firstname', ''),
+                    "lastname": contact_data.get('lastname', ''),
+                    "email": contact_data.get('email', '')
+                }
+            }
+
+            if 'company' in contact_data:
+                formatted_data["properties"]["company"] = contact_data['company']
 
             url = "https://api.hubapi.com/crm/v3/objects/contacts"
             headers = {
                 "Authorization": f"Bearer {token}",
                 "Content-Type": "application/json"
             }
-            data = {
-                "properties": contact_data
-            }
             
-            logger.info(f"Sending request to HubSpot with token: {token[:10]}...")  # Log only part of the token for security
-            response = requests.post(url, headers=headers, json=data)
-            return response
+            self.logger.info(f"Envoi de la requête à HubSpot pour créer le contact: {formatted_data}")
+            response = requests.post(url, headers=headers, json=formatted_data)
+            
+            if response.status_code == 401:  # Token expiré
+                self.logger.warning("Token expiré détecté pendant la requête, tentative de rafraîchissement...")
+                new_token = self.refresh_hubspot_token(self.user_id)
+                if new_token:
+                    headers["Authorization"] = f"Bearer {new_token}"
+                    response = requests.post(url, headers=headers, json=formatted_data)
+            
+            if response.status_code == 201:
+                self.logger.info("Contact créé avec succès dans HubSpot")
+                return response
+            else:
+                self.logger.error(f"Erreur HubSpot: {response.status_code} - {response.text}")
+                return None
+
         except Exception as e:
-            logger.error(f"Error sending request to HubSpot: {e}")
+            self.logger.error(f"Erreur lors de l'envoi à HubSpot: {str(e)}")
             return None
+
+    def is_token_expired(self, token):
+        """Vérifie si le token est expiré"""
+        try:
+            # Faire une requête test à l'API HubSpot
+            url = "https://api.hubapi.com/crm/v3/objects/contacts"
+            headers = {"Authorization": f"Bearer {token}"}
+            response = requests.get(url, headers=headers)
+            return response.status_code == 401
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la vérification du token: {str(e)}")
+            return True
+
+    def generate_response(self, message, chat):
+        try:
+            # Log du message reçu
+            self.logger.info(f"Message reçu: '{message}'")
+            self.logger.info(f"Chat ID: {chat.id}")
+            self.logger.info(f"État de la conversation: {self.conversation_state}")
+
+            # Normaliser le message pour la détection
+            normalized_message = message.lower().strip('?!., ')
+
+            # Si c'est un nouveau chat ou une demande d'identité
+            if (not Message.objects.filter(chat=chat).exists() or 
+                any(q in normalized_message for q in ['qui es tu', 'qui est tu', 'qui estu', 'qui es-tu', 'présente toi', 'presente toi'])):
+                
+                self.logger.info("Génération de la réponse de présentation d'Alya")
+                response = ("Bonjour ! Je suis Alya, une intelligence artificielle polyvalente et évolutive. 😊\n\n"
+                         "Ma mission est d'assister les utilisateurs dans leurs tâches quotidiennes, qu'elles soient professionnelles ou personnelles. "
+                         "Je suis capable d'interagir de manière fluide, naturelle et amicale, tout en adaptant mes réponses au contexte de vos besoins.\n\n"
+                         "Je peux vous aider avec :\n"
+                         "• La gestion de vos contacts et CRM\n"
+                         "• L'automatisation de vos tâches quotidiennes\n"
+                         "• La gestion de projets et le suivi de tâches\n"
+                         "• L'organisation personnelle et professionnelle\n\n"
+                         "Comment puis-je vous assister aujourd'hui ?")
+                self.logger.info(f"Réponse Alya: {response[:100]}...")
+                return response
+
+            # Si l'utilisateur veut créer un contact (élargi les patterns de détection)
+            if any(pattern in normalized_message for pattern in [
+                'créer contact', 'nouveau contact', 'ajouter contact', 
+                'creer un contact', 'contact hubspot', 'contact avec hubspot',
+                'nouveau contact hubspot', 'créer contact hubspot'
+            ]):
+                self.logger.info("Détection d'une demande de création de contact HubSpot")
+                try:
+                    hubspot_integration = Integration.objects.get(name__iexact='hubspot crm')
+                    has_hubspot = UserIntegration.objects.filter(
+                        user_id=self.user_id,
+                        integration=hubspot_integration,
+                        enabled=True
+                    ).exists()
+                    
+                    self.logger.info(f"HubSpot intégré: {has_hubspot}")
+
+                    if has_hubspot:
+                        self.conversation_state = 'contact_type'
+                        response = ("Je vais vous aider à créer un contact dans HubSpot. 👤\n\n"
+                                  "Quel type de contact souhaitez-vous créer ?\n\n"
+                                  "1. Contact Personnel (particulier)\n"
+                                  "2. Contact Professionnel (entreprise)")
+                        self.logger.info("Début du processus de création de contact")
+                    else:
+                        response = ("Pour créer un contact dans HubSpot, vous devez d'abord connecter votre compte. 🔌\n\n"
+                                  "Voici comment faire :\n"
+                                  "1. Cliquez sur l'icône d'intégration dans le menu\n"
+                                  "2. Sélectionnez HubSpot CRM\n"
+                                  "3. Suivez les étapes de connexion\n\n"
+                                  "Voulez-vous que je vous guide dans ce processus ?")
+                        self.logger.info("HubSpot non connecté - proposition de configuration")
+                    
+                    return response
+
+                except Integration.DoesNotExist:
+                    self.logger.error("Intégration HubSpot non trouvée dans la base de données")
+                    return "Désolée, l'intégration HubSpot n'est pas disponible pour le moment."
+
+            # Si l'utilisateur demande ce qu'Alya peut faire
+            if any(word in message.lower() for word in ['que peux-tu faire', 'quelles sont tes fonctionnalités']):
+                return ("Je peux vous aider avec plusieurs tâches :\n"
+                       "1. Gestion des contacts :\n"
+                       "   - Créer des contacts dans HubSpot\n"
+                       "   - Mettre à jour les informations des contacts\n\n"
+                       "2. Automatisation :\n"
+                       "   - Configurer des intégrations\n"
+                       "   - Automatiser des tâches répétitives\n\n"
+                       "Que souhaitez-vous faire ?")
+
+            # Gérer les étapes de création de contact si une conversation est en cours
+            if self.conversation_state:
+                return self.handle_contact_creation(message)
+
+            # Log pour les autres types de messages
+            self.logger.info("Message non reconnu - utilisation de la réponse par défaut")
+            completion = self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[{"role": "user", "content": message}],
+                temperature=0.7,
+                max_tokens=150
+            )
+            
+            response = completion.choices[0].message.content
+            self.logger.info(f"Réponse OpenAI: {response[:100]}...")
+            return response
+
+        except Exception as e:
+            self.logger.error(f"Erreur dans generate_response: {str(e)}")
+            return "Désolée, une erreur s'est produite. Pouvez-vous reformuler votre demande ?"
+
+    def handle_contact_creation(self, message):
+        """Gère le processus de création de contact"""
+        try:
+            # Vérifier l'état actuel de la conversation
+            state = self.conversation_state
+            self.logger.info(f"Traitement de l'état: {state}")
+            
+            if state == 'contact_type':
+                message = message.lower().strip()
+                if '1' in message or 'personnel' in message or 'particulier' in message:
+                    self.conversation_state = 'personal_firstname'
+                    return "Parfait, créons un contact personnel. Quel est son prénom ?"
+                elif '2' in message or 'professionnel' in message or 'entreprise' in message:
+                    self.conversation_state = 'pro_firstname'
+                    return "D'accord, créons un contact professionnel. Quel est son prénom ?"
+                else:
+                    return ("Je n'ai pas compris votre choix. Veuillez répondre par :\n\n"
+                           "1. Contact Personnel (particulier)\n"
+                           "2. Contact Professionnel (entreprise)")
+
+            elif state == 'personal_firstname':
+                self.contact_info = {'firstname': message}
+                self.conversation_state = 'personal_lastname'
+                return "Très bien ! Maintenant, quel est son nom de famille ?"
+                
+            elif state == 'personal_lastname':
+                self.contact_info['lastname'] = message
+                self.conversation_state = 'personal_email'
+                return "Parfait ! Quelle est son adresse email ?"
+                
+            elif state == 'personal_email':
+                self.contact_info['email'] = message
+                response = self.send_request_to_hubspot(self.contact_info)
+                
+                if response and response.status_code == 201:
+                    self.conversation_state = None
+                    self.contact_info = {}
+                    return "✅ Super ! Le contact a été créé avec succès dans HubSpot."
+                else:
+                    return "❌ Désolé, il y a eu un problème lors de la création du contact. Voulez-vous réessayer ?"
+
+            # Si l'état n'est pas reconnu
+            self.logger.error(f"État de conversation non géré: {state}")
+            return "Désolé, je ne sais pas où nous en étions. Pouvons-nous recommencer ?"
+
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la gestion de la création de contact: {str(e)}")
+            return "Une erreur est survenue. Pouvons-nous reprendre depuis le début ?"
+
+# Exemple de fonction pour appeler le modèle GPT-4o
+def call_gpt_model(model_input):
+    # Logique pour appeler l'API OpenAI avec les paramètres fournis
+    # Assurez-vous que l'API est correctement configurée et accessible
+    try:
+        response = openai.ChatCompletion.create(**model_input)
+        return response.choices[0].message.content
+    except Exception as e:
+        logger.error(f"Erreur lors de l'appel au modèle GPT-4o: {e}")
+        return "Désolé, une erreur est survenue lors de la génération de la réponse."

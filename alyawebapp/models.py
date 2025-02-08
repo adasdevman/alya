@@ -67,6 +67,12 @@ class Chat(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+class Message(models.Model):
+    chat = models.ForeignKey(Chat, related_name='messages', on_delete=models.CASCADE)
+    content = models.TextField()
+    is_user = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 class Prompt(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, null=True)

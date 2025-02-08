@@ -77,7 +77,7 @@ DATABASES = {
     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
 #DATABASES = {
-#    'default': {
+#  'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
@@ -173,7 +173,7 @@ LOGGING = {
     },
 }
 
-# HubSpot OAuth settings
+# HubSpot Configuration
 HUBSPOT_CLIENT_ID = os.getenv('HUBSPOT_CLIENT_ID')
 HUBSPOT_CLIENT_SECRET = os.getenv('HUBSPOT_CLIENT_SECRET')
 HUBSPOT_REDIRECT_URI = os.getenv('HUBSPOT_REDIRECT_URI')

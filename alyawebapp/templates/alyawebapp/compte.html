@@ -8,119 +8,615 @@
 <link rel="stylesheet" href="{% static 'css/chat.css' %}">
 <link rel="stylesheet" href="{% static 'css/components/info-tag.css' %}">
 <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+<style>
+    /* Reset du layout */
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    .container-fluid {
+        padding: 0;
+    }
+
+    /* Structure principale */
+    .main-wrapper {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Wrapper du contenu principal */
+    .content-wrapper {
+        flex: 1;
+        display: flex;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    /* Fix pour le décalage du sidebar */
+    html {
+        overflow-y: scroll !important;
+    }
+
+    body {
+        padding-right: 0 !important;
+    }
+
+    .modal-open {
+        overflow: auto !important;
+    }
+
+    .modal-open .modal {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .modal {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .modal-backdrop {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    #sidebar {
+        transition: all 0.3s ease-in-out;
+        background-color: #000000;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 250px;
+        flex-shrink: 0;
+        border-right: 1px solid #000000;
+    }
+    
+    #sidebar.collapsed {
+        width: 60px;
+    }
+    
+    /* Ajuster la navbar pour qu'elle soit poussée par le sidebar */
+    .navbar {
+        transition: margin-left 0.3s ease-in-out;
+        position: sticky;
+        top: 0;
+        right: 0;
+        z-index: 999;
+        width: 100%;
+    }
+
+    .navbar.expanded {
+        margin-left: 60px;
+        width: calc(100% - 60px);
+    }
+    
+    #main-content {
+        transition: margin-left 0.3s ease-in-out;
+        width: 66.66%; /* équivalent à col-md-8 */
+        padding: 0;
+        min-height: calc(100vh - 56px);
+    }
+    
+    #main-content.expanded {
+        margin-left: 60px;
+    }
+    
+    .sidebar-header {
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #000000;
+        border-bottom: 1px solid #000000;
+        height: 60px;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .sidebar-header:hover {
+        background-color: #1a1a1a;
+    }
+
+    .sidebar-header h5 {
+        color: #fff;
+        margin: 0;
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+    
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        height: calc(100vh - 116px); /* 100vh - (navbar + sidebar-header) */
+        overflow-y: auto;
+    }
+
+    .sidebar-menu li {
+        padding: 15px;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        opacity: 0.8;
+    }
+
+    .sidebar-menu li:hover {
+        background-color: #2c2c2c;
+        opacity: 1;
+    }
+
+    .sidebar-menu i {
+        width: 20px;
+        text-align: center;
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+
+    .sidebar-menu span {
+        opacity: 1;
+        transition: opacity 0.3s;
+    }
+
+    #sidebar.collapsed .sidebar-menu span {
+        display: none;
+    }
+    
+    .history-column {
+        height: calc(100vh - 56px);
+        width: 33.33%; /* équivalent à col-md-4 */
+        padding: 0;
+    }
+    
+    @media (max-width: 768px) {
+        #sidebar {
+            top: 0;
+        }
+        .navbar {
+            margin-left: 0;
+            width: 100%;
+        }
+        #main-content {
+            padding-top: 56px;
+        }
+        .history-column {
+            padding-top: 56px;
+        }
+        .content-wrapper {
+            flex-direction: column;
+            padding: 0.5rem;
+        }
+        #main-content,
+        .history-column {
+            width: 100%;
+        }
+        #main-content .card,
+        .history-column .card {
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        .card-body.p-0.d-flex.flex-column {
+            height: 500px; /* Hauteur fixe sur mobile */
+        }
+    }
+
+    /* Styles pour le modal des intégrations */
+    #integrationsListModal .modal-content {
+        background-color: #ffffff;
+        border: 1px solid #2c2c2c;
+    }
+
+    #integrationsListModal .modal-header {
+        background-color: #000000;
+        border-bottom: 1px solid #2c2c2c;
+        padding: 1rem 1.5rem;
+    }
+
+    #integrationsListModal .modal-title {
+        color: #fff;
+        font-size: 1.25rem;
+    }
+
+    #integrationsListModal .card {
+        background-color: #ffffff;
+        border: 1px solid #2c2c2c;
+        transition: all 0.3s ease;
+    }
+
+    #integrationsListModal .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #integrationsListModal .card-title {
+        color: #000000;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    #integrationsListModal .list-group-item-action {
+        background-color: transparent;
+        color: #000000;
+        border: none;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+    }
+
+    #integrationsListModal .list-group-item-action:hover {
+        background-color: #f8f9fa;
+        color: #000000;
+    }
+
+    #integrationsListModal .list-group-item-action i {
+        width: 20px;
+        margin-right: 10px;
+        text-align: center;
+    }
+
+    #integrationsListModal .card.disabled {
+        background-color: #f8f9fa;
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    #integrationsListModal .card.disabled .card-title,
+    #integrationsListModal .card.disabled .list-group-item-action {
+        color: #6c757d;
+    }
+
+    #integrationsListModal .coming-soon-badge {
+        font-size: 0.8rem;
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    /* Ajustements des cartes */
+    #main-content .card,
+    .history-column .card {
+        height: calc(100vh - 2rem); /* 100vh - padding du content-wrapper */
+        margin: 0;
+    }
+
+    /* Structure du chat */
+    .card-body.p-0.d-flex.flex-column {
+        height: calc(100vh - 116px); /* 100vh - (padding + header) */
+    }
+
+    .messages-wrapper {
+        flex-grow: 1;
+        overflow-y: auto;
+        background-color: white;
+        padding: 1rem;
+        height: calc(100% - 80px); /* Hauteur totale moins la hauteur de l'input */
+    }
+
+    .chat-messages {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .message-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        max-width: 85%;
+        margin-bottom: 1rem;
+    }
+
+    .message-group.user {
+        align-self: flex-end;
+        align-items: flex-end;
+    }
+
+    .message-group.assistant {
+        align-self: flex-start;
+        align-items: flex-start;
+    }
+
+    .message {
+        margin-bottom: 0.5rem;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        max-width: 85%;
+        display: inline-block;
+        white-space: normal;
+        word-break: normal !important;
+        word-wrap: normal !important;
+        overflow-wrap: normal !important;
+        line-height: 1.4;
+        text-wrap: nowrap;
+    }
+
+    .message.user {
+        background-color: #e9ecef;
+        margin-left: auto;
+        margin-right: 0;
+        text-align: left;
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-start;
+        white-space: nowrap;
+        word-break: normal !important;
+        hyphens: none;
+        min-width: min-content;
+    }
+
+    .message.user p {
+        white-space: nowrap;
+        margin: 0;
+        padding: 0;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        text-wrap: nowrap;
+    }
+
+    .message.assistant {
+        background-color: #343541;
+        color: white;
+        margin-right: auto;
+        margin-left: 0;
+        text-align: left;
+        border-top-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+        white-space: pre-wrap;
+    }
+
+    .message.system {
+        background-color: #ffd70020;
+        color: #666;
+        font-size: 0.9em;
+        align-self: center;
+        font-style: italic;
+        border-radius: 0.5rem;
+    }
+
+    /* Messages */
+    .message p {
+        margin: 0;
+        padding: 0;
+        white-space: normal;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+    }
+
+    .message p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Style pour les listes dans les messages */
+    .message ul, 
+    .message ol {
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+    }
+
+    .message li {
+        margin-bottom: 0.25rem;
+    }
+
+    /* Animation de typing */
+    .loading {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        background-color: #343541;
+        border-radius: 0.5rem;
+        margin: 0.5rem 0;
+        max-height: 40px;
+    }
+
+    .typing-indicator {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .typing-indicator span {
+        width: 6px;
+        height: 6px;
+        background-color: #ffffff;
+        border-radius: 50%;
+        animation: typing 1s infinite ease-in-out;
+    }
+
+    .typing-indicator span:nth-child(1) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.4s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.6s; }
+
+    @keyframes typing {
+        0%, 100% {
+            transform: translateY(0);
+            opacity: 0.5;
+        }
+        50% {
+            transform: translateY(-3px);
+            opacity: 1;
+        }
+    }
+
+    /* Messages */
+    .message {
+        margin-bottom: 0.5rem;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        max-width: 85%;
+    }
+
+    .message.assistant {
+        background-color: #343541;
+        color: white;
+        margin-right: auto;
+        border-top-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+    }
+
+    .message.user {
+        background-color: #e9ecef;
+        margin-left: auto;
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+    }
+
+    .message.system {
+        background-color: #ffd70020;
+        color: #666;
+        font-size: 0.9em;
+        align-self: center;
+        font-style: italic;
+    }
+
+    .chat-history-item {
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .chat-history-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .chat-history-item.active {
+        background-color: #e9ecef;
+    }
+
+    .chat-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .chat-preview-text {
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .chat-date {
+        font-size: 0.8em;
+        color: #999;
+        margin-top: 5px;
+    }
+
+    /* Ajustement pour les longs mots comme les URLs */
+    .message a {
+        word-break: break-all;
+    }
+
+    .history-column .card {
+        height: 100%;
+    }
+
+    .chat-history-list {
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+
+    .chat-history-item {
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .chat-history-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .chat-history-item.active {
+        background-color: #e9ecef;
+    }
+
+    .chat-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .preview-text {
+        font-size: 0.85rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .loading.message.assistant {
+        background-color: #343541;
+        padding: 0.5rem 1rem;
+        margin: 0.5rem 0;
+        border-radius: 1rem;
+        max-height: 40px;
+        display: flex;
+        align-items: center;
+    }
+
+    .typing-indicator {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .typing-indicator span {
+        width: 6px;
+        height: 6px;
+        background-color: #ffffff;
+        border-radius: 50%;
+        animation: typing 1s infinite ease-in-out;
+    }
+
+    .typing-indicator span:nth-child(1) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.4s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.6s; }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <!-- Colonne de gauche : Secteurs d'activité, Objectifs métier et Taille de l'entreprise -->
-        <div class="col-md-3">
-            <!-- Secteurs d'activité -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-dark">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 text-white">Secteurs d'activité</h6>
-                        <button type="button" 
-                                class="btn btn-link text-white p-0" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#editDomainsModal"
-                                onclick="console.log('Clic sur le bouton des domaines')">
-                            <i class="fa-regular fa-pen-to-square"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="domains-grid">
-                        {% for domain in user_domains %}
-                            <div class="info-tag" 
-                                 role="button"
-                                 data-bs-toggle="modal" 
-                                 data-bs-target="#{{ domain.name|lower }}Modal"
-                                 style="cursor: pointer;">
-                                <i class="{{ domain.icon }}"></i>
-                                <span class="info-name">{{ domain.name }}</span>
-                            </div>
-                        {% empty %}
-                            <p class="text-muted small text-center">
-                                <i class="fa-solid fa-circle-info"></i>
-                                Aucun secteur d'activité sélectionné
-                            </p>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Objectifs métier -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-dark">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 text-white">Objectifs métier</h6>
-                        <button type="button" class="btn btn-link text-white p-0" data-bs-toggle="modal" data-bs-target="#editObjectifsModal">
-                            <i class="fa-regular fa-pen-to-square"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row g-2">
-                        {% for objectif in user_objectifs %}
-                            <div class="col-12">
-                                <div class="info-tag">
-                                    {% if objectif.name == "Croissance" %}
-                                        <i class="fa-solid fa-chart-line"></i>
-                                    {% elif objectif.name == "Innovation" %}
-                                        <i class="fa-regular fa-lightbulb"></i>
-                                    {% elif objectif.name == "Optimisation" %}
-                                        <i class="fa-solid fa-gear"></i>
-                                    {% elif objectif.name == "Expansion" %}
-                                        <i class="fa-solid fa-globe"></i>
-                                    {% elif objectif.name == "Digitalisation" %}
-                                        <i class="fa-solid fa-desktop"></i>
-                                    {% elif objectif.name == "Formation" %}
-                                        <i class="fa-solid fa-graduation-cap"></i>
-                                    {% else %}
-                                        <i class="fa-solid fa-bullseye"></i>
-                                    {% endif %}
-                                    <span class="info-name">{{ objectif.name }}</span>
-                                </div>
-                            </div>
-                        {% empty %}
-                            <p class="text-muted small text-center">
-                                <i class="fa-regular fa-circle-info"></i>
-                                Aucun objectif défini
-                            </p>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Taille de l'entreprise -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-dark">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 text-white">Taille de l'entreprise</h6>
-                        <button type="button" class="btn btn-link text-white p-0" data-bs-toggle="modal" data-bs-target="#editTailleModal">
-                            <i class="fa-regular fa-pen-to-square"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    {% if user.company_size %}
-                        <div class="info-tag">
-                            <i class="fa-regular fa-building"></i>
-                            <span class="info-name">{{ user.company_size }} employés</span>
-                        </div>
-                    {% else %}
-                        <p class="text-muted small text-center">
-                            <i class="fa-regular fa-circle-info"></i>
-                            Non spécifié
-                        </p>
-                    {% endif %}
-                </div>
-            </div>
+<div class="main-wrapper">
+    {% csrf_token %}
+    <!-- Sidebar rétractable -->
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h5 class="sidebar-title">Menu</h5>
         </div>
+        <ul class="sidebar-menu">
+            <li>
+                <i class="fas fa-home"></i>
+                <span>Accueil</span>
+            </li>
+            <li>
+                <i class="fas fa-user"></i>
+                <span>Profil</span>
+            </li>
+            <li>
+                <i class="fas fa-cog"></i>
+                <span>Paramètres</span>
+            </li>
+            <li>
+                <i class="fas fa-plug"></i>
+                <span>Intégrations</span>
+            </li>
+            <li>
+                <i class="fas fa-question-circle"></i>
+                <span>Aide</span>
+            </li>
+        </ul>
+    </div>
 
+    <div class="content-wrapper">
         <!-- Section principale : Chat -->
-        <div class="col-md-6">
+        <div id="main-content">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-dark">
                         <div class="d-flex justify-content-between align-items-center">
@@ -142,7 +638,8 @@
                                 <input type="text" 
                                        id="chat-input" 
                                        class="form-control" 
-                                       placeholder="Tapez votre message...">
+                                       placeholder="Tapez votre message..."
+                                       onkeydown="handleKeyPress(event)">
                                 <button type="submit" class="btn btn-dark">
                                     <i class="fas fa-paper-plane"></i>
                                 </button>
@@ -154,7 +651,7 @@
         </div>
 
         <!-- Colonne de droite : Historique -->
-        <div class="col-md-3">
+        <div class="history-column">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-dark">
                     <div class="d-flex justify-content-between align-items-center">
@@ -165,8 +662,8 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <div class="history-list">
-                        <!-- L'historique des conversations s'affichera ici -->
+                    <div id="chat-list" class="chat-history-list">
+                        <!-- L'historique sera chargé dynamiquement via JavaScript -->
                     </div>
                 </div>
             </div>
@@ -175,10 +672,7 @@
 </div>
 
 <!-- Modals -->
-{% include 'alyawebapp/modals/domains_modal.html' %}
-{% include 'alyawebapp/modals/objectifs_modal.html' %}
 {% include 'alyawebapp/modals/profile_modal.html' %}
-{% include 'alyawebapp/modals/taille_modal.html' %}
 {% include 'alyawebapp/modals/integrations_modal.html' %}
 
 <!-- Domain-specific modals -->
@@ -191,6 +685,258 @@
 {% include 'alyawebapp/modals/integrations/legal.html' %}
 {% include 'alyawebapp/modals/integrations/logistique.html' %}
 {% include 'alyawebapp/modals/integrations/projet.html' %}
+
+<!-- Modal Profil -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="profileModalLabel">Mon Profil</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="profileForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="username" value="{{ user.username }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" value="{{ user.email }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="company" class="form-label">Entreprise</label>
+                        <input type="text" class="form-control" id="company" value="{{ user.company_name }}">
+                    </div>
+                    <button type="submit" class="btn btn-dark">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Paramètres -->
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="settingsModalLabel">Paramètres</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label d-block">Notifications</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="emailNotif">
+                        <label class="form-check-label" for="emailNotif">Notifications par email</label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Langue</label>
+                    <select class="form-select" id="language">
+                        <option value="fr">Français</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <button class="btn btn-dark">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Aide -->
+<div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="helpModalLabel">Aide</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="accordion" id="helpAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                Comment utiliser ALYA ?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>1. Interface de Chat</h6>
+                                <p>ALYA est votre assistant personnel. Vous pouvez lui poser des questions directement dans la zone de chat au centre de l'écran.</p>
+                                
+                                <h6>2. Types de Questions</h6>
+                                <ul>
+                                    <li>Création de contacts dans HubSpot</li>
+                                    <li>Gestion des informations clients</li>
+                                    <li>Assistance générale</li>
+                                </ul>
+                                
+                                <h6>3. Historique</h6>
+                                <p>Toutes vos conversations sont sauvegardées dans la colonne de droite pour référence future.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                Intégrations
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>HubSpot CRM</h6>
+                                <p>L'intégration avec HubSpot vous permet de :</p>
+                                <ul>
+                                    <li>Créer des contacts directement depuis le chat</li>
+                                    <li>Synchroniser les informations client</li>
+                                    <li>Gérer vos relations client de manière efficace</li>
+                                </ul>
+                                
+                                <h6>Comment configurer HubSpot :</h6>
+                                <ol>
+                                    <li>Cliquez sur "Intégrations" dans le menu</li>
+                                    <li>Sélectionnez HubSpot CRM</li>
+                                    <li>Suivez le processus d'authentification</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                Résolution des problèmes
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>Problèmes courants :</h6>
+                                <ul>
+                                    <li><strong>Connexion HubSpot perdue</strong> - Reconnectez-vous via le menu Intégrations</li>
+                                    <li><strong>Messages non envoyés</strong> - Vérifiez votre connexion internet</li>
+                                    <li><strong>Historique non visible</strong> - Actualisez la page</li>
+                                </ul>
+                                
+                                <p>Pour toute autre assistance, contactez le support : support@alya.ai</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal des intégrations -->
+<div class="modal fade" id="integrationsListModal" tabindex="-1" aria-labelledby="integrationsListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="integrationsListModalLabel">Intégrations Disponibles</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-4">
+                    <!-- CRM (Actif) -->
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-users me-2"></i>CRM
+                                </h5>
+                                <div class="list-group list-group-flush">
+                                    <a href="#" class="list-group-item list-group-item-action" data-integration="hubspot">
+                                        <i class="fab fa-hubspot me-2"></i>HubSpot
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- RH (Désactivé) -->
+                    <div class="col-md-4">
+                        <div class="card h-100 disabled">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-user-tie me-2"></i>RH
+                                    <span class="coming-soon-badge">(Bientôt disponible)</span>
+                                </h5>
+                                <div class="list-group list-group-flush">
+                                    <span class="list-group-item list-group-item-action">
+                                        <i class="fas fa-users-cog me-2"></i>SIRH
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Marketing (Désactivé) -->
+                    <div class="col-md-4">
+                        <div class="card h-100 disabled">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-bullhorn me-2"></i>Marketing
+                                    <span class="coming-soon-badge">(Bientôt disponible)</span>
+                                </h5>
+                                <div class="list-group list-group-flush">
+                                    <span class="list-group-item list-group-item-action">
+                                        <i class="fas fa-envelope me-2"></i>Marketing Automation
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Finance (Désactivé) -->
+                    <div class="col-md-4">
+                        <div class="card h-100 disabled">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-chart-line me-2"></i>Finance
+                                    <span class="coming-soon-badge">(Bientôt disponible)</span>
+                                </h5>
+                                <div class="list-group list-group-flush">
+                                    <span class="list-group-item list-group-item-action">
+                                        <i class="fas fa-calculator me-2"></i>Comptabilité
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Analytics (Désactivé) -->
+                    <div class="col-md-4">
+                        <div class="card h-100 disabled">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-chart-bar me-2"></i>Analytics
+                                    <span class="coming-soon-badge">(Bientôt disponible)</span>
+                                </h5>
+                                <div class="list-group list-group-flush">
+                                    <span class="list-group-item list-group-item-action">
+                                        <i class="fas fa-analytics me-2"></i>Analyse de données
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Support (Désactivé) -->
+                    <div class="col-md-4">
+                        <div class="card h-100 disabled">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-headset me-2"></i>Support
+                                    <span class="coming-soon-badge">(Bientôt disponible)</span>
+                                </h5>
+                                <div class="list-group list-group-flush">
+                                    <span class="list-group-item list-group-item-action">
+                                        <i class="fas fa-ticket-alt me-2"></i>Service Client
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}
@@ -208,179 +954,156 @@
 <!-- Scripts pour la gestion des formulaires -->
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
+    let currentChatId = null;  // Pour suivre le chat actuel
+
     // Fonction utilitaire pour obtenir le token CSRF
     function getCsrfToken() {
         return document.querySelector('[name=csrfmiddlewaretoken]').value;
     }
 
-    // Fonction utilitaire pour les requêtes fetch
-    function sendFormData(url, formData) {
-        return fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCsrfToken()
-            },
-            body: formData
-        });
+    // Fonction pour ajouter un message
+    function appendMessage(role, messageContent) {
+        const messagesContainer = document.getElementById('chatMessages');
+        if (!messagesContainer) return;
+
+        // Créer le message
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${role}`;
+        
+        // Formater le contenu du message
+        const formattedContent = formatMessage(messageContent);
+        messageDiv.innerHTML = formattedContent;
+        
+        // Ajouter le message au conteneur
+        messagesContainer.appendChild(messageDiv);
+        scrollToBottom();
     }
 
-    // Fonction pour ajouter un message dans le chat
-    function appendMessage(role, content) {
-        const messagesContainer = document.querySelector('.chat-messages');
-        if (messagesContainer) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-            messageDiv.textContent = content;
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
+    // Fonction pour formater le message
+    function formatMessage(text) {
+        return text
+            .split('\n')
+            .map(line => {
+                if (line.trim().startsWith('- ')) {
+                    return `<li>${line.trim().substring(2)}</li>`;
+                } else if (line.trim().startsWith('1. ')) {
+                    return `<li>${line.trim().substring(3)}</li>`;
+                }
+                return `<p>${line}</p>`;
+            })
+            .join('')
+            .replace(/<p><\/p>/g, '');
     }
 
-    // Afficher le message de bienvenue initial
-    appendMessage('assistant', 'Bonjour! Je suis ALYA, votre assistant personnel. Comment puis-je vous aider aujourd\'hui?');
-
-    // Gestion du formulaire des domaines
-    const editDomainsForm = document.getElementById('editDomainsForm');
-    if (editDomainsForm) {
-        editDomainsForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            
-            sendFormData('/update-domains/', formData)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('editDomainsModal'));
-                        if (modal) modal.hide();
-                        window.location.href = '/compte/';  // Redirection sans paramètres
-                    } else {
-                        alert('Erreur: ' + (data.message || 'Une erreur est survenue'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Erreur lors de la mise à jour des domaines');
-                });
-        });
-    }
-
-    // Gestion du formulaire des objectifs
-    const editObjectifsForm = document.getElementById('editObjectifsForm');
-    if (editObjectifsForm) {
-        editObjectifsForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            
-            sendFormData('/update-objectifs/', formData)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('editObjectifsModal'));
-                        if (modal) modal.hide();
-                        window.location.href = '/compte/';  // Redirection sans paramètres
-                    } else {
-                        alert('Erreur: ' + (data.message || 'Une erreur est survenue'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Erreur lors de la mise à jour des objectifs');
-                });
-        });
-    }
-
-    // Gestion du formulaire de profil
-    const editProfileForm = document.getElementById('editProfileForm');
-    if (editProfileForm) {
-        editProfileForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            
-            sendFormData('/update-profile/', formData)
-                .then(response => {
-                    if (response.ok) {
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
-                        if (modal) modal.hide();
-                        window.location.href = '/compte/';  // Redirection sans paramètres
-                    } else {
-                        throw new Error('Erreur lors de la mise à jour du profil');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Erreur lors de la mise à jour du profil');
-                });
-        });
-    }
-
-    // Gestion du formulaire de taille d'entreprise
-    const editTailleForm = document.getElementById('editTailleForm');
-    if (editTailleForm) {
-        editTailleForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            
-            sendFormData('/update-company-size/', formData)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('editTailleModal'));
-                        if (modal) modal.hide();
-                        window.location.href = '/compte/';
-                    } else {
-                        alert('Erreur: ' + (data.message || 'Une erreur est survenue'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Erreur lors de la mise à jour de la taille de l\'entreprise');
-                });
-        });
-    }
-
-    // Variable pour stocker l'ID du chat actuel
-    let currentChatId = null;
-
-    // Fonction pour faire défiler jusqu'au dernier message
-    function scrollToBottom() {
-        const messagesWrapper = document.querySelector('.messages-wrapper');
-        if (messagesWrapper) {
-            messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
-        }
-    }
-
-    // Fonction pour afficher l'animation de typing
-    function showTypingIndicator() {
+    // Fonction pour envoyer un message
+    function sendMessage(message) {
         const chatMessages = document.getElementById('chatMessages');
-        const typingDiv = document.createElement('div');
-        typingDiv.className = 'message assistant loading';
-        typingDiv.innerHTML = `
+        
+        // Afficher immédiatement le message de l'utilisateur
+        appendMessage('user', message);
+
+        // Ajouter l'indicateur de chargement
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'loading message assistant';
+        loadingDiv.innerHTML = `
             <div class="typing-indicator">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
         `;
-        chatMessages.appendChild(typingDiv);
+        chatMessages.appendChild(loadingDiv);
         scrollToBottom();
-        return typingDiv;
+
+        // Envoyer la requête au serveur
+        fetch('/chat/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken()
+            },
+            body: JSON.stringify({
+                message: message,
+                chat_id: currentChatId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            loadingDiv.remove();
+            
+            if (data.status === 'success') {
+                if (!currentChatId) {
+                    currentChatId = data.chat_id;
+                }
+                appendMessage('assistant', data.response);
+                scrollToBottom();
+                loadChatHistory();
+            } else {
+                appendMessage('system', 'Une erreur est survenue');
+            }
+        })
+        .catch(error => {
+            loadingDiv.remove();
+            appendMessage('system', 'Une erreur est survenue');
+            console.error('Erreur:', error);
+        });
     }
+
+    // Fonction pour gérer la soumission du formulaire
+    function handleChatSubmit(e) {
+        e.preventDefault();
+        const input = document.getElementById('chat-input');
+        const message = input.value.trim();
+        
+        if (!message) return;
+
+        input.value = '';
+        sendMessage(message);
+        input.focus();
+    }
+
+    // Attacher le gestionnaire au formulaire
+    document.querySelector('.chat-form').addEventListener('submit', handleChatSubmit);
+
+    // Afficher le message de bienvenue initial
+    function showWelcomeMessage() {
+        const chatMessages = document.getElementById('chatMessages');
+        if (chatMessages && chatMessages.children.length === 0) {
+            appendMessage('assistant', 'Bonjour! Je suis ALYA, votre assistant personnel. Comment puis-je vous aider aujourd\'hui?');
+        }
+    }
+
+    // Gestion du nouveau chat
+    document.getElementById('new-chat').addEventListener('click', function() {
+        sessionStorage.removeItem('currentChatId');
+        currentChatId = null;
+        document.getElementById('chatMessages').innerHTML = '';
+        showWelcomeMessage();
+        loadChatHistory();
+    });
+
+    // Appeler le message de bienvenue au chargement initial
+    showWelcomeMessage();
+
+    // Chargement initial de l'historique
+    loadChatHistory();
 
     // Fonction pour charger une conversation
     function loadConversation(chatId) {
         if (!chatId) return;
         
         currentChatId = chatId;
+        sessionStorage.setItem('currentChatId', chatId);
+        
         const chatMessages = document.getElementById('chatMessages');
-        chatMessages.innerHTML = '';
-        
-        const typingIndicator = showTypingIndicator();
-        
-        fetch(`/get-conversation/${chatId}/`)
+        if (!chatMessages) return;
+
+        fetch(`/get-messages/${chatId}/`)
             .then(response => response.json())
             .then(data => {
-                typingIndicator.remove();
-                if (data.status === 'success') {
+                chatMessages.innerHTML = '';
+                
+                if (data.messages && data.messages.length > 0) {
                     data.messages.forEach(message => {
                         appendMessage(message.is_user ? 'user' : 'assistant', message.content);
                     });
@@ -388,128 +1111,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                typingIndicator.remove();
-                console.error('Erreur lors du chargement de la conversation:', error);
-                scrollToBottom();
+                console.error('Erreur lors du chargement des messages:', error);
+                chatMessages.innerHTML = '<div class="message system">Erreur lors du chargement des messages</div>';
             });
-    }
-
-    // Gestion de la soumission du chat
-    const chatForm = document.querySelector('.chat-form');
-    const chatInput = document.getElementById('chat-input');
-
-    if (chatForm && chatInput) {
-        chatForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const message = chatInput.value.trim();
-            if (message) {
-                appendMessage('user', message);
-                chatInput.value = '';
-                scrollToBottom();
-
-                const typingIndicator = showTypingIndicator();
-
-                fetch('/chat/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCsrfToken()
-                    },
-                    body: JSON.stringify({ 
-                        message: message,
-                        chat_id: currentChatId
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    typingIndicator.remove();
-                    if (data.status === 'success') {
-                        currentChatId = data.chat_id;
-                        appendMessage('assistant', data.response);
-                        scrollToBottom();
-                        loadChatHistory();
-                    }
-                })
-                .catch(error => {
-                    typingIndicator.remove();
-                    console.error('Error:', error);
-                    appendMessage('system', 'Une erreur est survenue');
-                    scrollToBottom();
-                });
-            }
-        });
-    }
-
-    // Gestion du nouveau chat
-    const newChatBtn = document.getElementById('new-chat');
-    if (newChatBtn) {
-        newChatBtn.addEventListener('click', function() {
-            currentChatId = null;
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.innerHTML = '';
-            
-            // Ajouter le message de bienvenue
-            appendMessage('assistant', 'Bonjour ! Je suis ALYA, votre assistant. Comment puis-je vous aider aujourd\'hui ?');
-            scrollToBottom();
-            
-            loadChatHistory();
-        });
     }
 
     // Fonction pour charger l'historique des chats
     function loadChatHistory() {
-        const historyList = document.querySelector('.history-list');
-        if (!historyList) return;
+        const chatList = document.getElementById('chat-list');
+        if (!chatList) return;
 
         fetch('/get-chat-history/')
             .then(response => response.json())
             .then(data => {
-                if (data.status === 'success' && data.chats) {
-                    historyList.innerHTML = '';
-                    
-                    if (data.chats.length > 0) {
-                        data.chats.forEach(chat => {
-                            const chatItem = document.createElement('div');
-                            chatItem.className = 'p-2 border-bottom chat-history-item' + 
-                                (chat.id === currentChatId ? ' active' : '');
-                            chatItem.style.cursor = 'pointer';
-                            chatItem.dataset.chatId = chat.id;
-                            chatItem.innerHTML = `
-                                <div class="chat-preview">
-                                    <div class="text-truncate">
-                                        <small class="text-muted">${new Date(chat.created_at).toLocaleString()}</small>
-                                        <div class="text-truncate preview-text">${chat.preview}</div>
-                                    </div>
-                                </div>
-                            `;
-                            
-                            chatItem.onclick = function() {
-                                document.querySelectorAll('.chat-history-item').forEach(item => {
-                                    item.classList.remove('active');
-                                });
-                                this.classList.add('active');
-                                loadConversation(chat.id);
-                            };
-                            
-                            historyList.appendChild(chatItem);
+                chatList.innerHTML = '';
+                
+                if (data.chats && data.chats.length > 0) {
+                    data.chats.forEach(chat => {
+                        const chatItem = document.createElement('div');
+                        chatItem.className = 'chat-history-item';
+                        chatItem.onclick = () => loadConversation(chat.id);
+                        
+                        // Formater la date
+                        const date = new Date(chat.created_at);
+                        const formattedDate = date.toLocaleString('fr-FR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
                         });
-                    } else {
-                        historyList.innerHTML = `
-                            <div class="text-muted small text-center py-3">
-                                <i class="fa-solid fa-message"></i>
-                                Aucune conversation
+                        
+                        chatItem.innerHTML = `
+                            <div class="chat-preview p-3">
+                                <div class="chat-title">${chat.title || 'Nouvelle conversation'}</div>
+                                <div class="chat-preview-text">${chat.preview || ''}</div>
+                                <div class="chat-date">${formattedDate}</div>
                             </div>
                         `;
-                    }
+                        
+                        chatList.appendChild(chatItem);
+                    });
+                } else {
+                    chatList.innerHTML = `
+                        <div class="text-center p-3">
+                            <p class="text-muted">Aucune conversation</p>
+                        </div>
+                    `;
                 }
             })
             .catch(error => {
-                console.error('Erreur lors du chargement de l\'historique:', error);
+                console.error('Erreur:', error);
+                chatList.innerHTML = `
+                    <div class="text-center p-3">
+                        <p class="text-danger">Erreur lors du chargement de l'historique</p>
+                    </div>
+                `;
             });
     }
-
-    // Charger l'historique au chargement initial de la page
-    loadChatHistory();
 
     // Gestion du bouton clear history
     const clearHistoryBtn = document.getElementById('clearHistory');
@@ -534,6 +1193,97 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    const navbar = document.querySelector('.navbar');
+    const sidebarHeader = document.querySelector('.sidebar-header');
+    
+    sidebarHeader.addEventListener('click', function(e) {
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
+        navbar.classList.toggle('expanded');
+    });
+
+    // Gestion du clic sur l'élément Intégrations du sidebar
+    const integrationMenuItem = document.querySelector('.sidebar-menu li:nth-child(4)');
+    if (integrationMenuItem) {
+        integrationMenuItem.addEventListener('click', function() {
+            const modal = new bootstrap.Modal(document.getElementById('integrationsListModal'));
+            modal.show();
+        });
+    }
+
+    // Gestion des clics sur les intégrations
+    document.querySelectorAll('[data-integration]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const integration = this.dataset.integration;
+            // Rediriger vers la page d'authentification de l'intégration
+            window.location.href = `/integrations/${integration}/oauth/`;
+        });
+    });
+
+    // Gestion des clics sur les éléments du menu
+    const profileMenuItem = document.querySelector('.sidebar-menu li:nth-child(2)');
+    const settingsMenuItem = document.querySelector('.sidebar-menu li:nth-child(3)');
+    const helpMenuItem = document.querySelector('.sidebar-menu li:nth-child(5)');
+
+    profileMenuItem.addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('profileModal'));
+        modal.show();
+    });
+
+    settingsMenuItem.addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('settingsModal'));
+        modal.show();
+    });
+
+    helpMenuItem.addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('helpModal'));
+        modal.show();
+    });
+
+    // Style pour les intégrations désactivées
+    document.querySelectorAll('.list-group-item-action.disabled').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+        });
+    });
+
+    // Ajouter cette fonction d'aide
+    function formatDate(dateString) {
+        if (!dateString) return 'Date inconnue';
+        return new Date(dateString).toLocaleString('fr-FR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // Fonction pour gérer la touche Entrée
+    function handleKeyPress(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            document.querySelector('.chat-form').dispatchEvent(new Event('submit'));
+        }
+    }
+
+    // Fonction pour faire défiler jusqu'au dernier message
+    function scrollToBottom() {
+        const messagesWrapper = document.querySelector('.messages-wrapper');
+        if (messagesWrapper) {
+            messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
+        }
+    }
+
+    // Appeler la fonction au chargement de la page
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Page chargée, chargement de l\'historique...');
+        loadChatHistory();
+    });
 });
 </script>
 
@@ -546,57 +1296,50 @@ document.addEventListener('DOMContentLoaded', function() {
     .loading {
         display: flex;
         align-items: center;
-        padding: 1rem;
+        padding: 0.5rem;
         background-color: #343541;  /* Fond noir pour le message de l'assistant */
+        border-radius: 0.5rem;
+        margin: 0.5rem 0;  /* Ajoute une marge verticale */
+        max-height: 40px;  /* Limite la hauteur */
     }
 
     .typing-indicator {
         display: flex;
         gap: 4px;
+        align-items: center;  /* Centre verticalement les points */
     }
 
     .typing-indicator span {
-        width: 8px;
-        height: 8px;
-        background-color: #ffffff;  /* Points blancs pour contraster avec le fond noir */
+        width: 6px;  /* Réduit de 8px à 6px */
+        height: 6px;  /* Réduit de 8px à 6px */
+        background-color: #ffffff;
         border-radius: 50%;
         animation: typing 1s infinite ease-in-out;
     }
 
-    .typing-indicator span:nth-child(1) {
-        animation-delay: 0.2s;
-    }
-
-    .typing-indicator span:nth-child(2) {
-        animation-delay: 0.4s;
-    }
-
-    .typing-indicator span:nth-child(3) {
-        animation-delay: 0.6s;
-    }
-
+    /* Ajustement de l'animation pour la nouvelle taille */
     @keyframes typing {
         0%, 100% {
             transform: translateY(0);
-            opacity: 0.5;  /* Opacité minimum augmentée pour plus de visibilité */
+            opacity: 0.5;
         }
         50% {
-            transform: translateY(-5px);
+            transform: translateY(-3px);  /* Réduit de -5px à -3px */
             opacity: 1;
         }
     }
 
     /* Structure du chat */
     .card-body.p-0.d-flex.flex-column {
-        height: 100%;  /* Prendre toute la hauteur de la carte */
-        position: relative;  /* Pour le positionnement absolu de l'input */
+        height: calc(100vh - 116px); /* 100vh - (padding + header) */
     }
 
     .messages-wrapper {
-        flex: 1;  /* Prendre tout l'espace disponible */
+        flex-grow: 1;
         overflow-y: auto;
         background-color: white;
         padding: 1rem;
+        height: calc(100% - 80px); /* Hauteur totale moins la hauteur de l'input */
     }
 
     .chat-messages {
@@ -605,46 +1348,77 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     .chat-input-wrapper {
-        position: sticky;
-        bottom: 0;
-        width: 100%;
+        flex-shrink: 0;
         background: white;
         padding: 1rem;
         border-top: 1px solid #e0e0e0;
-        z-index: 10;
     }
 
     /* Messages */
     .message {
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
         padding: 0.75rem;
         border-radius: 0.5rem;
-        max-width: 80%;
+        max-width: 85%;
+        display: inline-block;
+        white-space: normal;
+        word-break: normal !important;
+        word-wrap: normal !important;
+        overflow-wrap: normal !important;
+        line-height: 1.4;
+        text-wrap: nowrap;
     }
 
     .message.user {
         background-color: #e9ecef;
         margin-left: auto;
+        margin-right: 0;
+        text-align: left;
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-start;
+        white-space: nowrap;
+        word-break: normal !important;
+        hyphens: none;
+        min-width: min-content;
+    }
+
+    .message.user p {
+        white-space: nowrap;
+        margin: 0;
+        padding: 0;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        text-wrap: nowrap;
     }
 
     .message.assistant {
         background-color: #343541;
         color: white;
         margin-right: auto;
+        margin-left: 0;
+        text-align: left;
+        border-top-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+        white-space: pre-wrap;
     }
 
     .message.system {
         background-color: #ffd70020;
         color: #666;
         font-size: 0.9em;
-        margin-left: auto;
-        margin-right: auto;
+        align-self: center;
         font-style: italic;
+        border-radius: 0.5rem;
     }
 
     /* Scrollbar */
     .messages-wrapper::-webkit-scrollbar {
-        width: 8px;
+        width: 18px;
     }
 
     .messages-wrapper::-webkit-scrollbar-track {
@@ -674,21 +1448,21 @@ document.addEventListener('DOMContentLoaded', function() {
         background-color: #e9ecef;
     }
 
-    .chat-preview {
-        width: 100%;
+    .chat-title {
+        color: #212529;
+        font-size: 0.95rem;
+        line-height: 1.2;
     }
 
     .preview-text {
-        color: #495057;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        color: #6c757d;
     }
 
-    /* Empêcher la sélection de texte lors du clic */
-    .chat-history-item {
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
+    .chat-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
     }
 </style>
 {% endblock %} 

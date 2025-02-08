@@ -27,7 +27,8 @@ from .models import (
     BusinessObjective,
     CompanySize,
     Integration,
-    UserIntegration
+    UserIntegration,
+    Message
 )
 from alyawebapp.services.ai_orchestrator import AIOrchestrator
 import traceback
@@ -241,51 +242,70 @@ def reset_domains(request):
         return redirect('home')
 
 @login_required
-def chat(request):
+def chat_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            message = data.get('message', '')
+            message = data.get('message')
             chat_id = data.get('chat_id')
             
-            # Utiliser l'orchestrator pour traiter le message
-            orchestrator = AIOrchestrator(request.user)
+            # Si pas de chat_id, créer un nouveau chat
+            if not chat_id:
+                chat = Chat.objects.create(user=request.user)
+                chat_id = chat.id
+            else:
+                chat = Chat.objects.get(id=chat_id, user=request.user)
+            
+            # Obtenir la réponse de l'assistant
+            orchestrator = AIOrchestrator(user_id=request.user.id)
             response = orchestrator.process_message(message, chat_id)
             
-            return JsonResponse(response)
+            return JsonResponse({
+                'status': 'success',
+                'response': response,
+                'chat_id': chat_id
+            })
             
         except Exception as e:
-            logger.error(f"Erreur lors du traitement du chat: {str(e)}")
+            logger.error(f"Erreur dans le chat: {str(e)}")
             return JsonResponse({
-                "error": str(e)
+                'status': 'error',
+                'message': str(e)
             }, status=500)
-    
-    return render(request, 'alyawebapp/chat.html')
 
 @login_required
 def get_chat_history(request):
     try:
-        # Récupérer tous les chats de l'utilisateur avec leur dernier message
-        chats = Chat.objects.filter(user=request.user).order_by('-created_at')
-        chat_list = []
+        # Récupérer les chats avec au moins un message
+        chats = Chat.objects.filter(
+            user=request.user,
+            messages__isnull=False
+        ).distinct()
+        
+        # Créer un dictionnaire pour stocker les conversations uniques
+        unique_chats = {}
         
         for chat in chats:
-            # Récupérer le premier message utilisateur de ce chat
-            first_message = ChatHistory.objects.filter(
-                chat=chat,
-                is_user=True
-            ).first()
-            
-            if first_message:
-                chat_list.append({
-                    'id': chat.id,
-                    'preview': first_message.content[:100] + '...' if len(first_message.content) > 100 else first_message.content,
-                    'created_at': chat.created_at.isoformat()
-                })
+            if chat.id not in unique_chats:
+                messages = Message.objects.filter(chat=chat).order_by('created_at')
+                if messages.exists():
+                    first_message = messages.first()
+                    last_message = messages.last()
+                    
+                    unique_chats[chat.id] = {
+                        'id': chat.id,
+                        'title': first_message.content[:50],
+                        'preview': last_message.content[:100],
+                        'created_at': chat.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                        'message_count': messages.count()
+                    }
+        
+        # Convertir le dictionnaire en liste pour la réponse
+        chat_history = list(unique_chats.values())
         
         return JsonResponse({
             'status': 'success',
-            'chats': chat_list
+            'chats': chat_history
         })
     except Exception as e:
         logger.error(f"Erreur lors de la récupération de l'historique: {str(e)}")
@@ -297,28 +317,22 @@ def get_chat_history(request):
 @login_required
 def get_conversation(request, chat_id):
     try:
-        chat = Chat.objects.get(id=chat_id, user=request.user)
-        messages = ChatHistory.objects.filter(chat=chat).order_by('created_at')
+        chat = Chat.objects.get(id=chat_id, user_id=request.user.id)
+        messages = chat.messages.all().order_by('created_at')
         
         return JsonResponse({
             'status': 'success',
             'messages': [{
                 'content': msg.content,
                 'is_user': msg.is_user,
-                'created_at': msg.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                'timestamp': msg.created_at.isoformat()
             } for msg in messages]
         })
     except Chat.DoesNotExist:
         return JsonResponse({
             'status': 'error',
-            'message': 'Conversation non trouvée'
-        }, status=404)
-    except Exception as e:
-        logger.error(f"Erreur lors de la récupération de la conversation: {str(e)}")
-        return JsonResponse({
-            'status': 'error',
-            'message': str(e)
-        }, status=500)
+            'message': 'Conversation not found'
+        })
 
 @login_required
 def update_company_size(request):
@@ -916,58 +930,6 @@ def hubspot_callback(request):
         return redirect('compte')
 
 @login_required
-def chat_view(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            message = data.get('message')
-            chat_id = data.get('chat_id')
-            
-            # Récupérer ou créer une conversation
-            if chat_id:
-                try:
-                    chat = Chat.objects.get(id=chat_id, user=request.user)
-                except Chat.DoesNotExist:
-                    chat = Chat.objects.create(user=request.user)
-            else:
-                chat = Chat.objects.create(user=request.user)
-
-            # Sauvegarder le message de l'utilisateur
-            ChatHistory.objects.create(
-                user=request.user,
-                chat=chat,
-                content=message,
-                is_user=True
-            )
-            
-            # Obtenir la réponse de l'assistant
-            orchestrator = AIOrchestrator(user=request.user)
-            response = orchestrator.process_message(message)
-            
-            # Sauvegarder la réponse de l'assistant
-            ChatHistory.objects.create(
-                user=request.user,
-                chat=chat,
-                content=response,
-                is_user=False
-            )
-            
-            return JsonResponse({
-                'status': 'success',
-                'response': response,
-                'chat_id': chat.id
-            })
-            
-        except Exception as e:
-            logger.error(f"Erreur dans le chat: {str(e)}")
-            return JsonResponse({
-                'status': 'error',
-                'message': str(e)
-            }, status=500)
-    
-    return JsonResponse({'status': 'error', 'message': 'Méthode non autorisée'}, status=405)
-
-@login_required
 def clear_chat_history(request):
     if request.method == 'POST':
         try:
@@ -986,4 +948,45 @@ def clear_chat_history(request):
 def integration_success(request):
     """Vue pour afficher la page de succès après l'intégration"""
     return render(request, 'alyawebapp/integration_success.html')
+
+def handle_chat_request(request):
+    if request.method == 'POST':
+        chat_id = request.POST.get('chat_id')
+        message_content = request.POST.get('message')
+
+        if not message_content:
+            return JsonResponse({'error': 'Le message ne peut pas être vide.'}, status=400)
+
+        orchestrator = AIOrchestrator(user=request.user)
+        try:
+            orchestrator.process_message(chat_id, message_content)
+            return JsonResponse({'status': 'success'})
+        except ValueError as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        except Exception as e:
+            logger.error(f"Erreur lors du traitement du message: {e}")
+            return JsonResponse({'error': 'Erreur interne du serveur.'}, status=500)
+
+@login_required
+def get_messages(request, chat_id):
+    try:
+        chat = Chat.objects.get(id=chat_id, user=request.user)
+        messages = Message.objects.filter(chat=chat).order_by('created_at')
+        
+        message_list = [{
+            'content': msg.content,
+            'is_user': msg.is_user,
+            'created_at': msg.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        } for msg in messages]
+        
+        return JsonResponse({
+            'status': 'success',
+            'messages': message_list
+        })
+    except Exception as e:
+        logger.error(f"Erreur lors de la récupération des messages: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
 

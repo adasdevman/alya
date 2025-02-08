@@ -30,4 +30,5 @@ urlpatterns = [
     path('integration-success/', views.integration_success, name='integration_success'),
     path('get-user-integrations-state/', views.get_user_integrations_state, name='get_user_integrations_state'),
     path('clear-chat-history/', views.clear_chat_history, name='clear_chat_history'),
+    path('get-messages/<int:chat_id>/', views.get_messages, name='get_messages'),
 ] 
