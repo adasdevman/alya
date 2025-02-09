@@ -177,7 +177,12 @@
     
     @media (max-width: 768px) {
         #sidebar {
+            height: 100vh;  /* Hauteur complète de l'écran */
+            position: fixed;  /* Position fixe */
+            left: 0;
             top: 0;
+            bottom: 0;
+            z-index: 1030;  /* Au-dessus du contenu */
         }
         .navbar {
             margin-left: 0;
@@ -188,10 +193,12 @@
         }
         .history-column {
             padding-top: 56px;
+            margin-left: 60px;
         }
         .content-wrapper {
             flex-direction: column;
             padding: 0.5rem;
+            margin-left: 0px;  /* Espace pour le sidebar rétracté */
         }
         #main-content,
         .history-column {
@@ -579,6 +586,127 @@
     .typing-indicator span:nth-child(1) { animation-delay: 0.2s; }
     .typing-indicator span:nth-child(2) { animation-delay: 0.4s; }
     .typing-indicator span:nth-child(3) { animation-delay: 0.6s; }
+
+    /* Styles pour les informations utilisateur en mobile */
+    .user-info-mobile {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        margin-bottom: 1rem;
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        background-color: #343541;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .user-details {
+        flex: 1;
+    }
+
+    .user-name {
+        color: white;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .user-email {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.8rem;
+    }
+
+    .logout-mobile {
+        margin-top: auto;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 1rem;
+    }
+
+    .logout-mobile a {
+        color: #ffffff;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Cacher le hamburger en mobile */
+    @media (max-width: 768px) {
+        .navbar-toggler {
+            display: none !important;
+        }
+    }
+
+    /* Style pour le sidebar rétracté */
+    #sidebar.collapsed .expanded-only {
+        display: none;
+    }
+
+    #sidebar.collapsed .user-info-mobile {
+        padding: 0.5rem;
+        border: none;
+        margin: 0;
+    }
+
+    #sidebar.collapsed .user-avatar {
+        margin: 0 auto;
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+
+    #sidebar.collapsed .user-profile {
+        justify-content: center;
+    }
+
+    #sidebar.collapsed .logout-mobile {
+        border: none;
+        padding: 0.5rem;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    #sidebar.collapsed .logout-mobile a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+    }
+
+    #sidebar.collapsed .logout-mobile span {
+        display: none;
+    }
+
+    #sidebar.collapsed .logout-mobile i {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    /* Correction pour l'alignement des cards en mobile */
+    @media (max-width: 768px) {
+        .card {
+            height: calc(100vh - 56px) !important;  /* Hauteur fixe moins la navbar */
+            margin: 0 !important;
+        }
+
+        #main-content, .history-column {
+            padding: 0;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -590,18 +718,26 @@
         <div class="sidebar-header">
             <h5 class="sidebar-title">Menu</h5>
         </div>
+        
+        <!-- Informations utilisateur mobile -->
+        <div class="user-info-mobile d-md-none">
+            <div class="user-profile">
+                <div class="user-avatar">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</div>
+                <div class="user-details expanded-only">
+                    <div class="user-name">{{ request.user.first_name }} {{ request.user.last_name }}</div>
+                    <div class="user-email">{{ request.user.email }}</div>
+                </div>
+            </div>
+        </div>
+
         <ul class="sidebar-menu">
             <li>
-                <i class="fas fa-home"></i>
-                <span>Accueil</span>
+                <i class="fas fa-robot"></i>
+                <span>Automatisation</span>
             </li>
             <li>
-                <i class="fas fa-user"></i>
-                <span>Profil</span>
-            </li>
-            <li>
-                <i class="fas fa-cog"></i>
-                <span>Paramètres</span>
+                <i class="fas fa-magic"></i>
+                <span>Créer votre assistant</span>
             </li>
             <li>
                 <i class="fas fa-plug"></i>
@@ -610,6 +746,13 @@
             <li>
                 <i class="fas fa-question-circle"></i>
                 <span>Aide</span>
+            </li>
+            <!-- Bouton déconnexion mobile -->
+            <li class="logout-mobile d-md-none">
+                <a href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Déconnexion</span>
+                </a>
             </li>
         </ul>
     </div>
@@ -967,8 +1110,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!messagesContainer) return;
 
         // Créer le message
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${role}`;
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
         
         // Formater le contenu du message
         const formattedContent = formatMessage(messageContent);
@@ -1027,22 +1170,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 chat_id: currentChatId
             })
         })
-        .then(response => response.json())
-        .then(data => {
+            .then(response => response.json())
+            .then(data => {
             loadingDiv.remove();
             
-            if (data.status === 'success') {
+                if (data.status === 'success') {
                 if (!currentChatId) {
                     currentChatId = data.chat_id;
                 }
                 appendMessage('assistant', data.response);
-                scrollToBottom();
+                    scrollToBottom();
                 loadChatHistory();
             } else {
                 appendMessage('system', 'Une erreur est survenue');
-            }
-        })
-        .catch(error => {
+                }
+            })
+            .catch(error => {
             loadingDiv.remove();
             appendMessage('system', 'Une erreur est survenue');
             console.error('Erreur:', error);
@@ -1079,7 +1222,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentChatId = null;
         document.getElementById('chatMessages').innerHTML = '';
         showWelcomeMessage();
-        loadChatHistory();
+                loadChatHistory();
     });
 
     // Appeler le message de bienvenue au chargement initial
@@ -1095,25 +1238,25 @@ document.addEventListener('DOMContentLoaded', function() {
         currentChatId = chatId;
         sessionStorage.setItem('currentChatId', chatId);
         
-        const chatMessages = document.getElementById('chatMessages');
+            const chatMessages = document.getElementById('chatMessages');
         if (!chatMessages) return;
 
         fetch(`/get-messages/${chatId}/`)
             .then(response => response.json())
             .then(data => {
-                chatMessages.innerHTML = '';
-                
+            chatMessages.innerHTML = '';
+            
                 if (data.messages && data.messages.length > 0) {
                     data.messages.forEach(message => {
                         appendMessage(message.is_user ? 'user' : 'assistant', message.content);
                     });
-                    scrollToBottom();
+            scrollToBottom();
                 }
             })
             .catch(error => {
                 console.error('Erreur lors du chargement des messages:', error);
                 chatMessages.innerHTML = '<div class="message system">Erreur lors du chargement des messages</div>';
-            });
+        });
     }
 
     // Fonction pour charger l'historique des chats
@@ -1127,7 +1270,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 chatList.innerHTML = '';
                 
                 if (data.chats && data.chats.length > 0) {
-                    data.chats.forEach(chat => {
+                data.chats.forEach(chat => {
                         const chatItem = document.createElement('div');
                         chatItem.className = 'chat-history-item';
                         chatItem.onclick = () => loadConversation(chat.id);
@@ -1142,14 +1285,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             minute: '2-digit'
                         });
                         
-                        chatItem.innerHTML = `
+                    chatItem.innerHTML = `
                             <div class="chat-preview p-3">
                                 <div class="chat-title">${chat.title || 'Nouvelle conversation'}</div>
                                 <div class="chat-preview-text">${chat.preview || ''}</div>
                                 <div class="chat-date">${formattedDate}</div>
-                            </div>
-                        `;
-                        
+                        </div>
+                    `;
+                    
                         chatList.appendChild(chatItem);
                     });
                 } else {
@@ -1205,37 +1348,24 @@ document.addEventListener('DOMContentLoaded', function() {
         navbar.classList.toggle('expanded');
     });
 
-    // Gestion du clic sur l'élément Intégrations du sidebar
-    const integrationMenuItem = document.querySelector('.sidebar-menu li:nth-child(4)');
-    if (integrationMenuItem) {
-        integrationMenuItem.addEventListener('click', function() {
-            const modal = new bootstrap.Modal(document.getElementById('integrationsListModal'));
+    // Gestion des clics sur les éléments du menu
+    const automationMenuItem = document.querySelector('.sidebar-menu li:nth-child(1)');
+    const createAssistantMenuItem = document.querySelector('.sidebar-menu li:nth-child(2)');
+    const integrationsMenuItem = document.querySelector('.sidebar-menu li:nth-child(3)');
+    const helpMenuItem = document.querySelector('.sidebar-menu li:nth-child(4)');
+
+    automationMenuItem.addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('automationModal'));
             modal.show();
         });
-    }
 
-    // Gestion des clics sur les intégrations
-    document.querySelectorAll('[data-integration]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const integration = this.dataset.integration;
-            // Rediriger vers la page d'authentification de l'intégration
-            window.location.href = `/integrations/${integration}/oauth/`;
-        });
-    });
-
-    // Gestion des clics sur les éléments du menu
-    const profileMenuItem = document.querySelector('.sidebar-menu li:nth-child(2)');
-    const settingsMenuItem = document.querySelector('.sidebar-menu li:nth-child(3)');
-    const helpMenuItem = document.querySelector('.sidebar-menu li:nth-child(5)');
-
-    profileMenuItem.addEventListener('click', function() {
-        const modal = new bootstrap.Modal(document.getElementById('profileModal'));
+    createAssistantMenuItem.addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('createAssistantModal'));
         modal.show();
     });
 
-    settingsMenuItem.addEventListener('click', function() {
-        const modal = new bootstrap.Modal(document.getElementById('settingsModal'));
+    integrationsMenuItem.addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('integrationsListModal'));
         modal.show();
     });
 
@@ -1284,6 +1414,21 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Page chargée, chargement de l\'historique...');
         loadChatHistory();
     });
+
+    // Ajouter la classe 'collapsed' au sidebar par défaut en mobile
+    function checkMobileView() {
+        if (window.innerWidth <= 768) {  // Breakpoint mobile
+            sidebar.classList.add('collapsed');
+            mainContent.classList.add('expanded');
+            navbar.classList.add('expanded');
+        }
+    }
+
+    // Vérifier au chargement
+    checkMobileView();
+
+    // Vérifier lors du redimensionnement
+    window.addEventListener('resize', checkMobileView);
 });
 </script>
 
