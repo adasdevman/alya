@@ -181,31 +181,706 @@
         .messages-wrapper {
             flex: 1;
             overflow-y: auto;
+            background-color: white;
+            padding: 1rem;
+            height: calc(100% - 80px); /* Hauteur totale moins la hauteur de l'input */
+        }
+
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
             padding: 1rem;
         }
 
-        /* Centrage parfait du logo dans la navbar */
-        .navbar {
+        .message-group {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 50px;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-width: 85%;
+            margin-bottom: 1rem;
         }
 
-        .navbar-brand {
-            position: absolute;
-            left: 40%;
-            transform: translateX(-50%);
-            margin: 0 !important;
+        .message-group.user {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+
+        .message-group.assistant {
+            align-self: flex-start;
+            align-items: flex-start;
+        }
+
+        .message {
+            margin-bottom: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            max-width: 85%;
+            display: inline-block;
+            white-space: normal;
+            word-break: normal !important;
+            word-wrap: normal !important;
+            overflow-wrap: normal !important;
+            line-height: 1.4;
+            text-wrap: nowrap;
+        }
+
+        .message.user {
+            background-color: #e9ecef;
+            margin-left: auto;
+            margin-right: 0;
+            text-align: left;
+            border-top-right-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            border-bottom-left-radius: 1rem;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            white-space: nowrap;
+            word-break: normal !important;
+            hyphens: none;
+            min-width: min-content;
+        }
+
+        .message.user p {
+            white-space: nowrap;
+            margin: 0;
             padding: 0;
+            word-break: normal !important;
+            overflow-wrap: normal !important;
+            text-wrap: nowrap;
+        }
+
+        .message.assistant {
+            background-color: #343541;
+            color: white;
+            margin-right: auto;
+            margin-left: 0;
+            text-align: left;
+            border-top-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            border-bottom-left-radius: 1rem;
+            white-space: pre-wrap;
+        }
+
+        .message.system {
+            background-color: #ffd70020;
+            color: #666;
+            font-size: 0.9em;
+            align-self: center;
+            font-style: italic;
+            border-radius: 0.5rem;
+        }
+
+        /* Messages */
+        .message p {
+            margin: 0;
+            padding: 0;
+            white-space: normal;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        .message p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Style pour les listes dans les messages */
+        .message ul, 
+        .message ol {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .message li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Animation de typing */
+        .loading {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            background-color: #343541;
+            border-radius: 0.5rem;
+            margin: 0.5rem 0;
+            max-height: 40px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: typing 1s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.4s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes typing {
+            0%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-3px);
+                opacity: 1;
+            }
+        }
+
+        /* Messages */
+        .message {
+            margin-bottom: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            max-width: 85%;
+        }
+
+        .message.assistant {
+            background-color: #343541;
+            color: white;
+            margin-right: auto;
+            border-top-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            border-bottom-left-radius: 1rem;
+        }
+
+        .message.user {
+            background-color: #e9ecef;
+            margin-left: auto;
+            border-top-right-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            border-bottom-left-radius: 1rem;
+        }
+
+        .message.system {
+            background-color: #ffd70020;
+            color: #666;
+            font-size: 0.9em;
+            align-self: center;
+            font-style: italic;
+        }
+
+        .chat-history-item {
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .chat-history-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .chat-history-item.active {
+            background-color: #e9ecef;
+        }
+
+        .chat-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .chat-preview-text {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .chat-date {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* Ajustement pour les longs mots comme les URLs */
+        .message a {
+            word-break: break-all;
+        }
+
+        .history-column .card {
+            height: 100%;
+        }
+
+        .chat-history-list {
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+
+        .chat-history-item {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .chat-history-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .chat-history-item.active {
+            background-color: #e9ecef;
+        }
+
+        .chat-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .preview-text {
+            font-size: 0.85rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .loading.message.assistant {
+            background-color: #343541;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 1rem;
+            max-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: typing 1s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.4s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.6s; }
+
+        /* Styles pour les informations utilisateur en mobile */
+        .user-info-mobile {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #343541;
+            color: white;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: bold;
         }
 
-        /* Ajuster la position du toggle button */
-        .navbar-toggler {
-            margin-left: 70px;
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .user-email {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8rem;
+        }
+
+        .logout-mobile {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 1rem;
+        }
+
+        .logout-mobile a {
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Cacher le hamburger en mobile */
+        @media (max-width: 768px) {
+            .navbar-toggler {
+                display: none !important;
+            }
+        }
+
+        /* Style pour le sidebar rétracté */
+        #sidebar.collapsed .expanded-only {
+            display: none;
+        }
+
+        #sidebar.collapsed .user-info-mobile {
+            padding: 0.5rem;
+            border: none;
+            margin: 0;
+        }
+
+        #sidebar.collapsed .user-avatar {
+            margin: 0 auto;
+            width: 30px;
+            height: 30px;
+            font-size: 0.8rem;
+        }
+
+        #sidebar.collapsed .user-profile {
+            justify-content: center;
+        }
+
+        #sidebar.collapsed .logout-mobile {
+            border: none;
+            padding: 0.5rem;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        #sidebar.collapsed .logout-mobile a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+        }
+
+        #sidebar.collapsed .logout-mobile span {
+            display: none;
+        }
+
+        #sidebar.collapsed .logout-mobile i {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        /* Correction pour l'alignement des cards en mobile */
+        @media (max-width: 768px) {
+            .card {
+                height: calc(100vh - 56px) !important;  /* Hauteur fixe moins la navbar */
+                margin: 0 !important;
+            }
+
+            #main-content, .history-column {
+                padding: 0;
+            }
+        }
+
+        /* Styles pour l'historique dans le sidebar */
+        .sidebar-history {
+            margin-top: 1rem;
+            padding: 0 1rem;
+        }
+
+        .sidebar-history-header {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgb(0, 0, 0);
+        }
+
+        .sidebar-history-list {
+            margin-top: 0.5rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 300px);  /* Ajuster selon vos besoins */
+        }
+
+        .sidebar-history-list .chat-history-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid rgb(0, 0, 0);
+            cursor: pointer;
+        }
+
+        .sidebar-history-list .chat-history-item:hover {
+            background-color: rgb(0, 0, 0);
+        }
+
+        .sidebar-history-list .chat-title {
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-history-list .chat-preview-text {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-history-list .chat-date {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.7rem;
+        }
+
+        /* Ajustements pour le mode rétracté */
+        #sidebar.collapsed .sidebar-history {
+            display: none;
+        }
+
+        .history-section {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+
+        .history-section .sidebar-history-list {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        #sidebar.collapsed .history-section .sidebar-history-list {
+            display: none;
+        }
+
+        /* Style de base du sidebar */
+        #sidebar {
+            background-color: #000000;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                height: 100vh;
+                width: 60px;
+                left: 0;
+                top: 0;
+                z-index: 1030;
+                background-color: #000000 !important;
+                transition: transform 0.3s ease;
+            }
+
+            /* Historique dans le sidebar */
+            .history-section {
+                display: flex !important;
+                flex-direction: column !important;
+                padding: 15px !important;
+            }
+
+            .history-section > i,
+            .history-section > span {
+                display: inline-flex !important;
+                align-items: center !important;
+                margin-bottom: 10px !important;
+            }
+
+            /* Masquer l'historique original en mobile */
+            .history-column {
+                display: none;
+            }
+        }
+
+        /* Style desktop pour la card historique (hors mobile) */
+        @media (min-width: 769px) {
+            .history-column .card-body {
+                padding: 1rem;
+            }
+        }
+
+        /* Ajustement du sidebar en desktop */
+        @media (min-width: 769px) {
+            #sidebar {
+                margin-top: 25px;  /* Réduit de 56px à 45px */
+                height: calc(100vh - 45px);  /* Ajusté en conséquence */
+            }
+
+            .sidebar-header {
+                top: 45px;  /* Ajusté aussi */
+            }
+
+            .content-wrapper {
+                margin-top: 45px;  /* Cohérence avec le sidebar */
+            }
+
+            /* Ajuster la hauteur du menu pour éviter le débordement */
+            .sidebar-menu {
+                height: calc(100vh - 85px);  /* 100vh - (navbar + sidebar-header) */
+            }
+        }
+
+        /* Ajustements pour mobile */
+        @media (max-width: 768px) {
+            .navbar {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            #sidebar {
+                top: 0;
+                height: 100vh;
+            }
+
+            .content-wrapper {
+                margin-top: 56px;
+            }
+        }
+
+        /* Structure principale en desktop */
+        @media (min-width: 769px) {
+            .content-wrapper {
+                display: flex;
+                gap: 1rem;
+                padding-left: 5rem;
+            }
+
+            #main-content {
+                width: 66.66%;
+            }
+
+            .history-column {
+                width: 33.33%;
+                display: block;
+            }
+
+            /* Ajustement du sidebar */
+            #sidebar {
+                margin-top: 30px;  /* Réduit la marge en haut */
+                height: calc(100vh - 30px);
+            }
+
+            .sidebar-header {
+                top: 30px;
+            }
+
+            .content-wrapper {
+                margin-top: 30px;
+            }
+
+            .sidebar-menu {
+                height: calc(100vh - 90px);
+            }
+        }
+
+        /* Maintenir le comportement mobile */
+        @media (max-width: 768px) {
+            
+
+            #main-content {
+                width: 100%;
+            }
+
+            .history-column {
+                display: none;
+            }
+        }
+
+        .integrations-grid {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .integration-item .card {
+            transition: transform 0.2s;
+            border: 1px solid #e0e0e0;
+        }
+
+        .integration-item .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .search-container {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 15px 0;
+            z-index: 1;
+        }
+
+        #integrationSearch {
+            border-radius: 20px;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+        }
+
+        #integrationSearch:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+            border-color: #80bdff;
+        }
+
+        .modal-lg {
+            max-width: 900px;
+        }
+
+        .integrations-grid {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .integration-item .card {
+            transition: transform 0.2s;
+            border: 1px solid #e0e0e0;
+            max-width: 250px;
+            margin: 0 auto;
+        }
+
+        .integration-item .card-body {
+            padding: 1rem;
+        }
+
+        .integration-item .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .search-container {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px 0;
+            z-index: 1;
+        }
+
+        #integrationSearch {
+            border-radius: 20px;
+            padding: 8px 15px;
+        }
+
+        .input-group-text {
+            background-color: transparent;
+            border-right: none;
+        }
+
+        #integrationSearch {
+            border-left: none;
+        }
+
+        .input-group-text i {
+            color: #6c757d;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .card-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+            line-height: 1.3;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
         }
     }
 
@@ -1104,10 +1779,115 @@
             display: none;
         }
     }
+
+    .integrations-grid {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    .integration-item .card {
+        transition: transform 0.2s;
+        border: 1px solid #e0e0e0;
+    }
+
+    .integration-item .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .search-container {
+        position: sticky;
+        top: 0;
+        background: white;
+        padding: 15px 0;
+        z-index: 1;
+    }
+
+    #integrationSearch {
+        border-radius: 20px;
+        padding: 10px 20px;
+        border: 1px solid #ddd;
+    }
+
+    #integrationSearch:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        border-color: #80bdff;
+    }
+
+    .modal-lg {
+        max-width: 900px;
+    }
+
+    .integrations-grid {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    .integration-item .card {
+        transition: transform 0.2s;
+        border: 1px solid #e0e0e0;
+        max-width: 250px;
+        margin: 0 auto;
+    }
+
+    .integration-item .card-body {
+        padding: 1rem;
+    }
+
+    .integration-item .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .search-container {
+        position: sticky;
+        top: 0;
+        background: white;
+        padding: 10px 0;
+        z-index: 1;
+    }
+
+    #integrationSearch {
+        border-radius: 20px;
+        padding: 8px 15px;
+    }
+
+    .input-group-text {
+        background-color: transparent;
+        border-right: none;
+    }
+
+    #integrationSearch {
+        border-left: none;
+    }
+
+    .input-group-text i {
+        color: #6c757d;
+    }
+
+    .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .card-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        line-height: 1.3;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
+    {% include "alyawebapp/modals/automation_modal.html" %}
+    {% include "alyawebapp/modals/assistant_modal.html" %}
+    {% include "alyawebapp/modals/integrations_modal.html" %}
+    {% include "alyawebapp/modals/help_modal.html" %}
 <div class="main-wrapper">
     {% csrf_token %}
     <!-- Sidebar rétractable -->
@@ -1128,15 +1908,15 @@
         </div>
 
         <ul class="sidebar-menu">
-            <li>
+            <li style="cursor: pointer;">
                 <i class="fas fa-robot"></i>
                 <span>Automatisation</span>
             </li>
-            <li>
+            <li style="cursor: pointer;">
                 <i class="fas fa-magic"></i>
                 <span>Créer votre assistant</span>
             </li>
-            <li>
+            <li style="cursor: pointer;">
                 <i class="fas fa-plug"></i>
                 <span>Intégrations</span>
             </li>
@@ -1219,9 +1999,6 @@
 
 <!-- Modals -->
 {% include 'alyawebapp/modals/profile_modal.html' %}
-{% include 'alyawebapp/modals/integrations_modal.html' %}
-
-<!-- Domain-specific modals -->
 {% include 'alyawebapp/modals/integrations/rh.html' %}
 {% include 'alyawebapp/modals/integrations/marketing.html' %}
 {% include 'alyawebapp/modals/integrations/crm.html' %}
@@ -1374,115 +2151,50 @@
 </div>
 
 <!-- Modal des intégrations -->
-<div class="modal fade" id="integrationsListModal" tabindex="-1" aria-labelledby="integrationsListModalLabel" aria-hidden="true">
+<div class="modal fade" id="integrationsModal" tabindex="-1" aria-labelledby="integrationsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="integrationsListModalLabel">Intégrations Disponibles</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header">
+                <h5 class="modal-title" id="integrationsModalLabel">Intégrations Disponibles</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row g-4">
-                    <!-- CRM (Actif) -->
-                    <div class="col-md-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="fas fa-users me-2"></i>CRM
-                                </h5>
-                                <div class="list-group list-group-flush">
-                                    <a href="#" class="list-group-item list-group-item-action" data-integration="hubspot">
-                                        <i class="fab fa-hubspot me-2"></i>HubSpot
-                                    </a>
+                <!-- Champ de recherche -->
+                <div class="search-container mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" id="integrationSearch" class="form-control" placeholder="Rechercher une intégration...">
                                 </div>
+                            </div>
+
+                <!-- Liste des intégrations -->
+                <div class="integrations-grid">
+                    <div class="row row-cols-1 row-cols-md-3 g-3" id="integrationsGrid">
+                        {% for integration in integrations %}
+                        <div class="col integration-item">
+                            <div class="card h-100">
+                                <div class="card-body text-center py-3">
+                                    <i class="{{ integration.icon_class }} fa-2x mb-2"></i>
+                                    <h6 class="card-title mb-2">{{ integration.name }}</h6>
+                                    <p class="card-text small mb-2">{{ integration.description|truncatechars:50 }}</p>
+                                    <button class="btn btn-primary btn-sm configure-integration" 
+                                            data-integration-id="{{ integration.id }}">
+                                        Configurer
+                                    </button>
+                        </div>
+                    </div>
+                                </div>
+                        {% endfor %}
                             </div>
                         </div>
                     </div>
-                    <!-- RH (Désactivé) -->
-                    <div class="col-md-4">
-                        <div class="card h-100 disabled">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="fas fa-user-tie me-2"></i>RH
-                                    <span class="coming-soon-badge">(Bientôt disponible)</span>
-                                </h5>
-                                <div class="list-group list-group-flush">
-                                    <span class="list-group-item list-group-item-action">
-                                        <i class="fas fa-users-cog me-2"></i>SIRH
-                                    </span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Marketing (Désactivé) -->
-                    <div class="col-md-4">
-                        <div class="card h-100 disabled">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="fas fa-bullhorn me-2"></i>Marketing
-                                    <span class="coming-soon-badge">(Bientôt disponible)</span>
-                                </h5>
-                                <div class="list-group list-group-flush">
-                                    <span class="list-group-item list-group-item-action">
-                                        <i class="fas fa-envelope me-2"></i>Marketing Automation
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Finance (Désactivé) -->
-                    <div class="col-md-4">
-                        <div class="card h-100 disabled">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="fas fa-chart-line me-2"></i>Finance
-                                    <span class="coming-soon-badge">(Bientôt disponible)</span>
-                                </h5>
-                                <div class="list-group list-group-flush">
-                                    <span class="list-group-item list-group-item-action">
-                                        <i class="fas fa-calculator me-2"></i>Comptabilité
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Analytics (Désactivé) -->
-                    <div class="col-md-4">
-                        <div class="card h-100 disabled">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="fas fa-chart-bar me-2"></i>Analytics
-                                    <span class="coming-soon-badge">(Bientôt disponible)</span>
-                                </h5>
-                                <div class="list-group list-group-flush">
-                                    <span class="list-group-item list-group-item-action">
-                                        <i class="fas fa-analytics me-2"></i>Analyse de données
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Support (Désactivé) -->
-                    <div class="col-md-4">
-                        <div class="card h-100 disabled">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="fas fa-headset me-2"></i>Support
-                                    <span class="coming-soon-badge">(Bientôt disponible)</span>
-                                </h5>
-                                <div class="list-group list-group-flush">
-                                    <span class="list-group-item list-group-item-action">
-                                        <i class="fas fa-ticket-alt me-2"></i>Service Client
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#integrationsModal">
+    <i class="fas fa-plug"></i> Voir les intégrations
+</button>
 {% endblock %}
 
 {% block extra_scripts %}
@@ -1557,10 +2269,10 @@
         // Ajouter un indicateur de chargement
         chatMessages.innerHTML = `
             <div class="loading message assistant">
-                <div class="typing-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+            <div class="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
                 </div>
             </div>
         `;
@@ -1608,7 +2320,7 @@
         }
 
         // Fonction pour envoyer un message
-        function sendMessage(message) {
+    function sendMessage(message) {
             const chatMessages = document.getElementById('chatMessages');
             
             // Afficher immédiatement le message de l'utilisateur
@@ -1628,36 +2340,36 @@
             scrollToBottom();
 
             // Envoyer la requête au serveur
-            fetch('/chat/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCsrfToken()
-                },
+        fetch('/chat/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken()
+            },
                 body: JSON.stringify({
                     message: message,
                     chat_id: currentChatId
                 })
-            })
-                .then(response => response.json())
-                .then(data => {
+        })
+        .then(response => response.json())
+        .then(data => {
                 loadingDiv.remove();
                 
                     if (data.status === 'success') {
                     if (!currentChatId) {
-                        currentChatId = data.chat_id;
+                    currentChatId = data.chat_id;
                     }
                     appendMessage('assistant', data.response);
                         scrollToBottom();
-                    loadChatHistory();
-                } else {
+                loadChatHistory();
+            } else {
                     appendMessage('system', 'Une erreur est survenue');
-                }
-            })
-                .catch(error => {
+            }
+        })
+        .catch(error => {
                 loadingDiv.remove();
                 appendMessage('system', 'Une erreur est survenue');
-                console.error('Erreur:', error);
+            console.error('Erreur:', error);
             });
         }
 
@@ -1671,8 +2383,8 @@
 
             input.value = '';
             sendMessage(message);
-            input.focus();
-        }
+                input.focus();
+            }
 
         // Attacher le gestionnaire au formulaire
         document.querySelector('.chat-form').addEventListener('submit', handleChatSubmit);
@@ -1683,9 +2395,9 @@
             if (chatMessages && chatMessages.children.length === 0) {
                 appendMessage('assistant', 'Bonjour! Je suis ALYA, votre assistant personnel. Comment puis-je vous aider aujourd\'hui?');
             }
-        }
+    }
 
-        // Gestion du nouveau chat
+    // Gestion du nouveau chat
         document.getElementById('new-chat').addEventListener('click', function() {
             sessionStorage.removeItem('currentChatId');
             currentChatId = null;
@@ -1698,16 +2410,16 @@
         showWelcomeMessage();
 
         // Chargement initial de l'historique
-        loadChatHistory();
+            loadChatHistory();
 
-        // Fonction pour charger l'historique des chats
-        function loadChatHistory() {
+    // Fonction pour charger l'historique des chats
+    function loadChatHistory() {
             const chatList = document.getElementById('chat-list');
             const sidebarHistoryList = document.querySelector('.sidebar-history-list');
 
-            fetch('/get-chat-history/')
-                .then(response => response.json())
-                .then(data => {
+        fetch('/get-chat-history/')
+            .then(response => response.json())
+            .then(data => {
                     const historyHTML = data.chats.map(chat => `
                         <div class="chat-history-item" onclick="loadConversation('${chat.id}')">
                             <div class="chat-title">${chat.title || 'Nouvelle conversation'}</div>
@@ -1721,40 +2433,40 @@
                 });
         }
 
-        // Gestion du bouton clear history
-        const clearHistoryBtn = document.getElementById('clearHistory');
-        if (clearHistoryBtn) {
-            clearHistoryBtn.addEventListener('click', function() {
-                if (confirm('Voulez-vous vraiment effacer tout l\'historique ?')) {
-                    fetch('/clear-chat-history/', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': getCsrfToken()
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            loadChatHistory();  // Recharger l'historique vide
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors de la suppression de l\'historique:', error);
-                    });
-                }
-            });
-        }
-
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('main-content');
-        const navbar = document.querySelector('.navbar');
-        const sidebarHeader = document.querySelector('.sidebar-header');
-        
-        sidebarHeader.addEventListener('click', function(e) {
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('expanded');
-            navbar.classList.toggle('expanded');
+    // Gestion du bouton clear history
+    const clearHistoryBtn = document.getElementById('clearHistory');
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', function() {
+            if (confirm('Voulez-vous vraiment effacer tout l\'historique ?')) {
+                fetch('/clear-chat-history/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCsrfToken()
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        loadChatHistory();  // Recharger l'historique vide
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la suppression de l\'historique:', error);
+                });
+            }
         });
+    }
+
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    const navbar = document.querySelector('.navbar');
+    const sidebarHeader = document.querySelector('.sidebar-header');
+    
+    sidebarHeader.addEventListener('click', function(e) {
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
+        navbar.classList.toggle('expanded');
+    });
 
         // Gestion des clics sur les éléments du menu
         const automationMenuItem = document.querySelector('.sidebar-menu li:nth-child(1)');
@@ -1763,51 +2475,70 @@
         const helpMenuItem = document.querySelector('.sidebar-menu li:nth-child(4)');
 
         automationMenuItem.addEventListener('click', function() {
-            const modal = new bootstrap.Modal(document.getElementById('automationModal'));
-            modal.show();
+            const modal = document.getElementById('automationModal');
+            console.log('Modal automation:', modal);
+            if (!modal) {
+                console.error('Modal automation non trouvé');
+                return;
+            }
+            if (!modal._bsModal) {
+                modal._bsModal = new bootstrap.Modal(modal);
+            }
+            modal._bsModal.show();
         });
 
         createAssistantMenuItem.addEventListener('click', function() {
-            const modal = new bootstrap.Modal(document.getElementById('createAssistantModal'));
-            modal.show();
+            const modal = document.getElementById('assistantModal');
+            console.log('Modal assistant:', modal);
+            if (!modal) {
+                console.error('Modal assistant non trouvé');
+                return;
+            }
+            if (!modal._bsModal) {
+                modal._bsModal = new bootstrap.Modal(modal);
+            }
+            modal._bsModal.show();
         });
 
         integrationsMenuItem.addEventListener('click', function() {
-            const modal = new bootstrap.Modal(document.getElementById('integrationsListModal'));
-            modal.show();
-        });
-
-        helpMenuItem.addEventListener('click', function() {
-            const modal = new bootstrap.Modal(document.getElementById('helpModal'));
-            modal.show();
-        });
-
-        // Style pour les intégrations désactivées
-        document.querySelectorAll('.list-group-item-action.disabled').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-            });
-        });
-
-        // Ajouter cette fonction d'aide
-        function formatDate(dateString) {
-            if (!dateString) return 'Date inconnue';
-            return new Date(dateString).toLocaleString('fr-FR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-
-        // Fonction pour gérer la touche Entrée
-        function handleKeyPress(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                document.querySelector('.chat-form').dispatchEvent(new Event('submit'));
+            const modal = document.getElementById('integrationsModal');
+            if (!modal._bsModal) {
+                modal._bsModal = new bootstrap.Modal(modal);
             }
+            modal._bsModal.show();
+    });
+
+    helpMenuItem.addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('helpModal'));
+        modal.show();
+    });
+
+    // Style pour les intégrations désactivées
+    document.querySelectorAll('.list-group-item-action.disabled').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+        });
+    });
+
+    // Ajouter cette fonction d'aide
+    function formatDate(dateString) {
+        if (!dateString) return 'Date inconnue';
+        return new Date(dateString).toLocaleString('fr-FR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // Fonction pour gérer la touche Entrée
+    function handleKeyPress(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            document.querySelector('.chat-form').dispatchEvent(new Event('submit'));
         }
+    }
 
         // Appeler la fonction au chargement de la page
         document.addEventListener('DOMContentLoaded', () => {
@@ -1829,189 +2560,38 @@
 
         // Vérifier lors du redimensionnement
         window.addEventListener('resize', checkMobileView);
+
+        const searchInput = document.getElementById('integrationSearch');
+        const integrationItems = document.querySelectorAll('.integration-item');
+
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+
+            integrationItems.forEach(item => {
+                const title = item.querySelector('.card-title').textContent.toLowerCase();
+                const description = item.querySelector('.card-text').textContent.toLowerCase();
+
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Gérer le clic sur le bouton configurer
+        document.querySelectorAll('.configure-integration').forEach(button => {
+            button.addEventListener('click', function() {
+                const integrationId = this.dataset.integrationId;
+                // Fermer le modal des intégrations
+                $('#integrationsModal').modal('hide');
+                // Ouvrir le modal de configuration
+                openConfigurationModal(integrationId);
+            });
+        });
     });
 </script>
 
 <!-- Autres scripts -->
 <script src="{% static 'js/compte/integrations.js' %}"></script>
-
-<!-- Vos styles existants -->
-<style>
-    /* Animation de chargement */
-    .loading {
-        display: flex;
-        align-items: center;
-        padding: 0.5rem;
-        background-color: #343541;  /* Fond noir pour le message de l'assistant */
-        border-radius: 0.5rem;
-        margin: 0.5rem 0;  /* Ajoute une marge verticale */
-        max-height: 40px;  /* Limite la hauteur */
-    }
-
-    .typing-indicator {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-    }
-
-    .typing-indicator span {
-        width: 6px;  /* Réduit de 8px à 6px */
-        height: 6px;  /* Réduit de 8px à 6px */
-        background-color: #ffffff;
-        border-radius: 50%;
-        animation: typing 1s infinite ease-in-out;
-    }
-
-    /* Ajustement de l'animation pour la nouvelle taille */
-    @keyframes typing {
-        0%, 100% {
-            transform: translateY(0);
-            opacity: 0.5;
-        }
-        50% {
-            transform: translateY(-3px);  /* Réduit de -5px à -3px */
-            opacity: 1;
-        }
-    }
-
-    /* Structure du chat */
-    .card-body.p-0.d-flex.flex-column {
-        height: calc(100vh - 116px); /* 100vh - (padding + header) */
-    }
-
-    .messages-wrapper {
-        flex-grow: 1;
-        overflow-y: auto;
-        background-color: white;
-        padding: 1rem;
-        height: calc(100% - 80px); /* Hauteur totale moins la hauteur de l'input */
-    }
-
-    .chat-messages {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .chat-input-wrapper {
-        flex-shrink: 0;
-        background: white;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        border-top: 1px solid #e0e0e0;
-    }
-
-    /* Messages */
-    .message {
-        margin-bottom: 0.5rem;
-        padding: 0.75rem;
-        border-radius: 0.5rem;
-        max-width: 85%;
-        display: inline-block;
-        white-space: normal;
-        word-break: normal !important;
-        word-wrap: normal !important;
-        overflow-wrap: normal !important;
-        line-height: 1.4;
-        text-wrap: nowrap;
-    }
-
-    .message.user {
-        background-color: #e9ecef;
-        margin-left: auto;
-        margin-right: 0;
-        text-align: left;
-        border-top-right-radius: 1rem;
-        border-bottom-right-radius: 1rem;
-        border-bottom-left-radius: 1rem;
-        display: inline-flex;
-        flex-direction: column;
-        align-items: flex-start;
-        white-space: nowrap;
-        word-break: normal !important;
-        hyphens: none;
-        min-width: min-content;
-    }
-
-    .message.user p {
-        white-space: nowrap;
-        margin: 0;
-        padding: 0;
-        word-break: normal !important;
-        overflow-wrap: normal !important;
-        text-wrap: nowrap;
-    }
-
-    .message.assistant {
-        background-color: #343541;
-        color: white;
-        margin-right: auto;
-        margin-left: 0;
-        text-align: left;
-        border-top-left-radius: 1rem;
-        border-bottom-right-radius: 1rem;
-        border-bottom-left-radius: 1rem;
-        white-space: pre-wrap;
-    }
-
-    .message.system {
-        background-color: #ffd70020;
-        color: #666;
-        font-size: 0.9em;
-        align-self: center;
-        font-style: italic;
-        border-radius: 0.5rem;
-    }
-
-    /* Scrollbar */
-    .messages-wrapper::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    .messages-wrapper::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-
-    .messages-wrapper::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 4px;
-    }
-
-    .messages-wrapper::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-
-    /* Styles pour l'historique des chats */
-    .chat-history-item {
-        padding: 5px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
-
-    .chat-history-item:hover {
-        background-color: #f8f9fa;
-    }
-
-    .chat-history-item.active {
-        background-color: #e9ecef;
-    }
-
-    .chat-title {
-        color: #212529;
-        font-size: 0.95rem;
-        line-height: 1.2;
-    }
-
-    .preview-text {
-        font-size: 0.85rem;
-        color: #6c757d;
-    }
-
-    .chat-preview {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-</style>
 {% endblock %} 

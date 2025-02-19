@@ -1,0 +1,71 @@
+<!-- Modal Automation -->
+<div class="modal fade" id="automationModal" tabindex="-1" aria-labelledby="automationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #1a1a1a; color: white;">
+                <h5 class="modal-title" id="automationModalLabel">Créer une automatisation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="opacity: 1;"></button>
+            </div>
+            <div class="modal-body">
+                <form id="automationForm">
+                    <div class="mb-4">
+                        <label for="automationName" class="form-label">Nom de l'automatisation</label>
+                        <input type="text" class="form-control" id="automationName" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="automationDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="automationDescription" rows="2"></textarea>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <label for="sourceIntegration" class="form-label">Intégration source</label>
+                            <select class="form-select" id="sourceIntegration" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="hubspot">HubSpot</option>
+                                <option value="salesforce">Salesforce</option>
+                                <option value="zapier">Zapier</option>
+                                <option value="zendesk">Zendesk</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label for="targetIntegration" class="form-label">Intégration cible</label>
+                            <select class="form-select" id="targetIntegration" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="hubspot">HubSpot</option>
+                                <option value="salesforce">Salesforce</option>
+                                <option value="zapier">Zapier</option>
+                                <option value="zendesk">Zendesk</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <label for="triggerEvent" class="form-label">Déclencheur</label>
+                            <select class="form-select" id="triggerEvent" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="new_contact">Nouveau contact</option>
+                                <option value="new_deal">Nouvelle affaire</option>
+                                <option value="update_contact">Mise à jour contact</option>
+                                <option value="new_ticket">Nouveau ticket</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label for="action" class="form-label">Action</label>
+                            <select class="form-select" id="action" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="create_contact">Créer un contact</option>
+                                <option value="create_deal">Créer une affaire</option>
+                                <option value="send_email">Envoyer un email</option>
+                                <option value="create_ticket">Créer un ticket</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-dark">Créer l'automatisation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

@@ -190,3 +190,31 @@ def ensure_config_is_dict(sender, instance, **kwargs):
     if not isinstance(instance.config, dict):
         instance.config = {}
     logger.info(f"Sauvegarde de UserIntegration - User: {instance.user.username}, Integration: {instance.integration.name}, Config: {instance.config}")
+
+class Automation(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    source_integration = models.ForeignKey(Integration, on_delete=models.CASCADE, related_name='source_automations')
+    target_integration = models.ForeignKey(Integration, on_delete=models.CASCADE, related_name='target_automations')
+    trigger_event = models.CharField(max_length=100)  # ex: "new_contact", "new_task"
+    action = models.CharField(max_length=100)  # ex: "create_contact", "create_task"
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.source_integration.name} → {self.target_integration.name})"
+
+class Assistant(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    integration = models.ForeignKey(Integration, on_delete=models.CASCADE)
+    prompt_template = models.TextField()
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.integration.name})"

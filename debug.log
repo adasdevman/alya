@@ -17655,3 +17655,216 @@ INFO 2025-02-09 08:00:19,599 views 26636 8240 Intégrations activées trouvées: [8
 INFO 2025-02-09 08:00:19,600 basehttp 26636 8240 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
 INFO 2025-02-09 08:00:22,651 basehttp 26636 2136 "GET /get-chat-history/ HTTP/1.1" 200 762
 INFO 2025-02-09 08:00:27,584 basehttp 26636 2136 "GET /get-messages/137/ HTTP/1.1" 200 3917
+INFO 2025-02-09 08:01:39,550 basehttp 26636 2136 "GET /compte/ HTTP/1.1" 200 168047
+INFO 2025-02-09 08:01:42,294 views 26636 8240 Intégrations activées trouvées: [8]
+INFO 2025-02-09 08:01:42,294 basehttp 26636 8240 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-09 08:01:45,337 basehttp 26636 2136 "GET /get-chat-history/ HTTP/1.1" 200 762
+INFO 2025-02-09 08:02:11,183 basehttp 26636 2136 "GET /get-messages/137/ HTTP/1.1" 200 3917
+INFO 2025-02-09 08:03:42,974 basehttp 26636 2136 "GET /compte/ HTTP/1.1" 200 168047
+INFO 2025-02-09 08:03:45,518 views 26636 8240 Intégrations activées trouvées: [8]
+INFO 2025-02-09 08:03:45,521 basehttp 26636 8240 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-09 08:03:48,776 basehttp 26636 2136 "GET /get-chat-history/ HTTP/1.1" 200 762
+INFO 2025-02-09 08:03:52,548 basehttp 26636 2136 "GET /get-messages/137/ HTTP/1.1" 200 3917
+INFO 2025-02-09 08:04:43,768 basehttp 26636 2136 "GET /compte/ HTTP/1.1" 200 168037
+INFO 2025-02-09 08:04:46,117 views 26636 8240 Intégrations activées trouvées: [8]
+INFO 2025-02-09 08:04:46,117 basehttp 26636 8240 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-09 08:04:49,764 basehttp 26636 2136 "GET /get-chat-history/ HTTP/1.1" 200 762
+INFO 2025-02-09 08:06:00,065 basehttp 26636 2136 "GET /compte/ HTTP/1.1" 200 168006
+INFO 2025-02-09 08:06:03,490 views 26636 8240 Intégrations activées trouvées: [8]
+INFO 2025-02-09 08:06:03,492 basehttp 26636 8240 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-09 08:06:07,741 basehttp 26636 2136 "GET /get-chat-history/ HTTP/1.1" 200 762
+INFO 2025-02-09 08:06:12,273 basehttp 26636 2136 "GET /get-messages/137/ HTTP/1.1" 200 3917
+INFO 2025-02-09 08:06:46,235 ai_orchestrator 26636 2136 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-09 08:06:46,747 ai_orchestrator 26636 2136 Message reçu: 'particulier'
+INFO 2025-02-09 08:06:46,748 ai_orchestrator 26636 2136 Chat ID: 140
+INFO 2025-02-09 08:06:46,748 ai_orchestrator 26636 2136 État de la conversation: contact_type
+INFO 2025-02-09 08:06:47,002 ai_orchestrator 26636 2136 Traitement de l'état: contact_type
+INFO 2025-02-09 08:06:47,009 ai_orchestrator 26636 2136 Changement d'état pour user 2: contact_type -> personal_firstname
+INFO 2025-02-09 08:06:47,286 basehttp 26636 2136 "POST /chat/ HTTP/1.1" 200 122
+INFO 2025-02-09 08:06:53,776 basehttp 26636 2136 "GET /get-chat-history/ HTTP/1.1" 200 940
+INFO 2025-02-09 08:07:11,857 basehttp 26636 2136 "GET /get-messages/140/ HTTP/1.1" 200 258
+INFO 2025-02-09 08:07:18,539 basehttp 26636 2136 "GET /get-messages/139/ HTTP/1.1" 200 841
+INFO 2025-02-09 08:07:22,286 basehttp 26636 2136 "GET /get-messages/137/ HTTP/1.1" 200 3917
+INFO 2025-02-09 08:07:42,384 basehttp 26636 2136 "GET /get-messages/140/ HTTP/1.1" 200 258
+INFO 2025-02-09 08:07:50,676 ai_orchestrator 26636 2136 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-09 08:07:51,188 ai_orchestrator 26636 2136 Message reçu: 'kevin'
+INFO 2025-02-09 08:07:51,188 ai_orchestrator 26636 2136 Chat ID: 140
+INFO 2025-02-09 08:07:51,194 ai_orchestrator 26636 2136 État de la conversation: personal_firstname
+INFO 2025-02-09 08:07:51,463 ai_orchestrator 26636 2136 Traitement de l'état: personal_firstname
+INFO 2025-02-09 08:07:51,463 ai_orchestrator 26636 2136 Changement d'état pour user 2: personal_firstname -> personal_lastname
+INFO 2025-02-09 08:07:51,733 basehttp 26636 2136 "POST /chat/ HTTP/1.1" 200 111
+INFO 2025-02-09 08:07:59,051 basehttp 26636 2136 "GET /get-chat-history/ HTTP/1.1" 200 929
+INFO 2025-02-09 08:08:03,352 basehttp 26636 2136 "GET /get-messages/139/ HTTP/1.1" 200 841
+INFO 2025-02-09 08:08:06,811 basehttp 26636 2136 "GET /get-messages/137/ HTTP/1.1" 200 3917
+INFO 2025-02-09 08:08:10,438 basehttp 26636 2136 "GET /get-messages/140/ HTTP/1.1" 200 464
+INFO 2025-02-19 06:14:34,041 autoreload 6544 16260 Watching for file changes with StatReloader
+INFO 2025-02-19 06:14:50,671 basehttp 6544 12468 "GET / HTTP/1.1" 200 11425
+INFO 2025-02-19 06:14:50,887 basehttp 6544 12468 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-02-19 06:14:50,889 basehttp 6544 28264 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-02-19 06:14:50,891 basehttp 6544 15832 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-02-19 06:14:50,893 basehttp 6544 14704 "GET /static/css/home.css HTTP/1.1" 200 3613
+INFO 2025-02-19 06:14:51,346 basehttp 6544 15012 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-02-19 06:14:52,530 log 6544 15012 Not Found: /favicon.ico
+WARNING 2025-02-19 06:14:52,531 basehttp 6544 15012 "GET /favicon.ico HTTP/1.1" 404 10217
+INFO 2025-02-19 06:15:49,962 basehttp 6544 15012 "GET /login/ HTTP/1.1" 200 6046
+INFO 2025-02-19 06:15:54,619 basehttp 6544 15012 "POST /login/ HTTP/1.1" 200 6370
+INFO 2025-02-19 06:16:04,468 basehttp 6544 15012 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-02-19 06:16:07,356 basehttp 6544 15012 "GET /compte/ HTTP/1.1" 200 168226
+INFO 2025-02-19 06:16:07,373 basehttp 6544 28264 "GET /static/css/components/info-tag.css HTTP/1.1" 200 380
+INFO 2025-02-19 06:16:07,373 basehttp 6544 15012 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-02-19 06:16:07,374 basehttp 6544 14704 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-02-19 06:16:09,786 basehttp 6544 14704 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-19 06:16:09,830 views 6544 15012 Intégrations activées trouvées: []
+INFO 2025-02-19 06:16:09,831 basehttp 6544 15012 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-19 06:16:18,456 basehttp 6544 15012 "POST /logout/ HTTP/1.1" 302 0
+INFO 2025-02-19 06:16:18,462 basehttp 6544 15012 "GET / HTTP/1.1" 200 11425
+INFO 2025-02-19 06:16:21,561 basehttp 6544 15012 "GET /login/ HTTP/1.1" 200 6046
+INFO 2025-02-19 06:16:29,721 basehttp 6544 15012 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-02-19 06:16:32,466 basehttp 6544 15012 "GET /compte/ HTTP/1.1" 200 168302
+INFO 2025-02-19 06:16:34,904 views 6544 14704 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:16:34,908 basehttp 6544 14704 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:16:40,491 basehttp 6544 15012 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:20:09,832 basehttp 6544 15012 "GET /compte/ HTTP/1.1" 200 183044
+INFO 2025-02-19 06:20:12,249 views 6544 14704 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:20:12,251 basehttp 6544 14704 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:20:18,192 basehttp 6544 15012 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:23:14,254 basehttp 6544 15012 "GET /compte/ HTTP/1.1" 200 184810
+INFO 2025-02-19 06:23:16,690 views 6544 14704 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:23:16,691 basehttp 6544 14704 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:23:22,509 basehttp 6544 15012 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:26:51,558 basehttp 6544 15012 "GET /compte/ HTTP/1.1" 200 196912
+INFO 2025-02-19 06:26:54,013 views 6544 14704 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:26:54,014 basehttp 6544 14704 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:26:59,813 basehttp 6544 15012 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:28:43,813 basehttp 6544 15012 "GET /compte/ HTTP/1.1" 200 184342
+INFO 2025-02-19 06:28:46,249 views 6544 14704 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:28:46,250 basehttp 6544 14704 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:28:52,086 basehttp 6544 15012 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:29:27,247 basehttp 6544 15012 "GET /compte/ HTTP/1.1" 200 187414
+INFO 2025-02-19 06:29:31,226 views 6544 14704 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:29:31,227 basehttp 6544 14704 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:29:36,451 basehttp 6544 15012 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:38:23,028 basehttp 6544 29060 "GET /compte/ HTTP/1.1" 200 191221
+INFO 2025-02-19 06:38:25,532 views 6544 24044 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:38:25,535 basehttp 6544 24044 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:38:31,555 basehttp 6544 29060 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:42:34,475 basehttp 6544 29060 "GET /compte/ HTTP/1.1" 200 191032
+INFO 2025-02-19 06:42:36,995 views 6544 24044 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:42:36,997 basehttp 6544 24044 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:42:42,614 basehttp 6544 29060 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:47:36,484 basehttp 6544 29060 "GET /compte/ HTTP/1.1" 200 186230
+INFO 2025-02-19 06:47:38,987 views 6544 24044 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:47:38,988 basehttp 6544 24044 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:47:44,849 basehttp 6544 29060 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:48:51,310 basehttp 6544 29060 "GET /compte/ HTTP/1.1" 200 186635
+INFO 2025-02-19 06:48:53,851 views 6544 24044 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:48:53,851 basehttp 6544 24044 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:48:59,552 basehttp 6544 29060 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:52:03,087 autoreload 6544 16260 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-02-19 06:52:04,223 autoreload 28804 11992 Watching for file changes with StatReloader
+INFO 2025-02-19 06:53:18,854 autoreload 28804 11992 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-02-19 06:53:19,906 autoreload 25576 16044 Watching for file changes with StatReloader
+INFO 2025-02-19 06:53:36,289 basehttp 25576 27784 "GET /compte/ HTTP/1.1" 200 188754
+INFO 2025-02-19 06:53:38,816 views 25576 7644 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:53:38,819 basehttp 25576 7644 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:53:44,707 basehttp 25576 27784 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:56:25,859 autoreload 25576 16044 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\models.py changed, reloading.
+INFO 2025-02-19 06:56:27,049 autoreload 21916 28716 Watching for file changes with StatReloader
+INFO 2025-02-19 06:57:22,107 autoreload 21916 28716 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\models.py changed, reloading.
+INFO 2025-02-19 06:57:23,185 autoreload 13092 14192 Watching for file changes with StatReloader
+INFO 2025-02-19 06:57:38,116 basehttp 13092 26140 "GET /compte/ HTTP/1.1" 200 188754
+INFO 2025-02-19 06:57:40,635 views 13092 17660 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:57:40,637 basehttp 13092 17660 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:57:46,512 basehttp 13092 26140 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:59:10,087 basehttp 13092 26140 "GET /compte/ HTTP/1.1" 200 190244
+INFO 2025-02-19 06:59:12,556 views 13092 17660 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:59:12,561 basehttp 13092 17660 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:59:18,692 basehttp 13092 26140 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 06:59:51,361 basehttp 13092 26140 "GET /compte/ HTTP/1.1" 200 188754
+INFO 2025-02-19 06:59:53,823 views 13092 17660 Intégrations activées trouvées: [8]
+INFO 2025-02-19 06:59:53,824 basehttp 13092 17660 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 06:59:59,769 basehttp 13092 26140 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:02:36,863 basehttp 13092 26140 "GET /compte/ HTTP/1.1" 200 189667
+INFO 2025-02-19 07:02:39,335 views 13092 17660 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:02:39,338 basehttp 13092 17660 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:02:45,239 basehttp 13092 26140 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:04:03,368 basehttp 13092 26140 "GET /compte/ HTTP/1.1" 200 188754
+INFO 2025-02-19 07:04:05,898 views 13092 17660 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:04:05,898 basehttp 13092 17660 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:04:12,130 basehttp 13092 26140 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:04:49,805 basehttp 13092 26140 "GET /compte/ HTTP/1.1" 200 189342
+INFO 2025-02-19 07:04:52,360 views 13092 17660 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:04:52,361 basehttp 13092 17660 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:04:57,944 basehttp 13092 26140 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:05:01,188 basehttp 13092 26140 "GET /compte/ HTTP/1.1" 200 189342
+INFO 2025-02-19 07:05:03,617 views 13092 17660 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:05:03,618 basehttp 13092 17660 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:05:09,543 basehttp 13092 26140 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:16:05,129 basehttp 13092 25764 "GET /compte/ HTTP/1.1" 200 189001
+INFO 2025-02-19 07:16:07,666 views 13092 23020 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:16:07,666 basehttp 13092 23020 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:16:13,347 basehttp 13092 25764 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:16:32,396 basehttp 13092 25764 "GET /compte/ HTTP/1.1" 200 189001
+INFO 2025-02-19 07:16:34,898 views 13092 23020 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:16:34,898 basehttp 13092 23020 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:16:40,488 basehttp 13092 25764 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:17:42,605 basehttp 13092 25764 "GET /compte/ HTTP/1.1" 200 189001
+INFO 2025-02-19 07:17:45,144 views 13092 23020 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:17:45,145 basehttp 13092 23020 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:17:50,908 basehttp 13092 25764 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:25:45,454 basehttp 13092 17840 "GET /compte/ HTTP/1.1" 200 189149
+INFO 2025-02-19 07:25:48,221 views 13092 14088 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:25:48,223 basehttp 13092 14088 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:25:54,715 basehttp 13092 17840 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:29:46,983 basehttp 13092 17840 "GET /compte/ HTTP/1.1" 200 195356
+INFO 2025-02-19 07:29:49,476 views 13092 14088 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:29:49,476 basehttp 13092 14088 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:29:55,403 basehttp 13092 17840 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:40:34,169 basehttp 13092 26668 "GET /compte/ HTTP/1.1" 200 196124
+INFO 2025-02-19 07:40:36,727 views 13092 11984 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:40:36,728 basehttp 13092 11984 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:40:42,541 basehttp 13092 26668 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:42:35,276 basehttp 13092 26668 "GET /compte/ HTTP/1.1" 200 196118
+INFO 2025-02-19 07:42:37,825 views 13092 11984 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:42:37,826 basehttp 13092 11984 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:42:43,453 basehttp 13092 26668 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:55:45,767 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 196984
+INFO 2025-02-19 07:55:48,494 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:55:48,494 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:55:54,023 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:58:08,439 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 197274
+INFO 2025-02-19 07:58:10,893 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:58:10,893 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:58:16,847 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 07:59:05,174 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 197450
+INFO 2025-02-19 07:59:07,649 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 07:59:07,649 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 07:59:13,635 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 08:00:19,666 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 197438
+INFO 2025-02-19 08:00:22,132 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 08:00:22,135 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 08:00:28,124 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 08:01:34,106 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 197438
+INFO 2025-02-19 08:01:36,540 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 08:01:36,540 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 08:01:42,412 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 08:04:35,873 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 197458
+INFO 2025-02-19 08:04:38,463 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 08:04:38,463 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 08:04:44,559 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 08:05:04,371 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 196964
+INFO 2025-02-19 08:05:06,960 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 08:05:06,960 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 08:05:12,857 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 08:07:08,219 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 197019
+INFO 2025-02-19 08:07:10,748 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 08:07:10,748 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 08:07:16,593 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 08:10:13,058 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 196704
+INFO 2025-02-19 08:10:15,898 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 08:10:15,898 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 08:10:21,986 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 08:11:35,526 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 197008
+INFO 2025-02-19 08:11:38,061 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 08:11:38,065 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 08:11:44,120 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164

@@ -141,6 +141,11 @@ def compte(request):
             ensure_ascii=False
         )
         
+        user_integrations = UserIntegration.objects.filter(
+            user=request.user, 
+            enabled=True
+        ).values_list('integration_id', flat=True)
+        
         context = {
             'user_domains': user_domains,
             'all_domains': all_domains,
@@ -148,7 +153,8 @@ def compte(request):
             'all_objectifs': all_objectifs,
             'company_sizes': company_sizes,
             'integrations': integrations,
-            'integration_configs_data': integration_configs_json
+            'integration_configs_data': integration_configs_json,
+            'user_integrations': list(user_integrations)
         }
         
         return render(request, 'alyawebapp/compte.html', context)

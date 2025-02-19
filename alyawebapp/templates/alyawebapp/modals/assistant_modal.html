@@ -1,0 +1,41 @@
+<!-- Modal Assistant -->
+<div class="modal fade" id="assistantModal" tabindex="-1" aria-labelledby="assistantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="assistantModalLabel">Créer un assistant</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="assistantForm">
+                    <div class="mb-3">
+                        <label for="assistantName" class="form-label">Nom de l'assistant</label>
+                        <input type="text" class="form-control" id="assistantName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="assistantDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="assistantDescription" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="assistantDomain" class="form-label">Domaine d'activité</label>
+                        <select class="form-select" id="assistantDomain" required>
+                            <option value="">Sélectionner...</option>
+                            {% for domain in all_domains %}
+                                <option value="{{ domain.id }}">{{ domain.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="promptTemplate" class="form-label">Template de prompt</label>
+                        <textarea class="form-control" id="promptTemplate" rows="4" required></textarea>
+                        <small class="text-muted">Utilisez {variables} pour les paramètres dynamiques</small>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-dark">Créer l'assistant</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

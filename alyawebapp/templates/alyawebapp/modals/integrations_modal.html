@@ -7,25 +7,35 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row g-3">
+                <!-- Ajout du champ de recherche -->
+                <div class="input-group mb-3">
+                    <span class="input-group-text bg-transparent">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" id="searchIntegrations" class="form-control" placeholder="Rechercher une intégration...">
+                </div>
+
+                <!-- Liste des intégrations -->
+                <div class="row row-cols-2 row-cols-md-3 g-2">
                     {% for integration in integrations %}
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h5 class="card-title">
-                                            <i class="{{ integration.icon_class }} me-2"></i>
-                                            {{ integration.name }}
-                                        </h5>
-                                        <p class="card-text small text-muted">{{ integration.description }}</p>
-                                    </div>
-                                </div>
-                                <button class="btn btn-sm btn-outline-dark mt-2 config-integration"
+                    <div class="col integration-card">
+                        <div class="card" style="margin: 0 auto; height: 120px;">
+                            <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
+                                <i class="{{ integration.icon_class }} fa-lg"></i>
+                                <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">{{ integration.name }}</h6>
+                                <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
+                                    {{ integration.description|truncatechars:30 }}
+                                </p>
+                                <button class="btn btn-sm {% if integration.id in user_integrations %}btn-success disabled{% else %}btn-outline-dark{% endif %} config-integration"
                                         data-integration-id="{{ integration.id }}"
-                                        id="config-btn-{{ integration.id }}">
-                                    <i class="fas fa-cog me-1"></i>
-                                    Configurer
+                                        id="config-btn-{{ integration.id }}"
+                                        style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
+                                    <i class="fas {% if integration.id in user_integrations %}fa-check{% else %}fa-cog{% endif %}"></i>
+                                    {% if integration.id in user_integrations %}
+                                        Déjà configuré
+                                    {% else %}
+                                        Configurer
+                                    {% endif %}
                                 </button>
                             </div>
                         </div>
@@ -37,6 +47,30 @@
     </div>
 </div>
 
-<script type="text/javascript">
-var INTEGRATION_CONFIGS = JSON.parse('{{ integration_configs|safe }}');
+<style>
+@media (max-width: 768px) {
+    .integration-card .card {
+        height: 110px !important;
+    }
+    .integration-card .card-body {
+        padding: 0.5rem !important;
+    }
+    .integration-card .fa-lg {
+        font-size: 1em;
+    }
+    .integration-card .card-text {
+        margin-bottom: 0.25rem !important;
+    }
+}
+</style>
+
+<script>
+document.getElementById('searchIntegrations').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    document.querySelectorAll('.integration-card').forEach(card => {
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        const description = card.querySelector('.card-text').textContent.toLowerCase();
+        card.style.display = (title.includes(searchTerm) || description.includes(searchTerm)) ? '' : 'none';
+    });
+});
 </script>
