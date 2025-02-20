@@ -17868,3 +17868,387 @@ INFO 2025-02-19 08:11:35,526 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 197
 INFO 2025-02-19 08:11:38,061 views 13092 18944 Intégrations activées trouvées: [8]
 INFO 2025-02-19 08:11:38,065 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
 INFO 2025-02-19 08:11:44,120 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 08:14:55,519 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 197017
+INFO 2025-02-19 08:15:01,707 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 08:15:01,707 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 08:15:13,518 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 08:17:17,945 basehttp 13092 7880 "GET /compte/ HTTP/1.1" 200 216868
+INFO 2025-02-19 08:17:22,716 views 13092 18944 Intégrations activées trouvées: [8]
+INFO 2025-02-19 08:17:22,716 basehttp 13092 18944 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-19 08:17:31,451 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1164
+INFO 2025-02-19 08:19:23,479 ai_orchestrator 13092 7880 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-19 08:19:24,064 ai_orchestrator 13092 7880 Message reçu: 'bonjour'
+INFO 2025-02-19 08:19:24,080 ai_orchestrator 13092 7880 Chat ID: 144
+INFO 2025-02-19 08:19:24,081 ai_orchestrator 13092 7880 État de la conversation: None
+INFO 2025-02-19 08:19:24,364 ai_orchestrator 13092 7880 Message non reconnu - utilisation de la réponse par défaut
+INFO 2025-02-19 08:19:27,980 ai_orchestrator 13092 7880 Réponse OpenAI: Bonjour ! Comment puis-je vous aider aujourd'hui ?...
+INFO 2025-02-19 08:19:28,281 basehttp 13092 7880 "POST /chat/ HTTP/1.1" 200 103
+INFO 2025-02-19 08:19:36,629 ai_orchestrator 13092 18944 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-19 08:19:37,248 ai_orchestrator 13092 18944 Message reçu: 'bien et toi'
+INFO 2025-02-19 08:19:37,264 ai_orchestrator 13092 18944 Chat ID: 144
+INFO 2025-02-19 08:19:37,264 ai_orchestrator 13092 18944 État de la conversation: None
+INFO 2025-02-19 08:19:37,581 ai_orchestrator 13092 18944 Message non reconnu - utilisation de la réponse par défaut
+INFO 2025-02-19 08:19:37,747 basehttp 13092 7880 "GET /get-chat-history/ HTTP/1.1" 200 1319
+INFO 2025-02-19 08:19:38,913 ai_orchestrator 13092 18944 Réponse OpenAI: Je vais bien, merci ! Comment puis-je vous aider aujourd'hui ?...
+INFO 2025-02-19 08:19:39,212 basehttp 13092 18944 "POST /chat/ HTTP/1.1" 200 115
+INFO 2025-02-19 08:19:48,766 basehttp 13092 18944 "GET /get-chat-history/ HTTP/1.1" 200 1331
+INFO 2025-02-19 08:19:58,229 ai_orchestrator 13092 18944 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-19 08:19:58,798 ai_orchestrator 13092 18944 Message reçu: 'je peux avoir la liste de tes integration?'
+INFO 2025-02-19 08:19:58,798 ai_orchestrator 13092 18944 Chat ID: 144
+INFO 2025-02-19 08:19:58,798 ai_orchestrator 13092 18944 État de la conversation: None
+INFO 2025-02-19 08:19:59,079 ai_orchestrator 13092 18944 Message non reconnu - utilisation de la réponse par défaut
+INFO 2025-02-19 08:20:01,813 ai_orchestrator 13092 18944 Réponse OpenAI: Je suis capable de m'intégrer avec diverses plateformes et services pour fournir des informations et...
+INFO 2025-02-19 08:20:02,115 basehttp 13092 18944 "POST /chat/ HTTP/1.1" 200 744
+INFO 2025-02-19 08:20:12,194 basehttp 13092 18944 "GET /get-chat-history/ HTTP/1.1" 200 1374
+INFO 2025-02-19 08:21:12,597 ai_orchestrator 13092 18944 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-19 08:21:13,199 ai_orchestrator 13092 18944 Message reçu: 'je peux creer un contact'
+INFO 2025-02-19 08:21:13,199 ai_orchestrator 13092 18944 Chat ID: 144
+INFO 2025-02-19 08:21:13,199 ai_orchestrator 13092 18944 État de la conversation: None
+INFO 2025-02-19 08:21:13,480 ai_orchestrator 13092 18944 Détection d'une demande de création de contact HubSpot
+INFO 2025-02-19 08:21:14,049 ai_orchestrator 13092 18944 HubSpot intégré: True
+INFO 2025-02-19 08:21:14,049 ai_orchestrator 13092 18944 Changement d'état pour user 2: None -> contact_type
+INFO 2025-02-19 08:21:14,049 ai_orchestrator 13092 18944 Début du processus de création de contact
+INFO 2025-02-19 08:21:14,347 basehttp 13092 18944 "POST /chat/ HTTP/1.1" 200 256
+INFO 2025-02-19 08:21:23,667 basehttp 13092 18944 "GET /get-chat-history/ HTTP/1.1" 200 1399
+INFO 2025-02-19 08:21:31,030 ai_orchestrator 13092 18944 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-19 08:21:31,630 ai_orchestrator 13092 18944 Message reçu: 'particulier'
+INFO 2025-02-19 08:21:31,630 ai_orchestrator 13092 18944 Chat ID: 144
+INFO 2025-02-19 08:21:31,630 ai_orchestrator 13092 18944 État de la conversation: contact_type
+INFO 2025-02-19 08:21:31,914 ai_orchestrator 13092 18944 Traitement de l'état: contact_type
+INFO 2025-02-19 08:21:31,914 ai_orchestrator 13092 18944 Changement d'état pour user 2: contact_type -> personal_firstname
+INFO 2025-02-19 08:21:32,215 basehttp 13092 18944 "POST /chat/ HTTP/1.1" 200 122
+INFO 2025-02-19 08:21:41,553 basehttp 13092 18944 "GET /get-chat-history/ HTTP/1.1" 200 1339
+INFO 2025-02-19 16:32:50,132 basehttp 13092 21964 "GET / HTTP/1.1" 200 12901
+ERROR 2025-02-19 16:35:08,475 log 13092 21964 Internal Server Error: /logout/
+Traceback (most recent call last):
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\sessions\backends\base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "dpg-cufhqdogph6c73845rcg-a.oregon-postgres.render.com" (35.227.164.209), port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\auth\views.py", line 137, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\auth\views.py", line 141, in post
+    auth_logout(request)
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\auth\__init__.py", line 168, in logout
+    if not getattr(user, "is_authenticated", True):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\auth\middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\auth\middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\auth\__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\auth\__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\sessions\backends\base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\sessions\backends\db.py", line 55, in load
+    s = self._get_session_from_db()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\contrib\sessions\backends\db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\models\query.py", line 645, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Nevada Man\CascadeProjects\alya\env\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "dpg-cufhqdogph6c73845rcg-a.oregon-postgres.render.com" (35.227.164.209), port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+ERROR 2025-02-19 16:35:08,576 basehttp 13092 21964 "POST /logout/ HTTP/1.1" 500 268236
+INFO 2025-02-19 16:51:38,102 basehttp 13092 19488 "POST /logout/ HTTP/1.1" 302 0
+INFO 2025-02-19 16:51:38,180 basehttp 13092 19488 "GET / HTTP/1.1" 200 11425
+INFO 2025-02-19 16:54:45,113 basehttp 13092 19488 "GET /login/ HTTP/1.1" 200 6046
+INFO 2025-02-19 16:54:58,283 basehttp 13092 19488 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-02-19 16:55:02,101 basehttp 13092 19488 "GET /compte/ HTTP/1.1" 200 227007
+INFO 2025-02-19 16:55:04,704 views 13092 7088 Intégrations activées trouvées: []
+INFO 2025-02-19 16:55:04,704 basehttp 13092 7088 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-19 16:55:04,704 basehttp 13092 19488 "GET /get-chat-history/ HTTP/1.1" 200 34
+WARNING 2025-02-19 17:16:43,132 log 13092 13752 Not Found: /hubspot/oauth/
+WARNING 2025-02-19 17:16:43,135 basehttp 13092 13752 "GET /hubspot/oauth/ HTTP/1.1" 404 10226
+WARNING 2025-02-19 17:16:52,959 log 13092 13752 Not Found: /hubspot/oauth/
+WARNING 2025-02-19 17:16:52,960 basehttp 13092 13752 "GET /hubspot/oauth/ HTTP/1.1" 404 10226
+ERROR 2025-02-20 10:58:29,341 views 13092 27616 FATAL COMPTE ERROR: Reverse for 'hubspot_auth' not found. 'hubspot_auth' is not a valid view function or pattern name.
+INFO 2025-02-20 10:58:29,377 basehttp 13092 27616 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-02-20 10:58:31,633 basehttp 13092 27616 "GET / HTTP/1.1" 200 13218
+ERROR 2025-02-20 11:01:03,660 views 13092 15624 FATAL COMPTE ERROR: Reverse for 'hubspot_auth' not found. 'hubspot_auth' is not a valid view function or pattern name.
+INFO 2025-02-20 11:01:03,662 basehttp 13092 15624 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-02-20 11:01:05,581 basehttp 13092 15624 "GET / HTTP/1.1" 200 13218
+ERROR 2025-02-20 11:01:38,275 views 13092 15340 FATAL COMPTE ERROR: Reverse for 'hubspot_auth' not found. 'hubspot_auth' is not a valid view function or pattern name.
+INFO 2025-02-20 11:01:38,591 basehttp 13092 15340 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-02-20 11:01:40,725 basehttp 13092 15340 "GET / HTTP/1.1" 200 13218
+INFO 2025-02-20 11:02:37,348 autoreload 28848 26036 Watching for file changes with StatReloader
+INFO 2025-02-20 11:03:15,409 basehttp 28848 14380 "GET / HTTP/1.1" 200 12884
+ERROR 2025-02-20 11:03:23,075 views 28848 14380 FATAL COMPTE ERROR: Reverse for 'hubspot_auth' not found. 'hubspot_auth' is not a valid view function or pattern name.
+INFO 2025-02-20 11:03:23,075 basehttp 28848 14380 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-02-20 11:03:24,969 basehttp 28848 14380 "GET / HTTP/1.1" 200 13218
+INFO 2025-02-20 11:03:37,843 basehttp 28848 14380 "POST /logout/ HTTP/1.1" 302 0
+INFO 2025-02-20 11:03:37,865 basehttp 28848 14380 "GET / HTTP/1.1" 200 11425
+INFO 2025-02-20 11:03:41,230 basehttp 28848 14380 "GET /login/ HTTP/1.1" 200 6046
+INFO 2025-02-20 11:03:48,083 basehttp 28848 14380 "POST /login/ HTTP/1.1" 302 0
+ERROR 2025-02-20 11:03:51,015 views 28848 14380 FATAL COMPTE ERROR: Reverse for 'hubspot_auth' not found. 'hubspot_auth' is not a valid view function or pattern name.
+INFO 2025-02-20 11:03:51,017 basehttp 28848 14380 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-02-20 11:03:52,837 basehttp 28848 14380 "GET / HTTP/1.1" 200 13218
+INFO 2025-02-20 11:04:48,698 basehttp 28848 14380 "GET / HTTP/1.1" 200 12884
+INFO 2025-02-20 11:04:57,762 basehttp 28848 14380 "GET /compte/ HTTP/1.1" 200 216699
+INFO 2025-02-20 11:04:57,774 basehttp 28848 14380 "GET /static/css/chat.css HTTP/1.1" 304 0
+INFO 2025-02-20 11:05:00,478 views 28848 27188 Intégrations activées trouvées: []
+INFO 2025-02-20 11:05:00,478 basehttp 28848 27188 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:05:00,478 basehttp 28848 14380 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-20 11:08:32,238 basehttp 28848 33284 "GET /compte/ HTTP/1.1" 200 216958
+INFO 2025-02-20 11:08:34,383 views 28848 17772 Intégrations activées trouvées: []
+INFO 2025-02-20 11:08:34,384 basehttp 28848 17772 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:08:34,463 basehttp 28848 33284 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-20 11:09:45,473 basehttp 28848 6644 "GET / HTTP/1.1" 200 11425
+INFO 2025-02-20 11:09:45,750 basehttp 28848 30244 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-02-20 11:09:45,752 basehttp 28848 27068 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-02-20 11:09:45,754 basehttp 28848 5340 "GET /static/css/home.css HTTP/1.1" 200 3613
+INFO 2025-02-20 11:09:45,798 basehttp 28848 6644 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-02-20 11:09:45,813 basehttp 28848 31364 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-02-20 11:09:48,082 log 28848 31364 Not Found: /favicon.ico
+WARNING 2025-02-20 11:09:48,083 basehttp 28848 31364 "GET /favicon.ico HTTP/1.1" 404 10217
+INFO 2025-02-20 11:09:50,946 basehttp 28848 31364 "GET /login/ HTTP/1.1" 200 6046
+INFO 2025-02-20 11:10:10,657 basehttp 28848 31364 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-02-20 11:10:13,489 basehttp 28848 31364 "GET /compte/ HTTP/1.1" 200 217343
+INFO 2025-02-20 11:10:13,539 basehttp 28848 31364 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-02-20 11:10:13,774 basehttp 28848 6644 "GET /static/css/components/info-tag.css HTTP/1.1" 200 380
+INFO 2025-02-20 11:10:13,803 basehttp 28848 27068 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-02-20 11:10:15,916 views 28848 6644 Intégrations activées trouvées: [8]
+INFO 2025-02-20 11:10:15,920 basehttp 28848 6644 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-20 11:10:21,914 basehttp 28848 27068 "GET /get-chat-history/ HTTP/1.1" 200 1339
+INFO 2025-02-20 11:12:24,244 basehttp 28848 33284 "GET /compte/ HTTP/1.1" 200 217921
+INFO 2025-02-20 11:12:26,354 views 28848 17772 Intégrations activées trouvées: []
+INFO 2025-02-20 11:12:26,354 basehttp 28848 17772 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:12:26,380 basehttp 28848 33284 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-20 11:13:01,007 basehttp 28848 33284 "GET /compte/ HTTP/1.1" 200 217921
+INFO 2025-02-20 11:13:03,099 views 28848 17772 Intégrations activées trouvées: []
+INFO 2025-02-20 11:13:03,099 basehttp 28848 17772 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:13:03,115 basehttp 28848 33284 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-20 11:13:46,877 basehttp 28848 27068 "GET /compte/ HTTP/1.1" 200 218010
+INFO 2025-02-20 11:13:49,038 views 28848 6644 Intégrations activées trouvées: [8]
+INFO 2025-02-20 11:13:49,039 basehttp 28848 6644 "GET /get-user-integrations-state/ HTTP/1.1" 200 50
+INFO 2025-02-20 11:13:54,940 basehttp 28848 27068 "GET /get-chat-history/ HTTP/1.1" 200 1339
+INFO 2025-02-20 11:14:59,333 basehttp 28848 33284 "GET /compte/ HTTP/1.1" 200 217989
+INFO 2025-02-20 11:15:01,465 views 28848 17772 Intégrations activées trouvées: []
+INFO 2025-02-20 11:15:01,468 basehttp 28848 17772 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:15:01,601 basehttp 28848 33284 "GET /get-chat-history/ HTTP/1.1" 200 34
+WARNING 2025-02-20 11:15:21,469 log 28848 33284 Not Found: /hubspot/auth/
+WARNING 2025-02-20 11:15:21,469 basehttp 28848 33284 "GET /hubspot/auth/ HTTP/1.1" 404 10223
+WARNING 2025-02-20 11:15:55,136 log 28848 33284 Not Found: /hubspot/auth/
+WARNING 2025-02-20 11:15:55,137 basehttp 28848 33284 "GET /hubspot/auth/ HTTP/1.1" 404 10223
+INFO 2025-02-20 11:16:32,392 basehttp 28848 33284 "GET /compte/ HTTP/1.1" 200 217921
+INFO 2025-02-20 11:16:34,606 views 28848 17772 Intégrations activées trouvées: []
+INFO 2025-02-20 11:16:34,607 basehttp 28848 17772 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:16:34,719 basehttp 28848 33284 "GET /get-chat-history/ HTTP/1.1" 200 34
+WARNING 2025-02-20 11:16:42,224 log 28848 33284 Not Found: /hubspot/auth/
+WARNING 2025-02-20 11:16:42,224 basehttp 28848 33284 "GET /hubspot/auth/ HTTP/1.1" 404 10223
+INFO 2025-02-20 11:17:02,950 basehttp 28848 33284 "GET /compte/ HTTP/1.1" 200 216958
+INFO 2025-02-20 11:17:05,050 basehttp 28848 33284 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-20 11:17:05,149 views 28848 17772 Intégrations activées trouvées: []
+INFO 2025-02-20 11:17:05,149 basehttp 28848 17772 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:19:41,104 basehttp 28848 17772 "GET /compte/ HTTP/1.1" 200 216958
+INFO 2025-02-20 11:19:43,231 views 28848 33284 Intégrations activées trouvées: []
+INFO 2025-02-20 11:19:43,233 basehttp 28848 33284 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:19:43,259 basehttp 28848 17772 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-20 11:20:32,034 basehttp 28848 17772 "GET /compte/ HTTP/1.1" 200 217067
+INFO 2025-02-20 11:20:34,207 basehttp 28848 17772 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-20 11:20:34,447 views 28848 33284 Intégrations activées trouvées: []
+INFO 2025-02-20 11:20:34,462 basehttp 28848 33284 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:24:28,985 basehttp 28848 33284 "GET /compte/ HTTP/1.1" 200 219230
+WARNING 2025-02-20 11:24:29,076 log 28848 32772 Not Found: /check-hubspot-integration/
+WARNING 2025-02-20 11:24:29,077 basehttp 28848 32772 "GET /check-hubspot-integration/ HTTP/1.1" 404 10262
+INFO 2025-02-20 11:24:31,159 views 28848 17772 Intégrations activées trouvées: []
+INFO 2025-02-20 11:24:31,174 basehttp 28848 17772 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:24:31,234 basehttp 28848 33284 "GET /get-chat-history/ HTTP/1.1" 200 34
+WARNING 2025-02-20 11:24:41,341 log 28848 33284 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:24:41,342 basehttp 28848 33284 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:24:43,342 log 28848 33284 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:24:43,343 basehttp 28848 33284 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:24:44,550 log 28848 33284 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:24:44,630 basehttp 28848 33284 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+INFO 2025-02-20 11:25:48,021 basehttp 28848 33284 "GET /compte/ HTTP/1.1" 200 218070
+INFO 2025-02-20 11:25:50,084 views 28848 17772 Intégrations activées trouvées: []
+INFO 2025-02-20 11:25:50,084 basehttp 28848 17772 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:25:50,184 basehttp 28848 33284 "GET /get-chat-history/ HTTP/1.1" 200 34
+WARNING 2025-02-20 11:25:53,473 log 28848 33284 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:25:53,474 basehttp 28848 33284 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:25:54,698 log 28848 33284 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:25:54,699 basehttp 28848 33284 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:25:54,955 log 28848 33284 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:25:54,956 basehttp 28848 33284 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:25:56,598 log 28848 33284 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:25:56,599 basehttp 28848 33284 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:25:56,777 log 28848 33284 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:25:56,777 basehttp 28848 33284 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:25:56,911 log 28848 33284 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:25:56,912 basehttp 28848 33284 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:25:57,046 log 28848 33284 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:25:57,047 basehttp 28848 33284 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+INFO 2025-02-20 11:26:35,086 basehttp 28848 33284 "GET /compte/ HTTP/1.1" 200 218560
+WARNING 2025-02-20 11:26:35,160 log 28848 32772 Not Found: /check-hubspot-integration/
+WARNING 2025-02-20 11:26:35,161 basehttp 28848 32772 "GET /check-hubspot-integration/ HTTP/1.1" 404 10262
+INFO 2025-02-20 11:26:37,235 basehttp 28848 33284 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-20 11:26:37,272 views 28848 17772 Intégrations activées trouvées: []
+INFO 2025-02-20 11:26:37,272 basehttp 28848 17772 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+WARNING 2025-02-20 11:26:41,674 log 28848 17772 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:26:41,675 basehttp 28848 17772 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:26:43,621 log 28848 17772 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:26:43,622 basehttp 28848 17772 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:26:44,541 log 28848 17772 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:26:44,567 basehttp 28848 17772 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:28:08,176 log 28848 17772 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:28:08,177 basehttp 28848 17772 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+WARNING 2025-02-20 11:28:08,400 log 28848 17772 Not Found: /get-hubspot-auth-url/
+WARNING 2025-02-20 11:28:08,401 basehttp 28848 17772 "POST /get-hubspot-auth-url/ HTTP/1.1" 404 10248
+INFO 2025-02-20 11:28:40,506 autoreload 28848 26036 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\urls.py changed, reloading.
+INFO 2025-02-20 11:28:42,505 autoreload 532 21668 Watching for file changes with StatReloader
+INFO 2025-02-20 11:29:04,101 autoreload 532 21668 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\urls.py changed, reloading.
+INFO 2025-02-20 11:29:05,924 autoreload 22680 26928 Watching for file changes with StatReloader
+INFO 2025-02-20 11:33:10,793 autoreload 22680 26928 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\urls.py changed, reloading.
+INFO 2025-02-20 11:33:12,055 autoreload 33136 28196 Watching for file changes with StatReloader
+INFO 2025-02-20 11:35:42,273 basehttp 33136 21956 "GET /compte/ HTTP/1.1" 200 218769
+WARNING 2025-02-20 11:35:42,332 log 33136 33508 Not Found: /check-hubspot-integration/
+WARNING 2025-02-20 11:35:42,334 basehttp 33136 33508 "GET /check-hubspot-integration/ HTTP/1.1" 404 10262
+INFO 2025-02-20 11:35:44,440 views 33136 22484 Intégrations activées trouvées: []
+INFO 2025-02-20 11:35:44,441 basehttp 33136 22484 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:35:44,551 basehttp 33136 21956 "GET /get-chat-history/ HTTP/1.1" 200 34
+WARNING 2025-02-20 11:38:44,933 log 33136 21956 Forbidden (CSRF token from POST incorrect.): /logout/
+WARNING 2025-02-20 11:38:44,934 basehttp 33136 21956 "POST /logout/ HTTP/1.1" 403 2526
+WARNING 2025-02-20 11:38:49,066 log 33136 21956 Forbidden (CSRF token from POST incorrect.): /logout/
+WARNING 2025-02-20 11:38:49,068 basehttp 33136 21956 "POST /logout/ HTTP/1.1" 403 2526
+WARNING 2025-02-20 11:38:53,681 base 33136 21956 Method Not Allowed (GET): /logout/
+WARNING 2025-02-20 11:38:53,682 log 33136 21956 Method Not Allowed: /logout/
+WARNING 2025-02-20 11:38:53,683 basehttp 33136 21956 "GET /logout/ HTTP/1.1" 405 0
+INFO 2025-02-20 11:39:13,275 autoreload 31680 31688 Watching for file changes with StatReloader
+WARNING 2025-02-20 11:39:20,717 base 31680 10252 Method Not Allowed (GET): /logout/
+WARNING 2025-02-20 11:39:20,719 log 31680 10252 Method Not Allowed: /logout/
+WARNING 2025-02-20 11:39:20,721 basehttp 31680 10252 "GET /logout/ HTTP/1.1" 405 0
+WARNING 2025-02-20 11:39:31,718 base 31680 10252 Method Not Allowed (GET): /logout/
+WARNING 2025-02-20 11:39:31,719 log 31680 10252 Method Not Allowed: /logout/
+WARNING 2025-02-20 11:39:31,720 basehttp 31680 10252 "GET /logout/ HTTP/1.1" 405 0
+INFO 2025-02-20 11:39:38,245 basehttp 31680 10252 "GET / HTTP/1.1" 200 12884
+INFO 2025-02-20 11:39:44,920 basehttp 31680 10252 "GET /compte/ HTTP/1.1" 200 218769
+WARNING 2025-02-20 11:39:44,981 log 31680 18660 Not Found: /check-hubspot-integration/
+WARNING 2025-02-20 11:39:44,982 basehttp 31680 18660 "GET /check-hubspot-integration/ HTTP/1.1" 404 10262
+INFO 2025-02-20 11:39:47,086 views 31680 23296 Intégrations activées trouvées: []
+INFO 2025-02-20 11:39:47,089 basehttp 31680 23296 "GET /get-user-integrations-state/ HTTP/1.1" 200 49
+INFO 2025-02-20 11:39:47,098 basehttp 31680 10252 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-20 11:41:33,493 autoreload 31680 31688 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-02-20 11:41:35,219 autoreload 21792 33640 Watching for file changes with StatReloader
+INFO 2025-02-20 11:42:03,564 autoreload 21792 33640 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\urls.py changed, reloading.
+INFO 2025-02-20 11:42:04,682 autoreload 13240 9016 Watching for file changes with StatReloader

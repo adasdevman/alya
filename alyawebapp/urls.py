@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
+from .views import get_hubspot_auth_url
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -31,4 +32,5 @@ urlpatterns = [
     path('get-user-integrations-state/', views.get_user_integrations_state, name='get_user_integrations_state'),
     path('clear-chat-history/', views.clear_chat_history, name='clear_chat_history'),
     path('get-messages/<int:chat_id>/', views.get_messages, name='get_messages'),
+    path('get-hubspot-auth-url/', get_hubspot_auth_url, name='get_hubspot_auth_url'),
 ] 

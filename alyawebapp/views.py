@@ -996,3 +996,13 @@ def get_messages(request, chat_id):
             'message': str(e)
         }, status=500)
 
+def get_hubspot_auth_url(request):
+    config = {
+        'client_id': settings.HUBSPOT_CLIENT_ID,
+        'client_secret': settings.HUBSPOT_CLIENT_SECRET,
+        'redirect_uri': settings.HUBSPOT_REDIRECT_URI
+    }
+    handler = HubSpotHandler(config)
+    auth_url = handler.get_authorization_url()
+    return redirect(auth_url)
+
