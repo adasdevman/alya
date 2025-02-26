@@ -44,6 +44,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.safestring import mark_safe
+from .integrations.trello.handler import TrelloHandler
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -69,7 +70,6 @@ def login_view(request):
         
         if user is not None:
             auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            messages.success(request, 'Connexion réussie!')
             return redirect('compte')
         else:
             messages.error(request, 'Nom d\'utilisateur ou mot de passe incorrect.')
@@ -154,8 +154,13 @@ def compte(request):
             'company_sizes': company_sizes,
             'integrations': integrations,
             'integration_configs_data': integration_configs_json,
-            'user_integrations': list(user_integrations)
+            'user_integrations': list(user_integrations),
+            'trello_api_key': 'dfdd546608d5f4cbfe3b417f6cba8204',  # Pour déboguer
+            'trello_redirect_uri': settings.TRELLO_REDIRECT_URI
         }
+        
+        # Déboguer les valeurs
+        print(f"Trello API Key in context: {context['trello_api_key']}")
         
         return render(request, 'alyawebapp/compte.html', context)
     except Exception as e:
@@ -249,35 +254,32 @@ def reset_domains(request):
 
 @login_required
 def chat_view(request):
-    if request.method == 'POST':
-        try:
+    try:
+        if request.method == 'POST':
             data = json.loads(request.body)
             message = data.get('message')
             chat_id = data.get('chat_id')
             
-            # Si pas de chat_id, créer un nouveau chat
-            if not chat_id:
-                chat = Chat.objects.create(user=request.user)
-                chat_id = chat.id
-            else:
-                chat = Chat.objects.get(id=chat_id, user=request.user)
+            if not message:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Le message ne peut pas être vide'
+                }, status=400)
             
-            # Obtenir la réponse de l'assistant
-            orchestrator = AIOrchestrator(user_id=request.user.id)
-            response = orchestrator.process_message(message, chat_id)
+            orchestrator = AIOrchestrator(user=request.user)
+            response = orchestrator.process_message(chat_id, message)
             
             return JsonResponse({
                 'status': 'success',
-                'response': response,
-                'chat_id': chat_id
+                'response': response
             })
             
-        except Exception as e:
-            logger.error(f"Erreur dans le chat: {str(e)}")
-            return JsonResponse({
-                'status': 'error',
-                'message': str(e)
-            }, status=500)
+    except Exception as e:
+        logger.error(f"Erreur dans le chat: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
 
 @login_required
 def get_chat_history(request):
@@ -295,15 +297,17 @@ def get_chat_history(request):
             if chat.id not in unique_chats:
                 messages = Message.objects.filter(chat=chat).order_by('created_at')
                 if messages.exists():
-                    first_message = messages.first()
-                    last_message = messages.last()
+                    # Trouver le premier message utilisateur
+                    first_user_message = messages.filter(is_user=True).first()
+                    # Trouver la dernière réponse
+                    last_response = messages.filter(is_user=False).last()
                     
                     unique_chats[chat.id] = {
                         'id': chat.id,
-                        'title': first_message.content[:50],
-                        'preview': last_message.content[:100],
+                        'title': first_user_message.content if first_user_message else "Nouvelle conversation",
+                        'preview': last_response.content[:100] if last_response else "",
                         'created_at': chat.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-                        'message_count': messages.count()
+                        'message_pairs': messages.count() // 2  # Nombre de paires question/réponse
                     }
         
         # Convertir le dictionnaire en liste pour la réponse
@@ -952,8 +956,12 @@ def clear_chat_history(request):
 
 @login_required
 def integration_success(request):
-    """Vue pour afficher la page de succès après l'intégration"""
-    return render(request, 'alyawebapp/integration_success.html')
+    # Récupérer le type d'intégration depuis la session ou l'URL
+    integration_type = request.GET.get('type', 'hubspot')  # Par défaut HubSpot
+    
+    return render(request, 'alyawebapp/integration_success.html', {
+        'integration_type': integration_type
+    })
 
 def handle_chat_request(request):
     if request.method == 'POST':
@@ -1005,4 +1013,57 @@ def get_hubspot_auth_url(request):
     handler = HubSpotHandler(config)
     auth_url = handler.get_authorization_url()
     return redirect(auth_url)
+
+@login_required
+def trello_oauth(request):
+    try:
+        integration = Integration.objects.get(name__iexact='trello')
+        user_integration, created = UserIntegration.objects.get_or_create(
+            user=request.user,
+            integration=integration
+        )
+
+        handler = TrelloHandler({
+            'api_key': settings.TRELLO_API_KEY,
+            'api_secret': settings.TRELLO_API_SECRET,
+            'redirect_uri': settings.TRELLO_REDIRECT_URI
+        })
+
+        auth_url = handler.get_authorization_url()
+        return redirect(auth_url)
+
+    except Exception as e:
+        logger.error(f"Erreur OAuth Trello: {str(e)}")
+        messages.error(request, "Une erreur est survenue lors de la configuration de Trello.")
+        return redirect('compte')
+
+@login_required
+def trello_callback(request):
+    return render(request, 'alyawebapp/trello_callback.html')
+
+@login_required
+@csrf_protect
+def trello_save_token(request):
+    try:
+        data = json.loads(request.body)
+        token = data.get('token')
+        
+        if not token:
+            return JsonResponse({'success': False, 'error': 'Token manquant'})
+
+        integration = Integration.objects.get(name__iexact='trello')
+        user_integration, created = UserIntegration.objects.get_or_create(
+            user=request.user,
+            integration=integration
+        )
+
+        user_integration.access_token = token
+        user_integration.enabled = True
+        user_integration.save()
+
+        return JsonResponse({'success': True})
+
+    except Exception as e:
+        logger.error(f"Erreur sauvegarde token Trello: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)})
 

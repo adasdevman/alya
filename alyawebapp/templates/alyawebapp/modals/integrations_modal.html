@@ -21,25 +21,39 @@
                     <div class="col integration-card">
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
-                                <i class="{{ integration.icon_class }} fa-lg"></i>
-                                <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">{{ integration.name }}</h6>
-                                <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
-                                    {{ integration.description|truncatechars:30 }}
-                                </p>
-                                <button 
-                                    class="btn btn-sm {% if integration.name == 'HubSpot CRM' %}btn-dark hubspot-auth{% elif integration.id in user_integrations %}btn-success disabled{% else %}btn-outline-dark config-integration{% endif %}"
-                                    data-integration-id="{{ integration.id }}"
-                                    {% if integration.name == 'HubSpot CRM' %}
-                                        onclick="window.location.href='{% url 'get_hubspot_auth_url' %}'"
-                                    {% endif %}
-                                    style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
-                                    <i class="fas {% if integration.id in user_integrations %}fa-check{% else %}fa-cog{% endif %}"></i>
-                                    {% if integration.id in user_integrations %}
-                                        Déjà configuré
-                                    {% else %}
-                                        {% if integration.name == 'HubSpot CRM' %}Connecter{% else %}Configurer{% endif %}
-                                    {% endif %}
-                                </button>
+                                {% if integration.name == 'Trello' %}
+                                    <i class="fab fa-trello fa-lg"></i>
+                                    <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">Trello</h6>
+                                    <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
+                                        Gérez vos projets et tâches d'équipe
+                                    </p>
+                                    <button class="btn btn-sm {% if integration.id in user_integrations %}btn-success disabled{% else %}btn-dark trello-auth{% endif %}"
+                                            onclick="window.location.href='https://trello.com/1/authorize?expiration=never&name=Alya&scope=read,write&response_type=token&key={{ trello_api_key }}&return_url={{ trello_redirect_uri }}'"
+                                            style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
+                                        <i class="fas fa-plug me-1"></i>
+                                        {% if integration.id in user_integrations %}
+                                            Déjà configuré
+                                        {% else %}
+                                            Connecter
+                                        {% endif %}
+                                    </button>
+                                {% else %}
+                                    <i class="{{ integration.icon_class }} fa-lg"></i>
+                                    <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">{{ integration.name }}</h6>
+                                    <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
+                                        {{ integration.description|truncatechars:30 }}
+                                    </p>
+                                    <button class="btn btn-sm {% if integration.id in user_integrations %}btn-success disabled{% else %}btn-outline-dark{% endif %} config-integration"
+                                            data-integration-id="{{ integration.id }}"
+                                            style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
+                                        <i class="fas {% if integration.id in user_integrations %}fa-check{% else %}fa-cog{% endif %}"></i>
+                                        {% if integration.id in user_integrations %}
+                                            Déjà configuré
+                                        {% else %}
+                                            Configurer
+                                        {% endif %}
+                                    </button>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -76,4 +90,42 @@ document.getElementById('searchIntegrations').addEventListener('input', function
         card.style.display = (title.includes(searchTerm) || description.includes(searchTerm)) ? '' : 'none';
     });
 });
+
+function initTrelloAuth() {
+    const authUrl = 'https://trello.com/1/authorize?' + new URLSearchParams({
+        expiration: 'never',
+        name: 'Alya',
+        scope: 'read,write',
+        response_type: 'token',
+        key: '{{ trello_api_key }}',
+        return_url: '{{ trello_redirect_uri }}'
+    });
+
+    // Ouvrir la fenêtre d'autorisation
+    const authWindow = window.open(authUrl, '_blank');
+
+    // Écouter le retour avec le token
+    window.addEventListener('message', function(event) {
+        if (event.origin === window.location.origin) {
+            const token = event.data.token;
+            if (token) {
+                // Envoyer le token au backend
+                fetch('/integrations/trello/save-token/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ token: token })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+    });
+}
 </script>

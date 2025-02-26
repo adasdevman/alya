@@ -186,3 +186,9 @@ if not all([HUBSPOT_CLIENT_ID, HUBSPOT_CLIENT_SECRET, HUBSPOT_REDIRECT_URI]):
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 86400  # 24 heures en secondes
 SESSION_COOKIE_SECURE = False  # Mettre à True en production
+
+# Trello Configuration
+TRELLO_API_KEY = os.getenv('TRELLO_API_KEY')
+TRELLO_API_SECRET = os.getenv('TRELLO_API_SECRET')
+TRELLO_REDIRECT_URI = os.getenv('TRELLO_REDIRECT_URI', default='http://localhost:8000/trello/callback/')
+TRELLO_API_URL = 'https://api.trello.com/1'

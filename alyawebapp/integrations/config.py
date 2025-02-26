@@ -655,7 +655,54 @@ INTEGRATION_CONFIGS = {
             }
         ],
         'documentation_url': 'https://developer.atlassian.com/cloud/trello/rest/',
-        'auth_type': 'api_key'
+        'auth_type': 'api_key',
+        'actions': {
+            'create_task': {
+                'name': 'Créer une tâche',
+                'description': 'Crée une nouvelle tâche dans Trello',
+                'parameters': ['name', 'list_name', 'description', 'due_date', 'assignee']
+            },
+            'get_overdue_tasks': {
+                'name': 'Tâches en retard',
+                'description': 'Récupère la liste des tâches en retard',
+                'parameters': []
+            },
+            'create_board': {
+                'name': 'Créer un tableau',
+                'description': 'Crée un nouveau tableau Trello',
+                'parameters': ['name', 'description', 'background_color']
+            },
+            'create_list': {
+                'name': 'Créer une liste',
+                'description': 'Crée une nouvelle liste dans un tableau',
+                'parameters': ['board_name', 'list_name', 'position']
+            },
+            'move_card': {
+                'name': 'Déplacer une carte',
+                'description': 'Déplace une carte vers une autre liste',
+                'parameters': ['card_name', 'source_list', 'target_list']
+            },
+            'add_comment': {
+                'name': 'Ajouter un commentaire',
+                'description': 'Ajoute un commentaire à une carte',
+                'parameters': ['card_name', 'comment']
+            },
+            'add_checklist': {
+                'name': 'Ajouter une checklist',
+                'description': 'Ajoute une checklist à une carte',
+                'parameters': ['card_name', 'checklist_name', 'items']
+            },
+            'add_label': {
+                'name': 'Ajouter un label',
+                'description': 'Ajoute un label à une carte',
+                'parameters': ['card_name', 'label_name', 'color']
+            },
+            'get_board_activity': {
+                'name': 'Activité du tableau',
+                'description': 'Récupère l\'activité récente d\'un tableau',
+                'parameters': ['board_name', 'limit']
+            }
+        }
     },
 
     # Marketing (ajouts manquants)

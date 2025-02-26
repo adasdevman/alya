@@ -33,4 +33,7 @@ urlpatterns = [
     path('clear-chat-history/', views.clear_chat_history, name='clear_chat_history'),
     path('get-messages/<int:chat_id>/', views.get_messages, name='get_messages'),
     path('get-hubspot-auth-url/', get_hubspot_auth_url, name='get_hubspot_auth_url'),
+    path('integrations/trello/oauth/', views.trello_oauth, name='trello_oauth'),
+    path('integrations/trello/callback/', views.trello_callback, name='trello_callback'),
+    path('integrations/trello/save-token/', views.trello_save_token, name='trello_save_token'),
 ] 

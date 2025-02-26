@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trello Callback</title>
+</head>
+<body>
+    <script>
+    // Récupérer le token du fragment d'URL
+    const hash = window.location.hash;
+    const token = new URLSearchParams(hash.substring(1)).get('token');
+    
+    if (token) {
+        // Envoyer le token au backend
+        fetch('/integrations/trello/save-token/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ token: token })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/integration-success/?type=trello';
+            } else {
+                window.location.href = '/compte/';
+            }
+        });
+    } else {
+        window.location.href = '/compte/';
+    }
+    </script>
+</body>
+</html> 

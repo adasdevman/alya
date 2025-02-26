@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from .integrations.config import INTEGRATION_CONFIGS
 from datetime import datetime, timedelta
 from django.utils import timezone
+from .integrations.trello.manager import TrelloManager
 
 logger = logging.getLogger(__name__)
 
@@ -63,9 +64,17 @@ class Chat(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+    title = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        # Si ce chat devient actif, désactiver les autres chats de l'utilisateur
+        if self.is_active:
+            Chat.objects.filter(user=self.user, is_active=True).exclude(id=self.id).update(is_active=False)
+        super().save(*args, **kwargs)
 
 class Message(models.Model):
     chat = models.ForeignKey(Chat, related_name='messages', on_delete=models.CASCADE)
@@ -122,7 +131,7 @@ class ChatHistory(models.Model):
         return f"{self.chat.id} - {'User' if self.is_user else 'Assistant'} - {self.created_at}"
 
 class Integration(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
     description = models.TextField(blank=True, null=True)
     icon_class = models.CharField(max_length=50)
@@ -184,6 +193,33 @@ class UserIntegration(models.Model):
         if expires_in:
             self.token_expires_at = timezone.now() + timedelta(seconds=expires_in)
         self.save()
+
+    def get_active_board_id(self):
+        """Récupère l'ID du tableau actif pour Trello"""
+        if self.integration.name.lower() == 'trello':
+            # Essayer d'abord de récupérer depuis la config
+            if 'active_board_id' in self.config:
+                return self.config['active_board_id']
+            
+            # Sinon, récupérer le premier tableau disponible
+            try:
+                boards = TrelloManager.get_boards(self)
+                if boards:
+                    board_id = boards[0]['id']
+                    # Sauvegarder dans la config pour la prochaine fois
+                    self.config['active_board_id'] = board_id
+                    self.save()
+                    return board_id
+            except Exception as e:
+                logger.error(f"Erreur lors de la récupération des tableaux Trello: {str(e)}")
+        
+        return None
+
+    def set_active_board(self, board_id):
+        """Définit le tableau actif pour Trello"""
+        if self.integration.name.lower() == 'trello':
+            self.config['active_board_id'] = board_id
+            self.save()
 
 @receiver(pre_save, sender=UserIntegration)
 def ensure_config_is_dict(sender, instance, **kwargs):
