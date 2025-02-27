@@ -20034,3 +20034,71 @@ INFO 2025-02-27 10:19:38,835 ai_orchestrator 71240 36408 Intention détectée: {'i
 INFO 2025-02-27 10:19:39,102 basehttp 71240 36408 "POST /chat/ HTTP/1.1" 200 148
 INFO 2025-02-27 10:20:48,916 autoreload 71240 58592 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
 INFO 2025-02-27 10:20:50,565 autoreload 55640 13828 Watching for file changes with StatReloader
+INFO 2025-02-27 10:20:59,328 basehttp 55640 46472 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 10:21:01,507 views 55640 77376 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 10:21:01,507 basehttp 55640 77376 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 10:21:01,527 basehttp 55640 46472 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:21:37,503 ai_orchestrator 55640 46472 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:21:37,520 ai_orchestrator 55640 46472 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:21:37,770 ai_orchestrator 55640 46472 Chat actif: 261
+INFO 2025-02-27 10:21:39,954 ai_orchestrator 55640 46472 Intention détectée: {'integration': '', 'action': '', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 10:21:40,271 basehttp 55640 46472 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 10:21:43,831 basehttp 55640 46472 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:21:48,788 ai_orchestrator 55640 46472 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:21:48,788 ai_orchestrator 55640 46472 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:21:49,190 ai_orchestrator 55640 46472 Chat actif: 261
+INFO 2025-02-27 10:21:51,287 ai_orchestrator 55640 46472 Intention détectée: {'integration': 'trello', 'action': 'get_overdue_tasks', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 10:21:53,536 basehttp 55640 46472 "POST /chat/ HTTP/1.1" 200 186
+INFO 2025-02-27 10:21:55,642 basehttp 55640 46472 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:22:09,054 ai_orchestrator 55640 46472 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:22:09,054 ai_orchestrator 55640 46472 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:22:09,303 ai_orchestrator 55640 46472 Chat actif: 261
+INFO 2025-02-27 10:22:11,205 ai_orchestrator 55640 46472 Intention détectée: {'integration': 'hubspot', 'action': 'create_contact', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 10:22:11,205 ai_orchestrator 55640 46472 Changement d'état pour user 2: None -> contact_creation_start
+INFO 2025-02-27 10:22:11,463 basehttp 55640 46472 "POST /chat/ HTTP/1.1" 200 132
+INFO 2025-02-27 10:22:13,601 basehttp 55640 46472 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:22:21,871 ai_orchestrator 55640 46472 Changement d'état pour user 2: contact_creation_start -> None
+INFO 2025-02-27 10:22:21,871 ai_orchestrator 55640 46472 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:22:22,123 ai_orchestrator 55640 46472 Chat actif: 261
+INFO 2025-02-27 10:22:23,653 ai_orchestrator 55640 46472 Intention détectée: {'integration': 'hubspot', 'action': 'create_contact', 'is_continuation': False, 'confidence': 0.9, 'context_type': 'new_request'}
+INFO 2025-02-27 10:22:23,653 ai_orchestrator 55640 46472 Changement d'état pour user 2: None -> contact_creation_start
+INFO 2025-02-27 10:22:23,906 basehttp 55640 46472 "POST /chat/ HTTP/1.1" 200 132
+INFO 2025-02-27 10:22:26,237 basehttp 55640 46472 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:22:32,505 ai_orchestrator 55640 38560 Changement d'état pour user 2: contact_creation_start -> None
+INFO 2025-02-27 10:22:32,505 ai_orchestrator 55640 38560 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:22:32,770 ai_orchestrator 55640 38560 Chat actif: 261
+INFO 2025-02-27 10:22:34,936 ai_orchestrator 55640 38560 Intention détectée: {'integration': 'hubspot', 'action': 'create_contact', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 10:22:34,936 ai_orchestrator 55640 38560 Changement d'état pour user 2: None -> contact_creation_start
+INFO 2025-02-27 10:22:35,190 basehttp 55640 38560 "POST /chat/ HTTP/1.1" 200 132
+INFO 2025-02-27 10:22:37,429 basehttp 55640 38560 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:22:43,903 ai_orchestrator 55640 38560 Changement d'état pour user 2: contact_creation_start -> None
+INFO 2025-02-27 10:22:43,903 ai_orchestrator 55640 38560 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:22:44,171 ai_orchestrator 55640 38560 Chat actif: 261
+INFO 2025-02-27 10:22:45,954 ai_orchestrator 55640 38560 Intention détectée: {'integration': 'hubspot', 'action': 'create_contact', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 10:22:45,954 ai_orchestrator 55640 38560 Changement d'état pour user 2: None -> contact_creation_start
+INFO 2025-02-27 10:22:46,221 basehttp 55640 38560 "POST /chat/ HTTP/1.1" 200 132
+INFO 2025-02-27 10:22:48,343 basehttp 55640 38560 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:23:52,504 basehttp 55640 75764 "GET /admin/alyawebapp/userintegration/ HTTP/1.1" 200 21793
+INFO 2025-02-27 10:23:52,719 basehttp 55640 46924 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-02-27 10:23:52,719 basehttp 55640 53948 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-02-27 10:23:54,643 basehttp 55640 75764 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 10:24:13,606 basehttp 55640 75764 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 27278
+INFO 2025-02-27 10:24:15,549 basehttp 55640 75764 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 10:24:25,090 basehttp 55640 38560 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 10:24:27,427 basehttp 55640 38560 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:24:27,427 views 55640 61436 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 10:24:27,427 basehttp 55640 61436 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 10:27:59,388 basehttp 55640 61436 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 10:28:01,705 views 55640 38560 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 10:28:01,720 basehttp 55640 38560 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 10:28:03,982 basehttp 55640 61436 "GET /get-chat-history/ HTTP/1.1" 200 498
+INFO 2025-02-27 10:28:06,973 ai_orchestrator 55640 61436 Changement d'état pour user 2: contact_creation_start -> None
+INFO 2025-02-27 10:28:06,973 ai_orchestrator 55640 61436 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:28:07,222 ai_orchestrator 55640 61436 Chat actif: 263
+INFO 2025-02-27 10:28:09,721 ai_orchestrator 55640 61436 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0.8, 'context_type': 'new_request'}
+INFO 2025-02-27 10:28:09,971 basehttp 55640 61436 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 10:28:15,105 basehttp 55640 61436 "GET /get-chat-history/ HTTP/1.1" 200 498
+INFO 2025-02-27 10:28:20,589 ai_orchestrator 55640 61436 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:28:20,589 ai_orchestrator 55640 61436 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:28:20,840 ai_orchestrator 55640 61436 Chat actif: 263
+INFO 2025-02-27 10:28:23,371 ai_orchestrator 55640 61436 Intention détectée: {'integration': 'trello', 'action': 'get_overdue_tasks', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
