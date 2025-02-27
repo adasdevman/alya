@@ -11,7 +11,7 @@ from alyawebapp.models import Integration, UserIntegration
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from ..integrations.trello.manager import TrelloManager
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from ..utils.retry_handler import RetryHandler
 import random
 from requests.exceptions import ConnectionError, SSLError, ProxyError
@@ -20,6 +20,7 @@ from urllib3.exceptions import NewConnectionError, MaxRetryError
 from django.core.cache import cache
 import uuid
 from typing import Optional, Dict, Any
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -94,13 +95,8 @@ class AIOrchestrator:
     def __init__(self, user):
         self.user = user
         self.session_state = self._get_or_create_session()
-        # Récupérer ou créer le chat actif
-        self.active_chat = self._get_or_create_active_chat()
-        # Vérifier la connexion internet
-        if not self._check_internet_connection():
-            logger.error("Pas de connexion internet détectée")
-            raise NetworkError("Pas de connexion internet")
-
+        self.active_chat = None
+        self.current_conversation = None
         self.openai_client = openai.OpenAI(
             api_key=settings.OPENAI_API_KEY,
             timeout=API_TIMEOUT,
@@ -109,6 +105,10 @@ class AIOrchestrator:
         self.trello_integration = None
         self._initialize_trello()
         self.conversation_history = []
+        self.task_info = {}
+        self.available_members = []
+        self.conversation_state = None  # État de la conversation actuelle
+        self.contact_info = {}  # Informations de contact en cours
         self.error_count = 0
         self.last_successful_action = None
         self.max_message_length = 4000  # Limite de longueur des messages
@@ -161,51 +161,99 @@ class AIOrchestrator:
     def _detect_intent(self, message, conversation_history):
         """Détecte l'intention de l'utilisateur avec l'IA"""
         try:
-            # Construire le contexte de la conversation
-            context = "\n".join([
-                f"{'Utilisateur' if msg['role'] == 'user' else 'Assistant'}: {msg['content']}"
-                for msg in conversation_history[-3:]
-            ])
+            # Vérifier d'abord si c'est une expression de fin de conversation
+            end_conversation = [
+                'merci', 'au revoir', 'bye', 'bonne journée', 'à bientôt',
+                'c\'est parfait', 'super merci', 'ok merci', 'parfait merci',
+                'très bien merci', 'c\'est tout', 'c\'est bon'
+            ]
+            
+            if message.lower().strip() in end_conversation or any(
+                exp in message.lower() for exp in end_conversation
+            ):
+                return {
+                    'integration': 'conversation',
+                    'action': 'end',
+                    'is_continuation': True,
+                    'confidence': 1,
+                    'context_type': 'end_conversation'
+                }
+            
+            # Construire le prompt pour détecter l'intention
+            prompt = {
+                "role": "system",
+                "content": """Tu es un expert en analyse d'intention. Analyse le message et le contexte pour déterminer 
+                    les informations suivantes et retourne-les au format JSON :
+                    1. L'intégration concernée (trello, hubspot, etc.)
+                    2. L'action demandée (create_task, update_task, etc.)
+                    3. Si c'est une continuation d'une demande précédente
+                    4. Le niveau de confiance (0-1)
+                    5. Le type de contexte (new_request, continuation, clarification)
+                    
+                    Utilise le contexte de la conversation pour comprendre si le message actuel
+                    fait référence à une conversation précédente. Par exemple, si le message
+                    précédent parlait de Trello et que le nouveau message est une réponse courte,
+                    considère que c'est une continuation de la conversation Trello.
+                    
+                    Retourne ta réponse sous forme d'objet JSON avec les clés :
+                    {
+                        "integration": string,
+                        "action": string,
+                        "is_continuation": boolean,
+                        "confidence": number,
+                        "context_type": string
+                    }"""
+            }
 
-            prompt = f"""
-            Analyse le message suivant et le contexte de la conversation pour déterminer l'intention de l'utilisateur.
+            # Ajouter le contexte de la conversation
+            context_messages = []
+            if conversation_history:
+                for msg in conversation_history:
+                    role = "Utilisateur" if msg.get('role') == 'user' else "Assistant"
+                    content = msg.get('content', '')
+                    if content:
+                        context_messages.append(f"{role}: {content}")
+            
+            context = "\n".join(context_messages)
+            
+            user_prompt = {
+                "role": "user",
+                "content": f"""En tenant compte de TOUTE la conversation précédente,
+                    analyse ce message et retourne un JSON avec l'intention :
+                    
+                    Contexte précédent:
+                    {context}
+                    
+                    Message actuel: {message}"""
+            }
 
-            Contexte de la conversation :
-            {context}
-
-            Message actuel : {message}
-
-            Identifie :
-            - integration: (trello, hubspot, ou null)
-            - action: (create_task, move_card, create_contact, etc.)
-            - confidence: (0-1)
-            - context_type: (new_request, continuation, clarification, correction, cancellation)
-            - previous_requests: []
-            - corrections: []
-
-            Retourne un objet JSON avec ces informations.
-            """
-
-            response = self.openai_client.chat.completions.create(
+            completion = self.openai_client.chat.completions.create(
                 model=INTENT_MODEL,
-                messages=[{"role": "user", "content": prompt}],
-                response_format={ "type": "json_object" },
-                temperature=0.3
+                messages=[prompt, user_prompt],
+                temperature=0.3,
+                response_format={ "type": "json_object" }
             )
 
-            intent = json.loads(response.choices[0].message.content)
+            intent = json.loads(completion.choices[0].message.content)
             self.logger.info(f"Intention détectée: {intent}")
+            
+            # S'assurer que context_type est présent
+            if 'context_type' not in intent:
+                intent['context_type'] = 'new_request'
+                if intent.get('is_continuation'):
+                    intent['context_type'] = 'continuation'
+            
             return intent
 
         except Exception as e:
-            self.logger.error(f"Erreur lors de la détection d'intention: {str(e)}")
+            self.logger.error(f"Erreur dans _detect_intent: {str(e)}")
+            self.logger.error(f"Conversation history: {conversation_history}")
             return {
-                "integration": None,
-                "action": "unknown",
-                "confidence": 0.0,
-                "context_type": "error",
-                "previous_requests": [],
-                "corrections": []
+                'integration': None,
+                'action': None,
+                'context_type': 'error',
+                'confidence': 0,
+                'is_continuation': False
             }
 
     def _extract_trello_task_info(self, text):
@@ -233,190 +281,231 @@ class AIOrchestrator:
 
     def _extract_task_info(self, text):
         """Extrait les informations de tâche du texte avec l'IA"""
-        prompt = f"""
-        En tant qu'assistant expert en gestion de projet, analyse naturellement cette demande 
-        pour en extraire les informations nécessaires à la création d'une tâche Trello.
-        
-        Comprends le contexte et l'intention pour identifier :
-        - Le titre principal de la tâche
-        - Tout détail supplémentaire comme description
-        - Une date d'échéance (convertis les mentions comme "demain", "vendredi", etc. en date ISO)
-        - La liste ou colonne concernée (par défaut "À faire" si non précisé)
-        - La personne à qui la tâche est assignée si mentionnée
-        
-        Texte à analyser : {text}
-        
-        Retourne uniquement un objet JSON avec les champs name, description, due_date, list_name, et assignee.
-        Si un champ n'est pas mentionné, ne pas l'inclure dans le JSON.
-        """
+        try:
+            # Extraire le nom de la tâche entre guillemets simples
+            name_match = re.search(r"'([^']*)'", text)
+            name = name_match.group(1) if name_match else None
 
-        response = self.openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {
-                    "role": "system", 
-                    "content": "Tu es un expert en analyse de langage naturel et gestion de projet."
-                },
-                {"role": "user", "content": prompt}
-            ],
-            response_format={ "type": "json_object" }
-        )
+            # Extraire la colonne
+            column_match = re.search(r"colonne '([^']*)'", text)
+            list_name = column_match.group(1) if column_match else "À faire"
 
-        task_info = json.loads(response.choices[0].message.content)
-        
-        # Générer une confirmation naturelle
-        confirmation = self.openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Tu es Alya, une assistante amicale. Confirme la création de la tâche de manière naturelle et concise."
-                },
-                {
-                    "role": "user",
-                    "content": f"Confirme la création d'une tâche avec ces détails : {json.dumps(task_info, ensure_ascii=False)}"
-                }
-            ]
-        ).choices[0].message.content
-        
-        task_info['confirmation_message'] = confirmation
-        return task_info
+            # Extraire l'assigné
+            assignee_match = re.search(r"assigne[^a-zA-Z]*(la |le )?[àa]\s+([^\s\.,]+)", text)
+            assignee = assignee_match.group(2) if assignee_match else None
+
+            # Extraire la date d'échéance
+            due_date = None
+            if "vendredi" in text.lower():
+                # Calculer le prochain vendredi
+                today = datetime.now()
+                days_until_friday = (4 - today.weekday()) % 7
+                next_friday = today + timedelta(days=days_until_friday)
+                # Ajouter l'heure de fin de journée (23:59:59)
+                next_friday = next_friday.replace(hour=23, minute=59, second=59)
+                # Format ISO 8601 que Trello attend
+                due_date = next_friday.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+            return {
+                "name": name,
+                "list_name": list_name,
+                "assignee": assignee,
+                "due_date": due_date
+            }
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'extraction des informations de tâche: {str(e)}")
+            return None
 
     @RetryHandler(max_retries=3, base_delay=2, max_delay=15)
-    def handle_trello_request(self, text):
-        """Gère les requêtes liées à Trello"""
-        if not self.trello_integration:
-            return ("Pour utiliser Trello, vous devez d'abord connecter votre compte. 🔌\n\n"
-                    "Voici comment faire :\n"
-                    "1. Cliquez sur l'icône d'intégration dans le menu\n"
-                    "2. Sélectionnez Trello\n"
-                    "3. Suivez les étapes de connexion\n\n"
-                    "Voulez-vous que je vous guide dans ce processus ?")
-
-        # Analyse le texte pour déterminer l'action
-        text_lower = text.lower()
-        
+    def handle_trello_request(self, message):
+        """Gère les requêtes Trello"""
         try:
-            # Vérifier la connexion à Trello
-            if not self._verify_integration_connection('trello'):
-                return ("Je n'arrive pas à me connecter à Trello. 😕\n"
-                        "Veuillez vérifier que votre connexion est toujours valide dans les paramètres d'intégration.")
+            if not self.trello_integration:
+                return "Désolée, vous n'avez pas encore configuré l'intégration Trello."
 
-            # Détection plus précise des demandes de création de tâches
-            if ("ajoute" in text_lower and "tâche" in text_lower) or \
-               ("crée" in text_lower and "tâche" in text_lower) or \
-               ("créer" in text_lower and "tâche" in text_lower) or \
-               ("nouvelle" in text_lower and "tâche" in text_lower):
-                info = self._extract_task_info(text)
-                if not info.get('name'):
-                    return "Je n'ai pas bien compris le nom de la tâche. Pouvez-vous reformuler ?"
-                
-                # Vérifier si la liste existe
-                list_name = info.get('list_name', 'À faire')
+            # Si c'est une demande de tâches en retard
+            if "tâches en retard" in message.lower():
                 try:
-                    lists = TrelloManager.get_lists(self.trello_integration)
-                    if list_name not in lists:
-                        return (f"Je ne trouve pas la liste '{list_name}'. 🤔\n"
-                                f"Les listes disponibles sont : {', '.join(lists)}\n"
-                                "Dans quelle liste souhaitez-vous créer la tâche ?")
+                    # Récupérer toutes les listes du tableau
+                    lists_response = requests.get(
+                        f"{settings.TRELLO_API_URL}/boards/{self.trello_integration.get_active_board_id()}/lists",
+                        params={
+                            'key': settings.TRELLO_API_KEY,
+                            'token': self.trello_integration.access_token
+                        }
+                    )
+                    lists_response.raise_for_status()
+                    lists = lists_response.json()
+                    
+                    # Récupérer toutes les cartes avec une date d'échéance
+                    cards_response = requests.get(
+                        f"{settings.TRELLO_API_URL}/boards/{self.trello_integration.get_active_board_id()}/cards",
+                        params={
+                            'key': settings.TRELLO_API_KEY,
+                            'token': self.trello_integration.access_token,
+                            'fields': 'name,due,idList,dueComplete'
+                        }
+                    )
+                    cards_response.raise_for_status()
+                    all_cards = cards_response.json()
+                    
+                    # Filtrer les cartes en retard
+                    now = datetime.now(timezone.utc)
+                    overdue_cards = [
+                        card for card in all_cards
+                        if card.get('due') and not card.get('dueComplete') and
+                        datetime.fromisoformat(card['due'].replace('Z', '+00:00')) < now
+                    ]
+                    
+                    if not overdue_cards:
+                        return "✅ Bonne nouvelle ! Aucune tâche n'est en retard."
+                    
+                    # Créer le message de réponse
+                    response = "📅 Voici les tâches en retard :\n\n"
+                    for card in overdue_cards:
+                        list_name = next(lst['name'] for lst in lists if lst['id'] == card['idList'])
+                        due_date = datetime.fromisoformat(card['due'].replace('Z', '+00:00'))
+                        response += f"• {card['name']} (dans '{list_name}')\n"
+                        response += f"  Échéance : {due_date.strftime('%d/%m/%Y')}\n"
+                    
+                    return response
                 except Exception as e:
-                    self.logger.error(f"Erreur lors de la récupération des listes: {str(e)}")
-                    return "Je n'arrive pas à accéder aux listes Trello. Veuillez réessayer."
-                
-                # Vérifier si l'assigné existe
-                if 'assignee' in info:
-                    try:
-                        members = TrelloManager.get_board_members(self.trello_integration)
-                        member = next((m for m in members if m['name'].lower() == info['assignee'].lower()), None)
-                        if not member:
-                            return (f"Je ne trouve pas le membre '{info['assignee']}'. 🤔\n"
-                                    f"Les membres disponibles sont : {', '.join(m['name'] for m in members)}\n"
-                                    "À qui souhaitez-vous assigner cette tâche ?")
-                        info['member_id'] = member['id']
-                    except Exception as e:
-                        self.logger.error(f"Erreur lors de la récupération des membres: {str(e)}")
-                        return "Je n'arrive pas à accéder aux membres du tableau. Veuillez réessayer."
-                
-                result = TrelloManager.create_task(self.trello_integration, info)
-                # Sauvegarder l'action pour pouvoir l'annuler
-                self.last_successful_action = {
-                    'integration': 'trello',
-                    'type': 'create_task',
-                    'id': result.get('id')
-                }
-                
-                # Construire un message de confirmation détaillé
-                confirmation = f"✅ J'ai créé la tâche '{info['name']}' "
-                confirmation += f"dans la liste '{list_name}'"
-                if 'assignee' in info:
-                    confirmation += f", assignée à {info['assignee']}"
-                if 'due_date' in info:
-                    confirmation += f", à terminer pour le {info['due_date']}"
-                confirmation += "."
-                return confirmation
+                    self.logger.error(f"Erreur lors de la récupération des tâches en retard: {str(e)}")
+                    return "Désolée, je n'arrive pas à récupérer les tâches en retard. Veuillez réessayer."
 
-            elif "crée" in text_lower or "créer" in text_lower:
-                if "tableau" in text_lower:
-                    info = self._extract_board_info(text)
-                    result = TrelloManager.create_board(self.trello_integration, info)
-                    return f"Le tableau '{info.get('name', '')}' a été créé avec succès ! 📋"
-                elif "liste" in text_lower:
-                    info = self._extract_list_info(text)
-                    result = TrelloManager.create_list(self.trello_integration, info)
-                    return f"La liste '{info.get('name', '')}' a été créée ! ✅"
+            # Si c'est une réponse simple avec juste le nom d'un membre
+            if self.task_info and message.strip().lower() in [
+                m.get('username', '').lower() for m in self.members_data
+            ]:
+                # Mettre à jour l'assigné dans task_info
+                member = next(
+                    m for m in self.members_data 
+                    if m.get('username', '').lower() == message.strip().lower()
+                )
+                self.task_info['assignee'] = member['username']
+                # Créer la tâche avec les informations mises à jour
+                return self._create_trello_task()
 
-            elif "déplace" in text_lower or "déplacer" in text_lower:
-                info = self._extract_move_info(text)
-                result = TrelloManager.move_card(self.trello_integration, info)
-                return "La carte a été déplacée avec succès ! 🔄"
+            # Récupérer d'abord les membres disponibles
+            try:
+                response = requests.get(
+                    f"{settings.TRELLO_API_URL}/boards/{self.trello_integration.get_active_board_id()}/members",
+                    params={
+                        'key': settings.TRELLO_API_KEY,
+                        'token': self.trello_integration.access_token,
+                        'fields': 'username,fullName'
+                    }
+                )
+                response.raise_for_status()
+                members = response.json()
+                self.members_data = members
+                self.available_members = []
+                for m in members:
+                    # Créer une description claire pour chaque membre
+                    member_desc = []
+                    if m.get('username'):
+                        member_desc.append(f"@{m['username']}")
+                    if m.get('fullName'):
+                        member_desc.append(f"({m['fullName']})")
+                    if member_desc:
+                        self.available_members.append(" ".join(member_desc))
+            except Exception as e:
+                self.logger.error(f"Erreur lors de la récupération des membres Trello: {str(e)}")
+                return "Désolée, je n'arrive pas à récupérer la liste des membres. Veuillez réessayer."
 
-            elif "commente" in text_lower or "ajoute un commentaire" in text_lower:
-                info = self._extract_comment_info(text)
-                result = TrelloManager.add_comment(self.trello_integration, info)
-                return f"Le commentaire a été ajouté avec succès ! 💬"
+            # Extraire les informations de la tâche
+            task_info = self._extract_task_info(message)
+            if not task_info:
+                return "Je n'ai pas pu comprendre les détails de la tâche. Pouvez-vous reformuler ?"
 
-            elif "checklist" in text_lower:
-                info = self._extract_checklist_info(text)
-                result = TrelloManager.add_checklist(self.trello_integration, info)
-                return f"Le checklist '{info.get('name', '')}' a été créé avec succès ! 📋"
+            # Vérifier si le membre assigné existe
+            if task_info.get('assignee'):
+                assignee_lower = task_info['assignee'].lower()
+                member = next(
+                    (m for m in self.members_data if 
+                    m.get('username', '').lower() == assignee_lower.replace('@', '') or
+                    (m.get('fullName') and m.get('fullName').lower() == assignee_lower)),
+                    None
+                )
+                if not member:
+                    self.task_info = task_info  # Sauvegarder pour plus tard
+                    return f"Je ne trouve pas le membre '{task_info['assignee']}'. 🤔\n\nVoici les membres disponibles :\n{', '.join(self.available_members)}\n\nÀ qui souhaitez-vous assigner cette tâche ? (utilisez le nom d'utilisateur)"
+                else:
+                    # Utiliser le username pour l'assignation
+                    task_info['assignee'] = member['username']
 
-            elif "label" in text_lower or "étiquette" in text_lower:
-                info = self._extract_label_info(text)
-                result = TrelloManager.add_label(self.trello_integration, info)
-                return f"Le label '{info.get('name', '')}' a été créé avec succès ! 🏷"
+            # Créer la tâche
+            data = {
+                'name': task_info['name'],
+                'idList': self._get_list_id(task_info['list_name']),
+                'key': settings.TRELLO_API_KEY,
+                'token': self.trello_integration.access_token
+            }
 
-            elif "activité" in text_lower or "activites" in text_lower:
-                info = self._extract_activity_info(text)
-                result = TrelloManager.get_board_activity(self.trello_integration, info)
-                return f"Voici les activités du tableau '{info.get('name', '')}' : {result}"
+            if task_info.get('due_date'):
+                data['due'] = task_info['due_date']
 
-            elif "tâches en retard" in text_lower:
-                result = TrelloManager.get_overdue_tasks_summary(self.trello_integration)
-                return f"Voici les tâches en retard pour le tableau '{info.get('name', '')}' : {result}"
+            if task_info.get('assignee'):
+                if member:
+                    data['idMembers'] = [member['id']]
 
-            else:
-                return "Je ne comprends pas votre demande. Voici ce que je peux faire avec Trello :\n" + \
-                       "- Créer un tableau, une liste ou une tâche\n" + \
-                       "- Déplacer une carte\n" + \
-                       "- Ajouter des commentaires, checklists ou labels\n" + \
-                       "- Voir l'activité d'un tableau\n" + \
-                       "- Lister les tâches en retard"
+            response = requests.post(
+                f"{settings.TRELLO_API_URL}/cards",
+                json=data
+            )
+            response.raise_for_status()
 
-            if result['success']:
-                return f"✅ {result['message']}"
-            else:
-                return f"❌ Erreur : {result['error']}"
+            return f"✅ J'ai créé la tâche '{task_info['name']}'" + (
+                f" et je l'ai assignée à {task_info['assignee']}" if task_info.get('assignee') else ""
+            )
 
-        except TrelloManager.TrelloError as e:
-            self.logger.error(f"Erreur Trello: {str(e)}")
-            return f"Désolée, une erreur est survenue avec Trello : {str(e)}"
         except Exception as e:
-            self.logger.error(f"Erreur dans handle_trello_request: {str(e)}")
-            return ("Une erreur inattendue s'est produite. 😕\n"
-                    "Voici quelques suggestions :\n"
-                    "1. Vérifiez que votre demande est claire\n"
-                    "2. Assurez-vous que les éléments mentionnés existent\n"
-                    "3. Essayez de reformuler votre demande")
+            self.logger.error(f"Erreur lors de la gestion de la requête Trello: {str(e)}")
+            return "Désolée, une erreur s'est produite lors de la création de la tâche. Veuillez réessayer."
+
+    def _get_list_id(self, list_name):
+        """Récupère l'ID d'une liste Trello"""
+        response = requests.get(
+            f"{settings.TRELLO_API_URL}/boards/{self.trello_integration.get_active_board_id()}/lists",
+            params={
+                'key': settings.TRELLO_API_KEY,
+                'token': self.trello_integration.access_token,
+                'fields': 'name'
+            }
+        )
+        response.raise_for_status()
+        lists = response.json()
+        
+        # Chercher la liste (insensible à la casse)
+        list_id = next(
+            (lst['id'] for lst in lists if lst['name'].lower() == list_name.lower()),
+            None
+        )
+        
+        if not list_id:
+            raise ValueError(f"Liste '{list_name}' non trouvée")
+        
+        return list_id
+
+    def _create_trello_task(self, task_info=None):
+        """Crée une tâche Trello avec les informations fournies"""
+        try:
+            info = task_info or self.task_info
+            if not info:
+                return "Désolée, je n'ai pas les informations nécessaires pour créer la tâche."
+
+            # Créer la tâche avec TrelloManager
+            result = TrelloManager.create_task_from_text(self.trello_integration, info)
+            
+            if result.get('success'):
+                self.task_info = {}  # Réinitialiser après succès
+                return f"✅ J'ai créé la tâche '{info['name']}' et je l'ai assignée à {info['assignee']}."
+            else:
+                return f"❌ Désolée, je n'ai pas pu créer la tâche : {result.get('error', 'Erreur inconnue')}"
+
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la création de la tâche: {str(e)}")
+            return "Désolée, une erreur s'est produite lors de la création de la tâche. Veuillez réessayer."
 
     @property
     def conversation_state(self):
@@ -494,11 +583,24 @@ class AIOrchestrator:
             return "Désolée, je n'ai pas pu traiter votre demande. Pouvez-vous reformuler ?"
 
     def _update_conversation_history(self, role, content):
-        """Met à jour l'historique de conversation"""
-        self.conversation_history.append({"role": role, "content": content})
-        # Garder seulement les 10 derniers messages pour éviter une trop grande utilisation de tokens
-        if len(self.conversation_history) > 10:
-            self.conversation_history = self.conversation_history[-10:]
+        """Met à jour l'historique de la conversation"""
+        try:
+            # Ajouter à l'historique en mémoire
+            self.conversation_history.append({
+                'role': role,
+                'content': content
+            })
+            
+            # Sauvegarder dans la base de données
+            if self.current_conversation:
+                ChatHistory.objects.create(
+                    chat=self.current_conversation,
+                    user=self.user,
+                    content=content,
+                    is_user=(role == 'user')
+                )
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la mise à jour de l'historique: {str(e)}")
 
     def _validate_message(self, message):
         """Valide et nettoie le message entrant"""
@@ -550,88 +652,150 @@ class AIOrchestrator:
         return None  # Pas de cas limite détecté
 
     def _handle_intent(self, intent, message):
-        """Gère la demande en fonction de l'intention détectée"""
+        """Gère l'intention détectée"""
         try:
-            # Gérer les confirmations
-            if intent['context_type'] == 'confirmation':
-                return self._handle_confirmation(intent, message)
-
-            # Gérer les annulations
-            if intent['context_type'] == 'cancellation':
-                if self._can_undo_action():
-                    return self._undo_last_action()
-                return "Il n'y a pas d'action récente à annuler."
-
-            # Gérer les corrections
-            if intent['context_type'] == 'correction':
-                return self._handle_correction(intent, message)
-
-            # Gérer les salutations et messages généraux
-            if intent['confidence'] < 0.5 or not intent.get('integration'):
-                if any(word in message.lower() for word in ['bonjour', 'hello', 'salut', 'bonsoir', 'hi']):
-                    return ("Bonjour ! 👋 Je suis Alya, votre assistante virtuelle.\n"
-                           "Je peux vous aider avec la gestion de vos tâches Trello, "
-                           "vos contacts HubSpot et bien plus encore.\n"
-                           "Comment puis-je vous aider aujourd'hui ?")
-                return self.generate_response(message, None)
-
-            # Gérer les intégrations spécifiques
-            integration = intent.get('integration')
-            if integration and integration.lower() == 'trello':
+            # Gérer la fin de conversation
+            if intent.get('integration') == 'conversation' and intent.get('action') == 'end':
+                # Vérifier le contexte précédent pour une réponse appropriée
+                if self.conversation_history:
+                    last_assistant_msg = next(
+                        (msg['content'] for msg in reversed(self.conversation_history)
+                         if msg['role'] == 'assistant'),
+                        None
+                    )
+                    
+                    if 'erreur' in last_assistant_msg.lower():
+                        return "Je suis désolée de ne pas avoir pu vous aider. N'hésitez pas si vous avez d'autres questions !"
+                    else:
+                        return "Je suis ravie d'avoir pu vous aider. À bientôt !"
+                
+                return "Au revoir ! N'hésitez pas si vous avez d'autres questions."
+            
+            # Vérifier si c'est une salutation simple
+            if not intent.get('integration') and not intent.get('action'):
+                if 'bonjour' in message.lower() or 'salut' in message.lower():
+                    return "Comment puis-je vous aider aujourd'hui ?"
+            
+            # Si c'est une nouvelle demande Trello
+            if intent.get('integration', '').lower() == 'trello':
+                # Vérifier si l'intégration Trello est configurée
+                if not self.trello_integration:
+                    return "Désolée, vous n'avez pas encore configuré l'intégration Trello."
+                
+                # Si c'est une continuation avec une tâche en cours
+                if intent.get('context_type') == 'continuation' and self.task_info:
+                    return self.handle_trello_request(message)
+                
+                # Extraire les informations de la tâche
+                task_info = self._extract_task_info(message)
+                if not task_info:
+                    return "Je n'ai pas pu comprendre les détails de la tâche. Pouvez-vous reformuler ?"
+                
+                # Vérifier si le membre assigné existe
+                if task_info.get('assignee'):
+                    try:
+                        members = TrelloManager.get_board_members(self.trello_integration)
+                        self.available_members = [member['username'] for member in members]
+                        
+                        if task_info['assignee'] not in self.available_members:
+                            self.task_info = task_info  # Sauvegarder pour plus tard
+                            return f"Je ne trouve pas le membre '{task_info['assignee']}'. 🤔\n\nLes membres disponibles sont : {', '.join(self.available_members)}\n\nÀ qui souhaitez-vous assigner cette tâche ?"
+                    except Exception as e:
+                        self.logger.error(f"Erreur lors de la récupération des membres Trello: {str(e)}")
+                        return "Désolée, je n'arrive pas à récupérer la liste des membres. Veuillez réessayer."
+                
+                # Créer la tâche
                 return self.handle_trello_request(message)
-            elif integration and integration.lower() == 'hubspot':
+            
+            # Si c'est une demande HubSpot
+            if intent.get('integration') == 'hubspot':
                 return self.handle_hubspot_request(message)
-
-            # Si l'intention n'est pas claire ou la confiance est faible
-            if not intent.get('action') or intent.get('confidence', 0) < 0.5:
-                return self.generate_response(message, None)
-
-            # Gérer les autres types de demandes
-            return self.generate_response(message, None)
+            
+            return "Je ne suis pas sûre de comprendre votre demande. Pouvez-vous préciser ?"
 
         except Exception as e:
             self.logger.error(f"Erreur dans _handle_intent: {str(e)}")
-            return self._handle_error(e, context={
-                'intent': intent,
-                'message': message
-            })
+            self.logger.error(f"Contexte: {{'intent': {intent}, 'message': {message}}}")
+            return "Désolée, une erreur s'est produite. Pouvez-vous reformuler votre demande ?"
 
     def process_message(self, chat_id, message_content):
         try:
             self._update_session_activity()
-            # Valider et nettoyer le message
-            message_content = self._validate_message(message_content)
+            
+            # Récupérer le dernier chat actif ou en créer un nouveau
+            if not chat_id:
+                chat = Chat.objects.filter(
+                    user=self.user,
+                    is_active=True
+                ).order_by('-created_at').first()
+                
+                if not chat:
+                    chat = Chat.objects.create(
+                        user=self.user,
+                        is_active=True
+                    )
+                chat_id = chat.id
+            else:
+                chat = Chat.objects.get(id=chat_id)
+            
+            # Stocker le chat_id dans la session pour les prochains messages
+            self.current_chat_id = chat_id
+            self.logger.info(f"Chat actif: {chat_id}")
 
-            # Vérifier les cas limites
-            edge_case_response = self._handle_edge_cases(message_content)
-            if edge_case_response:
-                return edge_case_response
+            # Sauvegarder d'abord le message de l'utilisateur
+            ChatHistory.objects.create(
+                chat=chat,
+                user=self.user,
+                content=message_content,
+                is_user=True
+            )
+            
+            # Récupérer TOUT l'historique du chat pour le contexte
+            chat_history = ChatHistory.objects.filter(
+                chat=chat
+            ).order_by('created_at')
+            
+            # Mettre à jour l'historique de conversation
+            self.conversation_history = [
+                {'role': 'user' if msg.is_user else 'assistant', 'content': msg.content}
+                for msg in chat_history
+            ]
 
-            chat = self._get_or_create_chat(chat_id)
-            Message.objects.create(chat=chat, content=message_content, is_user=True)
-            self._update_conversation_history("user", message_content)
+            # Vérifier si nous sommes dans un processus de création de contact
+            if self.conversation_state and 'contact_creation' in self.conversation_state:
+                response = self.handle_contact_creation(message_content)
+                ChatHistory.objects.create(
+                    chat=chat,
+                    user=self.user,
+                    content=response,
+                    is_user=False
+                )
+                return response
 
-            # Détecter l'intention avec l'IA
+            # Détecter l'intention
             intent = self._detect_intent(message_content, self.conversation_history)
             
-            # Vérifier à nouveau les cas limites avec l'intention
-            edge_case_response = self._handle_edge_cases(message_content, intent)
-            if edge_case_response:
-                return edge_case_response
-
-            response = self._handle_intent(intent, message_content)
+            # Gérer la réponse selon l'intention
+            if intent.get('integration') == 'hubspot' and intent.get('action') == 'create_contact':
+                self.conversation_state = 'contact_creation_start'
+                self.contact_info = {}
+                response = ("Je vais vous aider à créer un nouveau contact. \n"
+                          "Quel est le prénom du contact ?")
+            else:
+                response = self._handle_intent(intent, message_content)
             
-            Message.objects.create(chat=chat, content=response, is_user=False)
-            self._update_conversation_history("assistant", response)
-
-            # Réinitialiser le compteur de tentatives si succès
-            self.session_retry_count = 0
-
+            # Sauvegarder la réponse
+            ChatHistory.objects.create(
+                chat=chat,
+                user=self.user,
+                content=response,
+                is_user=False
+            )
+            
             return response
-            
+
         except Exception as e:
-            self.session_retry_count += 1
-            logger.error(f"Erreur dans process_message: {str(e)}")
+            self.logger.error(f"Erreur dans process_message: {str(e)}")
             return self._handle_error(e)
 
     @RetryHandler(max_retries=3, base_delay=2, max_delay=15)
@@ -649,22 +813,35 @@ class AIOrchestrator:
             if not user_integration:
                 return "L'intégration HubSpot n'est pas configurée. Voulez-vous que je vous aide à la configurer ?"
 
-            text_lower = text.lower()
-            
-            # Détection plus précise des demandes HubSpot
-            if any(pattern in text_lower for pattern in [
-                'créer contact', 'nouveau contact', 'ajouter contact',
-                'creer un contact', 'contact hubspot', 'contact avec hubspot',
-                'nouveau contact hubspot', 'créer contact hubspot'
-            ]):
-                # Extraire les informations du contact
-                contact_info = self._extract_contact_info(text)
-                result = self.create_hubspot_contact(contact_info)
+            # Gérer les différentes étapes de création de contact
+            if self.conversation_state == 'contact_creation_start':
+                self.contact_info['firstname'] = text.strip()
+                self.conversation_state = 'waiting_for_lastname'
+                return "Quel est le nom de famille du contact ?"
                 
-                if isinstance(result, bool) and result:
-                    return f"✅ J'ai créé le contact {contact_info.get('firstname', '')} {contact_info.get('lastname', '')} dans HubSpot."
-                else:
-                    return f"❌ Erreur : {result}"
+            elif self.conversation_state == 'waiting_for_lastname':
+                self.contact_info['lastname'] = text.strip()
+                self.conversation_state = 'waiting_for_email'
+                return "Quelle est l'adresse email du contact ?"
+                
+            elif self.conversation_state == 'waiting_for_email':
+                self.contact_info['email'] = text.strip()
+                self.conversation_state = 'waiting_for_phone'
+                return "Quel est le numéro de téléphone du contact ? (optionnel, appuyez sur Entrée si aucun)"
+                
+            elif self.conversation_state == 'waiting_for_phone':
+                if text.strip():
+                    self.contact_info['phone'] = text.strip()
+                
+                # Créer le contact dans HubSpot
+                try:
+                    result = self.create_hubspot_contact(self.contact_info)
+                    self.conversation_state = None
+                    self.contact_info = {}
+                    return "✅ Contact créé avec succès dans HubSpot !"
+                except Exception as e:
+                    self.logger.error(f"Erreur création contact HubSpot: {str(e)}")
+                    return "❌ Erreur lors de la création du contact. Voulez-vous réessayer ?"
 
             return "Je ne comprends pas votre demande HubSpot. Je peux :\n" + \
                    "- Créer un nouveau contact\n" + \
@@ -820,48 +997,69 @@ class AIOrchestrator:
     def generate_response(self, message, chat):
         """Génère une réponse avec l'IA"""
         try:
-            # Si un chat est fourni, vérifier s'il doit devenir le chat actif
-            if chat and chat != self.active_chat:
-                # Désactiver l'ancien chat actif s'il existe
-                if self.active_chat:
-                    self.active_chat.is_active = False
-                    self.active_chat.save()
-                # Activer le nouveau chat
-                chat.is_active = True
-                chat.save()
-                self.active_chat = chat
-            else:
-                chat = self.active_chat
-  
-            # Détecter l'intention
+            # Utiliser le chat fourni ou récupérer/créer le chat actif
+            if not chat:
+                chat = Chat.objects.filter(
+                    user=self.user,
+                    is_active=True
+                ).first()
+                
+                if not chat:
+                    # Créer un nouveau chat actif
+                    chat = Chat.objects.create(
+                        user=self.user,
+                        is_active=True
+                    )
+            
+            self.active_chat = chat
+
+            # Détecter l'intention avant de sauvegarder le message
             intent = self._detect_intent(message, self.conversation_history)
-            self.logger.info(f"Message reçu: '{message}'")
-  
-            # Sauvegarder le message avant de le traiter
+            
+            # Récupérer TOUT l'historique du chat actif
+            chat_history = ChatHistory.objects.filter(
+                chat=chat
+            ).order_by('created_at')
+            
+            # Mettre à jour l'historique de conversation
+            self.conversation_history = [
+                {'role': 'user' if msg.is_user else 'assistant', 'content': msg.content}
+                for msg in chat_history
+            ]
+
+            # Sauvegarder le message de l'utilisateur
             ChatHistory.objects.create(
                 chat=chat,
                 user=self.user,
                 content=message,
                 is_user=True
             )
-
-            # Si c'est une réponse à une demande précédente (continuation)
-            if intent['context_type'] == 'continuation':
-                if 'assignee' in message.lower():
-                    # Mettre à jour les informations de la tâche et continuer le processus
-                    return self.handle_trello_request(message)
-
-            # Construire le contexte de la conversation
-            context = self._build_conversation_context()
             
-            # Ajouter le message actuel au contexte
-            context += f"\nUtilisateur: {message}"
+            # Récupérer l'historique récent pour le contexte
+            recent_history = ChatHistory.objects.filter(
+                chat=chat
+            ).order_by('-created_at')[:6]
             
+            # Construire le contexte avec l'historique récent
+            context_messages = []
+            for hist in reversed(recent_history):
+                role = "Utilisateur" if hist.is_user else "Assistant"
+                context_messages.append(f"{role}: {hist.content}")
+            
+            # Ajouter les membres disponibles au contexte si pertinent
+            if intent.get('integration') == 'trello' and self.available_members:
+                context_messages.append(f"Assistant: Les membres disponibles sont : {', '.join(self.available_members)}")
+            
+            context = "\n".join(context_messages)
+
             # Générer la réponse
             completion = self.openai_client.chat.completions.create(
                 model=RESPONSE_MODEL,
                 messages=[
-                    {"role": "system", "content": "Tu es Alya, une assistante IA experte en gestion de projet et intégrations."},
+                    {"role": "system", "content": "Tu es Alya, une assistante IA experte en gestion de projet et intégrations. "
+                                                "Maintiens la cohérence de la conversation et évite les salutations redondantes. "
+                                                "Utilise uniquement les membres disponibles fournis dans le contexte. "
+                                                "Ne suggère jamais de membres qui ne sont pas dans la liste fournie."},
                     {"role": "user", "content": context}
                 ],
                 temperature=0.7,
@@ -870,13 +1068,7 @@ class AIOrchestrator:
             
             response = completion.choices[0].message.content
             
-            # Sauvegarder l'historique
-            ChatHistory.objects.create(
-                chat=chat,
-                user=self.user,
-                content=message,
-                is_user=True
-            )
+            # Sauvegarder la réponse
             ChatHistory.objects.create(
                 chat=chat,
                 user=self.user,
@@ -893,63 +1085,29 @@ class AIOrchestrator:
     def handle_contact_creation(self, message):
         """Gère le processus de création de contact"""
         try:
-            # Vérifier l'état actuel de la conversation
             state = self.conversation_state
-            self.logger.info(f"Traitement de l'état: {state}")
             
-            if state == 'contact_type':
-                message = message.lower().strip()
-                if '1' in message or 'personnel' in message or 'particulier' in message:
-                    self.conversation_state = 'personal_firstname'
-                    self.contact_info = {}  # Initialiser le dictionnaire de contact
-                    return "Parfait, créons un contact personnel. Quel est son prénom ?"
-                elif '2' in message or 'professionnel' in message or 'entreprise' in message:
-                    self.conversation_state = 'pro_firstname'
-                    self.contact_info = {}  # Initialiser le dictionnaire de contact
-                    return "D'accord, créons un contact professionnel. Quel est son prénom ?"
-                else:
-                    return ("Je n'ai pas compris votre choix. Veuillez répondre par :\n\n"
-                           "1. Contact Personnel (particulier)\n"
-                           "2. Contact Professionnel (entreprise)")
-  
-            elif state == 'personal_firstname':
-                if not message.strip():
-                    return "Le prénom ne peut pas être vide. Quel est son prénom ?"
-                self.contact_info = {'firstname': message}
-                self.conversation_state = 'personal_lastname'
-                return "Très bien ! Maintenant, quel est son nom de famille ?"
+            if state == 'contact_creation_start':
+                self.contact_info['firstname'] = message.strip()
+                self.conversation_state = 'waiting_for_lastname'
+                return "Quel est le nom de famille du contact ?"
                 
-            elif state == 'personal_lastname':
-                if not message.strip():
-                    return "Le nom ne peut pas être vide. Quel est son nom de famille ?"
-                self.contact_info['lastname'] = message
-                self.conversation_state = 'personal_email'
-                return "Parfait ! Quelle est son adresse email ?"
+            elif state == 'waiting_for_lastname':
+                self.contact_info['lastname'] = message.strip()
+                self.conversation_state = 'waiting_for_email'
+                return "Quelle est l'adresse email du contact ?"
                 
-            elif state == 'personal_email':
-                if not message.strip():
-                    return "L'email ne peut pas être vide. Quelle est son adresse email ?"
-                self.contact_info['email'] = message
-                
-                # Vérifier que toutes les informations requises sont présentes
-                required_fields = ['firstname', 'lastname', 'email']
-                if not all(field in self.contact_info for field in required_fields):
-                    self.logger.error(f"Informations de contact incomplètes: {self.contact_info}")
-                    return "Il manque des informations essentielles. Pouvons-nous recommencer ?"
-                
+            elif state == 'waiting_for_email':
+                self.contact_info['email'] = message.strip()
                 # Créer le contact dans HubSpot
                 try:
-                    response = self.hubspot_manager.create_contact(self.contact_info)
-                    if response and response.status_code == 201:
-                        self.conversation_state = None
-                        self.contact_info = {}
-                        return "✅ Super ! Le contact a été créé avec succès dans HubSpot."
-                    else:
-                        self.logger.error(f"Erreur HubSpot: {response.text if response else 'No response'}")
-                        return "❌ Désolé, il y a eu un problème lors de la création du contact. Voulez-vous réessayer ?"
+                    result = self.create_hubspot_contact(self.contact_info)
+                    self.conversation_state = None
+                    self.contact_info = {}
+                    return "✅ Contact créé avec succès !"
                 except Exception as e:
-                    self.logger.error(f"Erreur lors de la création du contact HubSpot: {str(e)}")
-                    return "❌ Une erreur s'est produite. Voulez-vous réessayer ?"
+                    self.logger.error(f"Erreur création contact: {str(e)}")
+                    return "❌ Erreur lors de la création du contact. Voulez-vous réessayer ?"
 
             # Si l'état n'est pas reconnu
             self.logger.error(f"État de conversation non géré: {state}")

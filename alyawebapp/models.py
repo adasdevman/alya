@@ -73,7 +73,10 @@ class Chat(models.Model):
     def save(self, *args, **kwargs):
         # Si ce chat devient actif, désactiver les autres chats de l'utilisateur
         if self.is_active:
-            Chat.objects.filter(user=self.user, is_active=True).exclude(id=self.id).update(is_active=False)
+            Chat.objects.filter(
+                user=self.user,
+                is_active=True
+            ).exclude(id=self.id).delete()  # Supprimer les autres chats actifs
         super().save(*args, **kwargs)
 
 class Message(models.Model):

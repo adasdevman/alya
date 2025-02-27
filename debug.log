@@ -19211,3 +19211,826 @@ INFO 2025-02-26 19:15:29,098 autoreload 41108 43732 C:\Users\Nevada Man\CascadeP
 INFO 2025-02-26 19:15:30,907 autoreload 20372 13616 Watching for file changes with StatReloader
 INFO 2025-02-26 19:16:40,055 autoreload 20372 13616 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
 INFO 2025-02-26 19:16:41,692 autoreload 26208 18836 Watching for file changes with StatReloader
+INFO 2025-02-26 19:17:14,694 basehttp 26208 57256 "POST /admin/alyawebapp/chathistory/ HTTP/1.1" 302 0
+INFO 2025-02-26 19:17:20,188 basehttp 26208 57256 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15607
+INFO 2025-02-26 19:17:23,062 basehttp 26208 57256 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-26 19:17:41,469 basehttp 26208 19732 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 19:17:44,941 views 26208 59180 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 19:17:44,942 basehttp 26208 59180 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 19:17:46,464 basehttp 26208 19732 "GET /get-chat-history/ HTTP/1.1" 200 249
+INFO 2025-02-26 19:19:32,405 basehttp 26208 19732 "GET /get-messages/187/ HTTP/1.1" 200 306
+INFO 2025-02-26 19:19:43,062 ai_orchestrator 26208 19732 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 19:19:48,263 ai_orchestrator 26208 19732 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'confidence': 1, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:19:54,106 basehttp 26208 19732 "POST /chat/ HTTP/1.1" 200 182
+INFO 2025-02-26 19:20:00,748 basehttp 26208 19732 "GET /get-chat-history/ HTTP/1.1" 200 633
+ERROR 2025-02-26 19:20:09,923 ai_orchestrator 26208 19732 Pas de connexion internet détectée
+ERROR 2025-02-26 19:20:09,924 views 26208 19732 Erreur dans le chat: Pas de connexion internet
+ERROR 2025-02-26 19:20:09,924 log 26208 19732 Internal Server Error: /chat/
+ERROR 2025-02-26 19:20:09,924 basehttp 26208 19732 "POST /chat/ HTTP/1.1" 500 59
+INFO 2025-02-26 19:20:24,139 ai_orchestrator 26208 19732 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 19:20:27,573 ai_orchestrator 26208 19732 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:20:29,239 ai_orchestrator 26208 19732 Intention détectée: {'integration': None, 'action': None, 'confidence': 0.5, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:20:29,241 ai_orchestrator 26208 19732 Message reçu: 'oui roms andro'
+INFO 2025-02-26 19:20:39,291 basehttp 26208 19732 "POST /chat/ HTTP/1.1" 200 768
+INFO 2025-02-26 19:20:47,370 basehttp 26208 19732 "GET /get-chat-history/ HTTP/1.1" 200 845
+INFO 2025-02-26 19:22:38,207 basehttp 26208 38656 "GET /get-messages/188/ HTTP/1.1" 200 491
+INFO 2025-02-26 19:22:55,057 ai_orchestrator 26208 15424 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 19:22:59,159 ai_orchestrator 26208 15424 Intention détectée: {'integration': None, 'action': None, 'confidence': 0.5, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:23:00,040 ai_orchestrator 26208 15424 Intention détectée: {'integration': None, 'action': None, 'confidence': 0.5, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:23:00,258 ai_orchestrator 26208 15424 Message reçu: 'oui romsandro'
+INFO 2025-02-26 19:23:04,773 basehttp 26208 15424 "POST /chat/ HTTP/1.1" 200 229
+INFO 2025-02-26 19:23:14,487 basehttp 26208 15424 "GET /get-chat-history/ HTTP/1.1" 200 1063
+INFO 2025-02-26 19:49:26,443 autoreload 42316 13792 Watching for file changes with StatReloader
+INFO 2025-02-26 19:49:50,314 basehttp 42316 42396 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 19:49:54,814 basehttp 42316 42396 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-26 19:49:54,925 views 42316 41636 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 19:49:54,940 basehttp 42316 41636 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 19:50:21,683 ai_orchestrator 42316 41636 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 19:50:29,199 ai_orchestrator 42316 41636 Intention détectée: {'integration': None, 'action': None, 'confidence': 0.8, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:50:29,584 basehttp 42316 41636 "POST /chat/ HTTP/1.1" 200 248
+INFO 2025-02-26 19:50:34,648 basehttp 42316 41636 "GET /get-chat-history/ HTTP/1.1" 200 259
+INFO 2025-02-26 19:52:03,006 autoreload 42316 13792 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 19:52:04,580 autoreload 26112 50792 Watching for file changes with StatReloader
+INFO 2025-02-26 19:52:16,700 autoreload 26112 50792 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 19:52:18,573 autoreload 50056 32156 Watching for file changes with StatReloader
+INFO 2025-02-26 19:52:53,833 basehttp 50056 63416 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 19:52:57,503 views 50056 25328 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 19:52:57,503 basehttp 50056 25328 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 19:53:00,340 basehttp 50056 63416 "GET /get-chat-history/ HTTP/1.1" 200 259
+INFO 2025-02-26 19:53:05,366 basehttp 50056 63416 "GET /get-messages/200/ HTTP/1.1" 200 401
+ERROR 2025-02-26 19:53:25,066 ai_orchestrator 50056 63416 Pas de connexion internet détectée
+ERROR 2025-02-26 19:53:25,067 views 50056 63416 Erreur dans le chat: Pas de connexion internet
+ERROR 2025-02-26 19:53:25,067 log 50056 63416 Internal Server Error: /chat/
+ERROR 2025-02-26 19:53:25,067 basehttp 50056 63416 "POST /chat/ HTTP/1.1" 500 59
+INFO 2025-02-26 19:53:37,035 ai_orchestrator 50056 63416 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 19:53:43,550 ai_orchestrator 50056 63416 Intention détectée: {'integration': 'trello', 'action': 'view_all_tasks', 'confidence': 0.9, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:53:45,734 basehttp 50056 63416 "POST /chat/ HTTP/1.1" 200 316
+INFO 2025-02-26 19:53:54,180 basehttp 50056 63416 "GET /get-chat-history/ HTTP/1.1" 200 513
+INFO 2025-02-26 19:53:58,445 basehttp 50056 25328 "POST /clear-chat-history/ HTTP/1.1" 200 21
+INFO 2025-02-26 19:54:00,986 basehttp 50056 63416 "POST /clear-chat-history/ HTTP/1.1" 200 21
+INFO 2025-02-26 19:54:01,827 basehttp 50056 25328 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-26 19:54:06,095 basehttp 50056 25328 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-26 19:54:09,383 basehttp 50056 25328 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-26 19:54:11,917 ai_orchestrator 50056 63416 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 19:54:14,705 ai_orchestrator 50056 63416 Intention détectée: {'integration': None, 'action': None, 'confidence': 0.8, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:54:15,134 basehttp 50056 63416 "POST /chat/ HTTP/1.1" 200 248
+INFO 2025-02-26 19:54:20,027 basehttp 50056 63416 "GET /get-chat-history/ HTTP/1.1" 200 259
+INFO 2025-02-26 19:54:28,254 ai_orchestrator 50056 63416 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 19:54:30,620 ai_orchestrator 50056 63416 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'confidence': 1, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:54:38,366 basehttp 50056 63416 "POST /chat/ HTTP/1.1" 200 182
+INFO 2025-02-26 19:54:45,747 basehttp 50056 63416 "GET /get-chat-history/ HTTP/1.1" 200 643
+INFO 2025-02-26 19:54:49,502 ai_orchestrator 50056 25328 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 19:54:54,438 ai_orchestrator 50056 25328 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:54:55,534 ai_orchestrator 50056 25328 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:54:55,534 ai_orchestrator 50056 25328 Message reçu: 'romsandro'
+INFO 2025-02-26 19:54:59,335 basehttp 50056 25328 "POST /chat/ HTTP/1.1" 200 155
+INFO 2025-02-26 19:55:10,525 basehttp 50056 25328 "GET /get-chat-history/ HTTP/1.1" 200 860
+INFO 2025-02-26 19:55:48,768 basehttp 50056 12324 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-02-26 19:55:48,805 basehttp 50056 12324 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4965
+INFO 2025-02-26 19:55:48,934 basehttp 50056 52112 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-02-26 19:55:48,936 basehttp 50056 16096 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2804
+INFO 2025-02-26 19:55:48,936 basehttp 50056 12324 "GET /static/admin/css/base.css HTTP/1.1" 200 22092
+INFO 2025-02-26 19:55:48,940 basehttp 50056 52112 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-02-26 19:55:48,942 basehttp 50056 12324 "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-02-26 19:55:48,944 basehttp 50056 16096 "GET /static/admin/css/responsive.css HTTP/1.1" 200 17972
+INFO 2025-02-26 19:55:48,946 basehttp 50056 16096 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-02-26 19:56:06,978 basehttp 50056 58324 "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2025-02-26 19:56:10,440 basehttp 50056 58324 "GET /admin/ HTTP/1.1" 200 17198
+INFO 2025-02-26 19:56:10,467 basehttp 50056 58324 "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-02-26 19:56:10,480 basehttp 50056 58324 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-02-26 19:56:10,481 basehttp 50056 19596 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-02-26 19:56:10,483 basehttp 50056 52008 "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-02-26 19:56:27,833 basehttp 50056 67816 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-26 19:56:27,876 basehttp 50056 67816 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-02-26 19:56:27,888 basehttp 50056 34308 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-02-26 19:56:27,889 basehttp 50056 26392 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-02-26 19:56:27,889 basehttp 50056 37124 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9097
+INFO 2025-02-26 19:56:27,889 basehttp 50056 67816 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-02-26 19:56:27,896 basehttp 50056 37124 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-02-26 19:56:27,896 basehttp 50056 34308 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-02-26 19:56:27,901 basehttp 50056 37340 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-02-26 19:56:27,903 basehttp 50056 67816 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-02-26 19:56:27,910 basehttp 50056 67816 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-02-26 19:56:30,934 basehttp 50056 25756 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-26 19:56:30,986 basehttp 50056 25756 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-02-26 19:56:48,303 basehttp 50056 71352 "GET /admin/alyawebapp/chathistory/543/change/ HTTP/1.1" 200 18440
+INFO 2025-02-26 19:56:48,337 basehttp 50056 71352 "GET /static/admin/css/forms.css HTTP/1.1" 200 8794
+INFO 2025-02-26 19:56:48,339 basehttp 50056 63508 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-02-26 19:56:48,342 basehttp 50056 71352 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11564
+INFO 2025-02-26 19:56:48,345 basehttp 50056 71352 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-02-26 19:56:48,348 basehttp 50056 71352 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-02-26 19:56:51,332 basehttp 50056 46516 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-26 19:57:03,285 basehttp 50056 68268 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-26 19:57:14,175 basehttp 50056 68268 "GET /admin/alyawebapp/chathistory/544/change/ HTTP/1.1" 200 18553
+INFO 2025-02-26 19:57:17,217 basehttp 50056 68268 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-26 19:57:24,604 basehttp 50056 68268 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-26 19:57:58,878 ai_orchestrator 50056 25328 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 19:58:02,121 ai_orchestrator 50056 25328 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'confidence': 1, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 19:58:07,985 basehttp 50056 25328 "POST /chat/ HTTP/1.1" 200 182
+INFO 2025-02-26 19:58:17,685 basehttp 50056 63416 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 19:58:19,018 basehttp 50056 25328 - Broken pipe from ('127.0.0.1', 51672)
+INFO 2025-02-26 19:58:24,502 views 50056 43108 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 19:58:24,502 basehttp 50056 43108 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 19:58:28,702 basehttp 50056 63416 "GET /get-chat-history/ HTTP/1.1" 200 1244
+INFO 2025-02-26 19:58:29,053 basehttp 50056 64224 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-26 19:58:32,021 basehttp 50056 64224 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-26 19:58:40,836 basehttp 50056 64224 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-26 19:58:44,855 basehttp 50056 64224 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-26 19:58:54,101 basehttp 50056 64224 "GET /admin/alyawebapp/chathistory/543/change/ HTTP/1.1" 200 18490
+INFO 2025-02-26 19:58:57,152 basehttp 50056 64224 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-26 19:59:14,120 basehttp 50056 48644 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-26 19:59:17,293 basehttp 50056 48644 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-26 19:59:30,986 basehttp 50056 63416 "GET /get-messages/206/ HTTP/1.1" 200 491
+INFO 2025-02-26 19:59:41,373 basehttp 50056 69112 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-26 19:59:44,390 basehttp 50056 69112 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-26 20:02:05,053 autoreload 50056 32156 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:02:06,689 autoreload 15644 64788 Watching for file changes with StatReloader
+INFO 2025-02-26 20:02:21,997 basehttp 15644 54428 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:02:25,695 views 15644 71780 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:02:25,695 basehttp 15644 71780 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:02:31,821 ai_orchestrator 15644 71780 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:02:32,886 basehttp 15644 54428 "GET /get-chat-history/ HTTP/1.1" 200 1244
+INFO 2025-02-26 20:02:37,321 ai_orchestrator 15644 71780 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'confidence': 1, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:02:44,951 basehttp 15644 71780 "POST /chat/ HTTP/1.1" 200 182
+INFO 2025-02-26 20:02:55,587 ai_orchestrator 15644 54428 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:02:57,386 basehttp 15644 71780 "GET /get-chat-history/ HTTP/1.1" 200 1628
+INFO 2025-02-26 20:02:58,353 ai_orchestrator 15644 54428 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:02:59,808 ai_orchestrator 15644 54428 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:02:59,808 ai_orchestrator 15644 54428 Message reçu: 'romsandro'
+INFO 2025-02-26 20:03:04,602 basehttp 15644 54428 "POST /chat/ HTTP/1.1" 200 278
+INFO 2025-02-26 20:03:18,757 basehttp 15644 54428 "GET /get-chat-history/ HTTP/1.1" 200 1852
+INFO 2025-02-26 20:05:23,839 autoreload 15644 64788 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:05:25,607 autoreload 26696 78316 Watching for file changes with StatReloader
+INFO 2025-02-26 20:05:37,835 basehttp 26696 25292 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:05:41,711 views 26696 49560 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:05:41,711 basehttp 26696 49560 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:05:51,024 ai_orchestrator 26696 49560 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:05:51,703 basehttp 26696 25292 "GET /get-chat-history/ HTTP/1.1" 200 1852
+INFO 2025-02-26 20:05:56,786 ai_orchestrator 26696 49560 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'confidence': 1, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:06:09,620 basehttp 26696 49560 "POST /chat/ HTTP/1.1" 200 182
+INFO 2025-02-26 20:06:24,972 basehttp 26696 49560 "GET /get-chat-history/ HTTP/1.1" 200 2236
+INFO 2025-02-26 20:07:04,871 ai_orchestrator 26696 49560 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:07:08,171 ai_orchestrator 26696 49560 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:07:09,408 ai_orchestrator 26696 49560 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:07:09,420 ai_orchestrator 26696 49560 Message reçu: 'romsandro'
+INFO 2025-02-26 20:07:12,441 basehttp 26696 49560 "POST /chat/ HTTP/1.1" 200 114
+INFO 2025-02-26 20:07:29,819 basehttp 26696 49560 "GET /get-chat-history/ HTTP/1.1" 200 2420
+INFO 2025-02-26 20:07:38,839 ai_orchestrator 26696 49560 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:07:42,089 ai_orchestrator 26696 49560 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'confidence': 1, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+ERROR 2025-02-26 20:07:50,139 retry_handler 26696 49560 Erreur non retriable: type object 'TrelloManager' has no attribute 'TrelloError'
+ERROR 2025-02-26 20:07:50,153 ai_orchestrator 26696 49560 Erreur dans _handle_intent: type object 'TrelloManager' has no attribute 'TrelloError'
+ERROR 2025-02-26 20:07:50,154 ai_orchestrator 26696 49560 Erreur (1): type object 'TrelloManager' has no attribute 'TrelloError'
+ERROR 2025-02-26 20:07:50,154 ai_orchestrator 26696 49560 Contexte: {'intent': {'integration': 'trello', 'action': 'create_task', 'confidence': 1, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}, 'message': "Alya, ajoute une tâche 'Finaliser la présentation client' dans la colonne 'En cours' sur Trello et assigne-la à Romsandro. L'échéance est vendredi."}
+INFO 2025-02-26 20:07:50,572 basehttp 26696 49560 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-02-26 20:08:08,904 basehttp 26696 49560 "GET /get-chat-history/ HTTP/1.1" 200 2774
+INFO 2025-02-26 20:09:12,436 autoreload 26696 78316 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:09:14,105 autoreload 73032 22300 Watching for file changes with StatReloader
+INFO 2025-02-26 20:09:19,787 autoreload 73032 22300 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:09:21,312 autoreload 2372 30560 Watching for file changes with StatReloader
+INFO 2025-02-26 20:10:08,838 basehttp 2372 33524 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:10:12,278 views 2372 40252 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:10:12,278 basehttp 2372 40252 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:10:24,689 ai_orchestrator 2372 40252 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:10:29,890 basehttp 2372 33524 "GET /get-chat-history/ HTTP/1.1" 200 2774
+INFO 2025-02-26 20:10:30,573 ai_orchestrator 2372 40252 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'confidence': 1, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:10:36,594 basehttp 2372 40252 "POST /chat/ HTTP/1.1" 200 186
+INFO 2025-02-26 20:10:44,605 ai_orchestrator 2372 33524 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:10:47,823 ai_orchestrator 2372 33524 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:10:48,822 ai_orchestrator 2372 33524 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:10:48,822 ai_orchestrator 2372 33524 Message reçu: 'Romsandro'
+INFO 2025-02-26 20:10:52,374 basehttp 2372 33524 "POST /chat/ HTTP/1.1" 200 155
+INFO 2025-02-26 20:10:57,939 basehttp 2372 40252 "GET /get-chat-history/ HTTP/1.1" 200 3160
+INFO 2025-02-26 20:11:06,974 ai_orchestrator 2372 33524 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:11:09,823 ai_orchestrator 2372 33524 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'confidence': 1, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:11:13,690 basehttp 2372 33524 "POST /chat/ HTTP/1.1" 200 186
+INFO 2025-02-26 20:11:19,955 basehttp 2372 40252 "GET /get-chat-history/ HTTP/1.1" 200 3377
+INFO 2025-02-26 20:11:23,340 ai_orchestrator 2372 33524 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:11:25,690 ai_orchestrator 2372 33524 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:11:26,572 ai_orchestrator 2372 33524 Intention détectée: {'integration': None, 'action': None, 'confidence': 0, 'context_type': 'new_request', 'previous_requests': [], 'corrections': []}
+INFO 2025-02-26 20:11:26,572 ai_orchestrator 2372 33524 Message reçu: 'romsandro'
+INFO 2025-02-26 20:11:30,406 basehttp 2372 33524 "POST /chat/ HTTP/1.1" 200 137
+INFO 2025-02-26 20:11:43,725 basehttp 2372 40252 "GET /get-chat-history/ HTTP/1.1" 200 3763
+INFO 2025-02-26 20:12:09,139 basehttp 2372 40252 "GET /get-chat-history/ HTTP/1.1" 200 3970
+INFO 2025-02-26 20:12:41,055 autoreload 2372 30560 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:12:42,756 autoreload 40992 37664 Watching for file changes with StatReloader
+INFO 2025-02-26 20:12:57,823 basehttp 40992 19752 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:13:01,846 views 40992 65176 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:13:01,846 basehttp 40992 65176 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:13:05,284 basehttp 40992 42660 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 17970
+INFO 2025-02-26 20:13:08,221 basehttp 40992 42660 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-26 20:13:24,081 basehttp 40992 19752 "GET /get-chat-history/ HTTP/1.1" 200 3970
+INFO 2025-02-26 20:14:29,798 autoreload 40992 37664 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:14:31,574 autoreload 52860 15668 Watching for file changes with StatReloader
+INFO 2025-02-26 20:15:03,078 autoreload 52860 15668 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\models.py changed, reloading.
+INFO 2025-02-26 20:15:04,680 autoreload 18260 67252 Watching for file changes with StatReloader
+INFO 2025-02-26 20:15:35,674 basehttp 18260 32108 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:15:39,216 views 18260 66604 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:15:39,216 basehttp 18260 66604 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:16:01,644 basehttp 18260 32108 "GET /get-chat-history/ HTTP/1.1" 200 3970
+INFO 2025-02-26 20:16:07,756 basehttp 18260 32108 "POST /clear-chat-history/ HTTP/1.1" 200 21
+INFO 2025-02-26 20:16:09,015 basehttp 18260 66604 "POST /clear-chat-history/ HTTP/1.1" 200 21
+INFO 2025-02-26 20:16:11,206 basehttp 18260 32108 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-26 20:16:14,720 basehttp 18260 32108 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-26 20:16:15,591 basehttp 18260 66604 "POST /clear-chat-history/ HTTP/1.1" 200 21
+INFO 2025-02-26 20:16:19,842 basehttp 18260 66604 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-26 20:16:21,760 ai_orchestrator 18260 32108 Initialisation d'AIOrchestrator pour user_id: 2
+ERROR 2025-02-26 20:16:23,053 ai_orchestrator 18260 32108 Erreur dans _detect_intent: sequence item 0: expected str instance, dict found
+ERROR 2025-02-26 20:16:23,501 ai_orchestrator 18260 32108 Erreur dans _detect_intent: sequence item 0: expected str instance, dict found
+INFO 2025-02-26 20:16:32,342 basehttp 18260 32108 "POST /chat/ HTTP/1.1" 200 330
+INFO 2025-02-26 20:16:37,305 basehttp 18260 32108 "GET /get-chat-history/ HTTP/1.1" 200 414
+INFO 2025-02-26 20:18:15,822 autoreload 18260 67252 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:18:17,489 autoreload 49196 48880 Watching for file changes with StatReloader
+INFO 2025-02-26 20:18:38,538 basehttp 49196 42104 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:18:43,124 views 49196 46472 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:18:43,124 basehttp 49196 46472 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:18:43,809 basehttp 49196 42104 "GET /get-chat-history/ HTTP/1.1" 200 414
+INFO 2025-02-26 20:18:51,541 ai_orchestrator 49196 42104 Initialisation d'AIOrchestrator pour user_id: 2
+ERROR 2025-02-26 20:19:03,324 ai_orchestrator 49196 42104 Erreur dans _detect_intent: Error code: 400 - {'error': {'message': "'messages' must contain the word 'json' in some form, to use 'response_format' of type 'json_object'.", 'type': 'invalid_request_error', 'param': 'messages', 'code': None}}
+ERROR 2025-02-26 20:19:03,324 ai_orchestrator 49196 42104 Conversation history: [{'role': 'user', 'content': "Alya, ajoute une tâche 'Finaliser la présentation client' dans la colonne 'En cours' sur Trello et assigne-la à Marie. L'échéance est vendredi."}]
+ERROR 2025-02-26 20:19:04,143 ai_orchestrator 49196 42104 Erreur dans _detect_intent: Error code: 400 - {'error': {'message': "'messages' must contain the word 'json' in some form, to use 'response_format' of type 'json_object'.", 'type': 'invalid_request_error', 'param': 'messages', 'code': None}}
+ERROR 2025-02-26 20:19:04,157 ai_orchestrator 49196 42104 Conversation history: [{'role': 'user', 'content': "Alya, ajoute une tâche 'Finaliser la présentation client' dans la colonne 'En cours' sur Trello et assigne-la à Marie. L'échéance est vendredi."}]
+INFO 2025-02-26 20:19:09,176 basehttp 49196 42104 "POST /chat/ HTTP/1.1" 200 275
+INFO 2025-02-26 20:19:14,936 basehttp 49196 42104 "GET /get-chat-history/ HTTP/1.1" 200 418
+INFO 2025-02-26 20:20:43,236 autoreload 49196 48880 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:20:45,022 autoreload 39800 37956 Watching for file changes with StatReloader
+INFO 2025-02-26 20:21:26,345 autoreload 39800 37956 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:21:27,826 autoreload 64404 55128 Watching for file changes with StatReloader
+INFO 2025-02-26 20:21:46,275 autoreload 64404 55128 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:21:47,881 autoreload 44360 14528 Watching for file changes with StatReloader
+INFO 2025-02-26 20:22:24,261 basehttp 44360 40696 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:22:28,125 views 44360 51572 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:22:28,126 basehttp 44360 51572 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:22:29,920 basehttp 44360 71172 "GET /get-chat-history/ HTTP/1.1" 200 418
+INFO 2025-02-26 20:22:41,544 ai_orchestrator 44360 71172 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:22:49,042 ai_orchestrator 44360 71172 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'continuation': True, 'confidence_level': 1}
+ERROR 2025-02-26 20:22:49,042 ai_orchestrator 44360 71172 Erreur dans _handle_intent: 'context_type'
+ERROR 2025-02-26 20:22:49,042 ai_orchestrator 44360 71172 Erreur (1): 'context_type'
+ERROR 2025-02-26 20:22:49,042 ai_orchestrator 44360 71172 Contexte: {'intent': {'integration': 'Trello', 'action': 'create_task', 'continuation': True, 'confidence_level': 1, 'is_continuation': False}, 'message': "Alya, ajoute une tâche 'Finaliser la présentation client' dans la colonne 'En cours' sur Trello et assigne-la à Marie. L'échéance est vendredi."}
+INFO 2025-02-26 20:22:49,477 basehttp 44360 71172 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-02-26 20:22:54,443 basehttp 44360 71172 "GET /get-chat-history/ HTTP/1.1" 200 382
+INFO 2025-02-26 20:23:00,665 ai_orchestrator 44360 71172 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:23:06,542 ai_orchestrator 44360 71172 Intention détectée: {'integration': None, 'action': None, 'continuation_of': None, 'confidence': 0}
+ERROR 2025-02-26 20:23:06,542 ai_orchestrator 44360 71172 Erreur dans _handle_intent: 'context_type'
+ERROR 2025-02-26 20:23:06,542 ai_orchestrator 44360 71172 Erreur (1): 'context_type'
+ERROR 2025-02-26 20:23:06,542 ai_orchestrator 44360 71172 Contexte: {'intent': {'integration': None, 'action': None, 'continuation_of': None, 'confidence': 0, 'is_continuation': False}, 'message': 'bonjour alya'}
+INFO 2025-02-26 20:23:06,984 basehttp 44360 71172 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-02-26 20:23:12,334 basehttp 44360 71172 "GET /get-chat-history/ HTTP/1.1" 200 226
+INFO 2025-02-26 20:24:00,790 autoreload 44360 14528 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:24:02,497 autoreload 27096 42816 Watching for file changes with StatReloader
+INFO 2025-02-26 20:24:09,876 autoreload 27096 42816 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:24:11,448 autoreload 68576 39780 Watching for file changes with StatReloader
+INFO 2025-02-26 20:24:28,561 ai_orchestrator 68576 46112 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:24:34,193 ai_orchestrator 68576 46112 Intention détectée: {'integration': None, 'action': None, 'continuation_of': None, 'confidence_level': 0}
+ERROR 2025-02-26 20:24:34,193 ai_orchestrator 68576 46112 Erreur dans _handle_intent: 'confidence'
+ERROR 2025-02-26 20:24:34,193 ai_orchestrator 68576 46112 Erreur (1): 'confidence'
+ERROR 2025-02-26 20:24:34,193 ai_orchestrator 68576 46112 Contexte: {'intent': {'integration': None, 'action': None, 'continuation_of': None, 'confidence_level': 0, 'is_continuation': False, 'context_type': 'new_request'}, 'message': 'bonjour alya'}
+INFO 2025-02-26 20:24:34,626 basehttp 68576 46112 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-02-26 20:24:39,638 basehttp 68576 46112 "GET /get-chat-history/ HTTP/1.1" 200 226
+INFO 2025-02-26 20:25:03,937 autoreload 68576 39780 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:25:05,584 autoreload 26392 28460 Watching for file changes with StatReloader
+INFO 2025-02-26 20:25:43,758 autoreload 26392 28460 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:25:45,380 autoreload 67404 6912 Watching for file changes with StatReloader
+INFO 2025-02-26 20:25:51,213 autoreload 67404 6912 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:25:52,577 autoreload 40632 14184 Watching for file changes with StatReloader
+INFO 2025-02-26 20:26:05,885 basehttp 40632 49464 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:26:09,419 views 40632 28828 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:26:09,419 basehttp 40632 28828 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:26:11,110 basehttp 40632 49464 "GET /get-chat-history/ HTTP/1.1" 200 226
+INFO 2025-02-26 20:26:14,726 ai_orchestrator 40632 28828 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:26:23,278 ai_orchestrator 40632 28828 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1}
+ERROR 2025-02-26 20:26:23,278 ai_orchestrator 40632 28828 Erreur dans _handle_intent: 'context_type'
+ERROR 2025-02-26 20:26:23,278 ai_orchestrator 40632 28828 Erreur (1): 'context_type'
+ERROR 2025-02-26 20:26:23,278 ai_orchestrator 40632 28828 Contexte: {'intent': {'integration': 'trello', 'action': 'create_task', 'is_continuation': False, 'confidence': 1}, 'message': "Alya, ajoute une tâche 'Finaliser la présentation client' dans la colonne 'En cours' sur Trello et assigne-la à Marie. L'échéance est vendredi."}
+INFO 2025-02-26 20:26:23,745 basehttp 40632 28828 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-02-26 20:26:29,945 basehttp 40632 28828 "GET /get-chat-history/ HTTP/1.1" 200 382
+INFO 2025-02-26 20:26:33,109 ai_orchestrator 40632 49464 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:26:38,327 ai_orchestrator 40632 49464 Intention détectée: {'integration': None, 'action': None, 'is_continuation': False, 'confidence': 0}
+ERROR 2025-02-26 20:26:38,327 ai_orchestrator 40632 49464 Erreur dans _handle_intent: 'context_type'
+ERROR 2025-02-26 20:26:38,342 ai_orchestrator 40632 49464 Erreur (1): 'context_type'
+ERROR 2025-02-26 20:26:38,343 ai_orchestrator 40632 49464 Contexte: {'intent': {'integration': None, 'action': None, 'is_continuation': False, 'confidence': 0}, 'message': 'bonjour alya'}
+INFO 2025-02-26 20:26:38,762 basehttp 40632 49464 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-02-26 20:26:44,245 basehttp 40632 49464 "GET /get-chat-history/ HTTP/1.1" 200 226
+INFO 2025-02-26 20:27:45,477 autoreload 40632 14184 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:27:47,155 autoreload 15276 15976 Watching for file changes with StatReloader
+INFO 2025-02-26 20:28:02,254 autoreload 15276 15976 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:28:03,803 autoreload 73144 56224 Watching for file changes with StatReloader
+INFO 2025-02-26 20:28:28,528 basehttp 73144 30204 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:28:32,009 views 73144 69540 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:28:32,009 basehttp 73144 69540 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:28:34,446 basehttp 73144 30204 "GET /get-chat-history/ HTTP/1.1" 200 226
+INFO 2025-02-26 20:29:30,917 ai_orchestrator 73144 30204 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:29:44,229 ai_orchestrator 73144 30204 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-26 20:29:45,321 basehttp 73144 30204 "POST /chat/ HTTP/1.1" 200 118
+INFO 2025-02-26 20:29:51,282 basehttp 73144 41600 "GET /get-chat-history/ HTTP/1.1" 200 379
+INFO 2025-02-26 20:31:14,913 autoreload 73144 56224 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-26 20:31:17,768 autoreload 67064 66360 Watching for file changes with StatReloader
+INFO 2025-02-26 20:31:32,998 basehttp 67064 37696 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:31:37,141 views 67064 71128 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:31:37,141 basehttp 67064 71128 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:31:38,830 basehttp 67064 37696 "GET /get-chat-history/ HTTP/1.1" 200 379
+INFO 2025-02-26 20:32:12,801 ai_orchestrator 67064 37696 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:32:19,463 ai_orchestrator 67064 37696 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-26 20:32:24,670 basehttp 67064 37696 "POST /chat/ HTTP/1.1" 200 186
+INFO 2025-02-26 20:32:29,748 basehttp 67064 37696 "GET /get-chat-history/ HTTP/1.1" 200 418
+INFO 2025-02-26 20:32:36,836 ai_orchestrator 67064 37696 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:32:42,563 ai_orchestrator 67064 37696 Intention détectée: {'integration': 'None', 'action': 'None', 'is_continuation': False, 'confidence': 0.7, 'context_type': 'new_request'}
+INFO 2025-02-26 20:32:42,980 basehttp 67064 37696 "POST /chat/ HTTP/1.1" 200 118
+INFO 2025-02-26 20:32:48,213 basehttp 67064 37696 "GET /get-chat-history/ HTTP/1.1" 200 220
+INFO 2025-02-26 20:33:07,397 ai_orchestrator 67064 37696 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:33:13,147 ai_orchestrator 67064 37696 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+ERROR 2025-02-26 20:33:19,530 manager 67064 37696 Erreur lors de la création de la tâche Trello: type object 'TrelloManager' has no attribute '_extract_task_info'
+INFO 2025-02-26 20:33:19,964 basehttp 67064 37696 "POST /chat/ HTTP/1.1" 200 170
+INFO 2025-02-26 20:33:25,979 basehttp 67064 37696 "GET /get-chat-history/ HTTP/1.1" 200 428
+INFO 2025-02-26 20:34:24,995 autoreload 67064 66360 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\trello\manager.py changed, reloading.
+INFO 2025-02-26 20:34:26,530 autoreload 32248 15432 Watching for file changes with StatReloader
+INFO 2025-02-26 20:34:40,164 basehttp 32248 13688 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:34:44,010 views 32248 15904 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:34:44,025 basehttp 32248 15904 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:34:51,585 basehttp 32248 13688 "GET /get-chat-history/ HTTP/1.1" 200 428
+INFO 2025-02-26 20:35:00,946 ai_orchestrator 32248 13688 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:35:10,043 ai_orchestrator 32248 13688 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-26 20:35:15,908 basehttp 32248 13688 "POST /chat/ HTTP/1.1" 200 190
+INFO 2025-02-26 20:35:21,222 basehttp 32248 13688 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-26 20:35:46,312 ai_orchestrator 32248 13688 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:35:52,765 ai_orchestrator 32248 13688 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+ERROR 2025-02-26 20:36:01,296 manager 32248 13688 Erreur lors de la création de la tâche Trello: string indices must be integers, not 'str'
+INFO 2025-02-26 20:36:01,731 basehttp 32248 13688 "POST /chat/ HTTP/1.1" 200 147
+INFO 2025-02-26 20:36:06,997 basehttp 32248 13688 "GET /get-chat-history/ HTTP/1.1" 200 412
+INFO 2025-02-26 20:37:14,047 autoreload 32248 15432 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\trello\manager.py changed, reloading.
+INFO 2025-02-26 20:37:15,604 autoreload 56936 23120 Watching for file changes with StatReloader
+INFO 2025-02-26 20:37:24,963 autoreload 56936 23120 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\trello\manager.py changed, reloading.
+INFO 2025-02-26 20:37:26,435 autoreload 52592 26300 Watching for file changes with StatReloader
+INFO 2025-02-26 20:38:06,523 autoreload 52592 26300 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\trello\manager.py changed, reloading.
+INFO 2025-02-26 20:38:08,054 autoreload 1904 36532 Watching for file changes with StatReloader
+INFO 2025-02-26 20:38:18,280 autoreload 1904 36532 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\trello\manager.py changed, reloading.
+INFO 2025-02-26 20:38:19,827 autoreload 61420 31732 Watching for file changes with StatReloader
+INFO 2025-02-26 20:38:38,819 basehttp 61420 39908 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:38:44,861 basehttp 61420 39908 "GET /get-chat-history/ HTTP/1.1" 200 412
+INFO 2025-02-26 20:38:45,720 views 61420 50500 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:38:45,720 basehttp 61420 50500 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:38:52,015 ai_orchestrator 61420 50500 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:38:58,435 ai_orchestrator 61420 50500 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-26 20:39:04,497 basehttp 61420 50500 "POST /chat/ HTTP/1.1" 200 199
+INFO 2025-02-26 20:39:12,724 basehttp 61420 50500 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-26 20:40:17,648 ai_orchestrator 61420 50500 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:40:25,249 ai_orchestrator 61420 50500 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-26 20:40:29,951 basehttp 61420 50500 "POST /chat/ HTTP/1.1" 200 199
+INFO 2025-02-26 20:40:35,759 basehttp 61420 50500 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-26 20:41:46,198 autoreload 61420 31732 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\trello\manager.py changed, reloading.
+INFO 2025-02-26 20:41:47,689 autoreload 45352 72016 Watching for file changes with StatReloader
+INFO 2025-02-26 20:42:07,668 basehttp 45352 19748 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:42:13,213 basehttp 45352 19748 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-26 20:42:13,505 views 45352 26988 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:42:13,521 basehttp 45352 26988 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:42:20,363 ai_orchestrator 45352 26988 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:42:30,332 ai_orchestrator 45352 26988 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-26 20:42:35,556 basehttp 45352 26988 "POST /chat/ HTTP/1.1" 200 199
+INFO 2025-02-26 20:42:43,541 basehttp 45352 26988 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-26 20:43:56,006 autoreload 45352 72016 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\trello\manager.py changed, reloading.
+INFO 2025-02-26 20:43:57,616 autoreload 29252 54596 Watching for file changes with StatReloader
+INFO 2025-02-26 20:44:12,604 basehttp 29252 26796 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:44:18,030 views 29252 50068 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:44:18,030 basehttp 29252 50068 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:44:20,249 basehttp 29252 26796 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-26 20:44:24,000 ai_orchestrator 29252 50068 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:44:35,383 ai_orchestrator 29252 50068 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-26 20:44:43,899 basehttp 29252 50068 "POST /chat/ HTTP/1.1" 200 199
+INFO 2025-02-26 20:44:49,744 basehttp 29252 50068 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-26 20:46:07,964 autoreload 29252 54596 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\trello\manager.py changed, reloading.
+INFO 2025-02-26 20:46:09,407 autoreload 43884 70852 Watching for file changes with StatReloader
+INFO 2025-02-26 20:46:18,679 autoreload 43884 70852 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\trello\manager.py changed, reloading.
+INFO 2025-02-26 20:46:20,114 autoreload 65304 39956 Watching for file changes with StatReloader
+INFO 2025-02-26 20:46:32,981 basehttp 65304 17544 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-26 20:46:40,177 views 65304 37384 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-26 20:46:40,177 basehttp 65304 37384 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-26 20:46:42,262 basehttp 65304 17544 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-26 20:46:52,237 ai_orchestrator 65304 17544 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-26 20:46:59,278 ai_orchestrator 65304 17544 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+ERROR 2025-02-26 20:47:04,038 ai_orchestrator 65304 17544 Erreur lors de la récupération des membres Trello: 'name'
+INFO 2025-02-26 20:47:04,471 basehttp 65304 17544 "POST /chat/ HTTP/1.1" 200 145
+INFO 2025-02-26 20:47:10,440 basehttp 65304 17544 "GET /get-chat-history/ HTTP/1.1" 200 410
+INFO 2025-02-27 05:35:41,572 autoreload 65304 39956 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 05:35:48,599 autoreload 75220 56996 Watching for file changes with StatReloader
+INFO 2025-02-27 05:36:33,924 basehttp 75220 32948 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 05:36:36,784 views 75220 27280 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 05:36:36,788 basehttp 75220 27280 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 05:36:38,079 basehttp 75220 32948 "GET /get-chat-history/ HTTP/1.1" 200 410
+INFO 2025-02-27 05:36:57,652 ai_orchestrator 75220 32948 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 05:37:03,912 ai_orchestrator 75220 32948 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+ERROR 2025-02-27 05:37:07,373 ai_orchestrator 75220 32948 Erreur lors de la récupération des membres Trello: 'name'
+INFO 2025-02-27 05:37:07,655 basehttp 75220 32948 "POST /chat/ HTTP/1.1" 200 145
+INFO 2025-02-27 05:37:11,207 basehttp 75220 32948 "GET /get-chat-history/ HTTP/1.1" 200 410
+INFO 2025-02-27 05:38:40,244 autoreload 75220 56996 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 05:38:44,631 autoreload 63452 21256 Watching for file changes with StatReloader
+INFO 2025-02-27 05:39:01,171 basehttp 63452 47560 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 05:39:04,426 views 63452 8432 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 05:39:04,429 basehttp 63452 8432 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 05:39:05,751 basehttp 63452 47560 "GET /get-chat-history/ HTTP/1.1" 200 410
+INFO 2025-02-27 05:39:13,123 ai_orchestrator 63452 47560 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 05:39:18,432 ai_orchestrator 63452 47560 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+ERROR 2025-02-27 05:39:21,503 ai_orchestrator 63452 47560 Erreur lors de la récupération des membres Trello: 'name'
+INFO 2025-02-27 05:39:21,835 basehttp 63452 47560 "POST /chat/ HTTP/1.1" 200 145
+INFO 2025-02-27 05:39:25,620 basehttp 63452 47560 "GET /get-chat-history/ HTTP/1.1" 200 410
+INFO 2025-02-27 05:39:33,714 ai_orchestrator 63452 47560 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 05:39:38,353 ai_orchestrator 63452 47560 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0.8, 'context_type': 'new_request'}
+INFO 2025-02-27 05:39:38,723 basehttp 63452 47560 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 05:39:42,377 basehttp 63452 47560 "GET /get-chat-history/ HTTP/1.1" 200 182
+INFO 2025-02-27 05:39:49,277 basehttp 63452 47560 "GET /get-messages/236/ HTTP/1.1" 200 230
+INFO 2025-02-27 05:41:10,439 autoreload 63452 21256 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 05:41:14,900 autoreload 9072 52984 Watching for file changes with StatReloader
+INFO 2025-02-27 05:41:59,983 basehttp 9072 44992 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 05:42:02,803 views 9072 76944 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 05:42:02,808 basehttp 9072 76944 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 05:42:04,153 basehttp 9072 44992 "GET /get-chat-history/ HTTP/1.1" 200 182
+INFO 2025-02-27 05:42:11,819 ai_orchestrator 9072 44992 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 05:42:17,368 ai_orchestrator 9072 44992 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 05:42:20,599 basehttp 9072 44992 "POST /chat/ HTTP/1.1" 200 199
+INFO 2025-02-27 05:42:24,401 basehttp 9072 44992 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-27 05:43:05,064 ai_orchestrator 9072 44992 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 05:43:09,574 ai_orchestrator 9072 44992 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-27 05:43:17,483 basehttp 9072 44992 "POST /chat/ HTTP/1.1" 200 168
+INFO 2025-02-27 05:43:21,552 basehttp 9072 44992 "GET /get-chat-history/ HTTP/1.1" 200 442
+INFO 2025-02-27 09:13:10,010 autoreload 9072 52984 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:13:12,313 autoreload 28388 12792 Watching for file changes with StatReloader
+INFO 2025-02-27 09:14:50,411 autoreload 28388 12792 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:14:51,975 autoreload 41976 63176 Watching for file changes with StatReloader
+INFO 2025-02-27 09:15:37,749 autoreload 41976 63176 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:15:39,488 autoreload 33368 17172 Watching for file changes with StatReloader
+INFO 2025-02-27 09:17:33,881 basehttp 33368 49008 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:17:36,471 views 33368 43800 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:17:36,487 basehttp 33368 43800 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:17:37,551 basehttp 33368 49008 "GET /get-chat-history/ HTTP/1.1" 200 442
+INFO 2025-02-27 09:17:48,516 ai_orchestrator 33368 49008 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:17:52,832 ai_orchestrator 33368 49008 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 0.95, 'context_type': 'continuation'}
+INFO 2025-02-27 09:17:53,984 basehttp 33368 49008 "POST /chat/ HTTP/1.1" 200 199
+INFO 2025-02-27 09:17:57,846 basehttp 33368 49008 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-27 09:19:30,620 autoreload 33368 17172 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:19:32,283 autoreload 36088 52568 Watching for file changes with StatReloader
+INFO 2025-02-27 09:19:42,229 autoreload 36088 52568 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:19:43,802 autoreload 65920 60504 Watching for file changes with StatReloader
+INFO 2025-02-27 09:19:52,367 basehttp 65920 78128 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:19:55,329 views 65920 50356 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:19:55,329 basehttp 65920 50356 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:19:56,331 basehttp 65920 78128 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-27 09:20:05,951 ai_orchestrator 65920 78128 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:20:10,518 ai_orchestrator 65920 78128 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-27 09:20:11,683 basehttp 65920 78128 "POST /chat/ HTTP/1.1" 200 199
+INFO 2025-02-27 09:20:15,915 basehttp 65920 78128 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-27 09:21:03,118 ai_orchestrator 65920 78128 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:21:07,117 ai_orchestrator 65920 78128 Intention détectée: {'integration': 'N/A', 'action': 'N/A', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-27 09:21:07,369 basehttp 65920 78128 "POST /chat/ HTTP/1.1" 200 118
+INFO 2025-02-27 09:21:11,322 basehttp 65920 78128 "GET /get-chat-history/ HTTP/1.1" 200 229
+INFO 2025-02-27 09:23:39,269 autoreload 65920 60504 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:23:40,968 autoreload 30340 55388 Watching for file changes with StatReloader
+INFO 2025-02-27 09:23:48,191 autoreload 30340 55388 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:23:49,652 autoreload 42608 29568 Watching for file changes with StatReloader
+INFO 2025-02-27 09:24:01,785 basehttp 42608 72720 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:24:04,593 views 42608 45896 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:24:04,608 basehttp 42608 45896 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:24:05,205 basehttp 42608 72720 "GET /get-chat-history/ HTTP/1.1" 200 229
+INFO 2025-02-27 09:24:14,168 ai_orchestrator 42608 72720 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:24:18,551 ai_orchestrator 42608 72720 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0.8, 'context_type': 'new_request'}
+INFO 2025-02-27 09:24:18,801 basehttp 42608 72720 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 09:24:22,397 basehttp 42608 72720 "GET /get-chat-history/ HTTP/1.1" 200 182
+INFO 2025-02-27 09:24:45,402 ai_orchestrator 42608 72720 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:24:48,672 ai_orchestrator 42608 72720 Intention détectée: {'integration': 'hubspot', 'action': 'create_contact', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-27 09:24:50,651 ai_orchestrator 42608 72720 Configuration de l'utilisateur pour HubSpot: {'timezone': 'UTC', 'portal_id': 'unknown', 'account_type': 'unknown'}
+INFO 2025-02-27 09:24:50,652 ai_orchestrator 42608 72720 Token d'accès HubSpot récupéré: CN29ubfOMh...
+ERROR 2025-02-27 09:24:50,652 ai_orchestrator 42608 72720 Erreur lors de la création du contact HubSpot: 'firstname'
+INFO 2025-02-27 09:24:50,919 basehttp 42608 72720 "POST /chat/ HTTP/1.1" 200 116
+INFO 2025-02-27 09:24:55,292 basehttp 42608 72720 "GET /get-chat-history/ HTTP/1.1" 200 246
+INFO 2025-02-27 09:25:24,070 ai_orchestrator 42608 72720 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:25:28,405 ai_orchestrator 42608 72720 Intention détectée: {'integration': '', 'action': '', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 09:25:28,670 basehttp 42608 72720 "POST /chat/ HTTP/1.1" 200 118
+INFO 2025-02-27 09:25:32,419 basehttp 42608 72720 "GET /get-chat-history/ HTTP/1.1" 200 285
+INFO 2025-02-27 09:26:00,185 basehttp 42608 72720 "GET /get-messages/244/ HTTP/1.1" 200 333
+INFO 2025-02-27 09:27:33,050 autoreload 42608 29568 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:27:34,950 autoreload 38184 58992 Watching for file changes with StatReloader
+INFO 2025-02-27 09:27:42,103 autoreload 38184 58992 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:27:43,769 autoreload 44364 52804 Watching for file changes with StatReloader
+INFO 2025-02-27 09:27:53,952 basehttp 44364 59524 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:27:56,189 views 44364 19288 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:27:56,189 basehttp 44364 19288 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:27:57,285 basehttp 44364 59524 "GET /get-chat-history/ HTTP/1.1" 200 285
+INFO 2025-02-27 09:28:02,103 ai_orchestrator 44364 59524 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:28:02,103 ai_orchestrator 44364 59524 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:28:06,637 ai_orchestrator 44364 59524 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}
+INFO 2025-02-27 09:28:07,374 basehttp 44364 59524 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 09:28:10,498 basehttp 44364 59524 "GET /get-chat-history/ HTTP/1.1" 200 182
+INFO 2025-02-27 09:28:17,604 ai_orchestrator 44364 59524 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:28:17,619 ai_orchestrator 44364 59524 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:28:22,153 ai_orchestrator 44364 59524 Intention détectée: {'integration': 'Trello', 'action': 'create_task', 'is_continuation': False, 'confidence': 0.95, 'context_type': 'new_request'}
+INFO 2025-02-27 09:28:23,621 basehttp 44364 59524 "POST /chat/ HTTP/1.1" 200 199
+INFO 2025-02-27 09:28:26,843 basehttp 44364 59524 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-27 09:28:33,387 basehttp 44364 51768 "GET /get-messages/246/ HTTP/1.1" 200 512
+INFO 2025-02-27 09:28:45,382 basehttp 44364 34024 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 13302
+INFO 2025-02-27 09:28:47,334 basehttp 44364 34024 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:28:54,041 basehttp 44364 34024 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 13302
+INFO 2025-02-27 09:28:55,975 basehttp 44364 34024 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:30:40,670 autoreload 44364 52804 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:30:42,254 autoreload 44096 39464 Watching for file changes with StatReloader
+INFO 2025-02-27 09:30:47,856 autoreload 44096 39464 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:30:49,407 autoreload 17132 50580 Watching for file changes with StatReloader
+INFO 2025-02-27 09:33:14,753 autoreload 17132 50580 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:33:16,493 autoreload 65612 35332 Watching for file changes with StatReloader
+INFO 2025-02-27 09:34:11,433 autoreload 65612 35332 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:34:12,901 autoreload 75744 52092 Watching for file changes with StatReloader
+INFO 2025-02-27 09:34:41,984 basehttp 75744 26844 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:34:45,372 views 75744 13528 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:34:45,372 basehttp 75744 13528 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:34:46,689 basehttp 75744 26844 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-27 09:34:49,192 ai_orchestrator 75744 13528 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:34:49,192 ai_orchestrator 75744 13528 Initialisation d'AIOrchestrator pour user_id: 2
+ERROR 2025-02-27 09:34:49,590 ai_orchestrator 75744 13528 Erreur dans process_message: Chat matching query does not exist.
+ERROR 2025-02-27 09:34:49,594 ai_orchestrator 75744 13528 Erreur (1): Chat matching query does not exist.
+INFO 2025-02-27 09:34:49,594 basehttp 75744 13528 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-02-27 09:34:53,056 basehttp 75744 13528 "GET /get-chat-history/ HTTP/1.1" 200 422
+INFO 2025-02-27 09:35:40,946 autoreload 75744 52092 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:35:42,407 autoreload 43936 32484 Watching for file changes with StatReloader
+INFO 2025-02-27 09:36:25,039 autoreload 43936 32484 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:36:26,577 autoreload 68740 52220 Watching for file changes with StatReloader
+INFO 2025-02-27 09:36:42,673 basehttp 68740 72468 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:36:42,744 basehttp 68740 65164 - Broken pipe from ('127.0.0.1', 55733)
+INFO 2025-02-27 09:36:45,037 basehttp 68740 72468 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:36:45,267 views 68740 24676 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:36:45,267 basehttp 68740 24676 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:36:50,690 basehttp 68740 33748 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 13302
+INFO 2025-02-27 09:36:52,791 basehttp 68740 33748 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:37:00,089 ai_orchestrator 68740 24676 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:37:00,089 ai_orchestrator 68740 24676 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:37:03,839 ai_orchestrator 68740 24676 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}
+ERROR 2025-02-27 09:37:04,090 ai_orchestrator 68740 24676 Erreur dans process_message: null value in column "chat_id" of relation "alyawebapp_chathistory" violates not-null constraint
+DETAIL:  Failing row contains (557, bonjour alya, t, 2025-02-27 09:37:03.839836+00, null, 2).
+
+ERROR 2025-02-27 09:37:04,106 ai_orchestrator 68740 24676 Erreur (1): null value in column "chat_id" of relation "alyawebapp_chathistory" violates not-null constraint
+DETAIL:  Failing row contains (557, bonjour alya, t, 2025-02-27 09:37:03.839836+00, null, 2).
+
+INFO 2025-02-27 09:37:04,106 basehttp 68740 24676 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-02-27 09:37:06,185 basehttp 68740 24676 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:38:25,357 autoreload 68740 52220 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:38:27,091 autoreload 48064 65428 Watching for file changes with StatReloader
+INFO 2025-02-27 09:39:05,487 autoreload 48064 65428 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:39:07,050 autoreload 61700 19500 Watching for file changes with StatReloader
+INFO 2025-02-27 09:39:18,876 basehttp 61700 76056 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:39:21,040 basehttp 61700 76056 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:39:21,092 views 61700 65080 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:39:21,092 basehttp 61700 65080 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:39:25,406 ai_orchestrator 61700 65080 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:39:25,406 ai_orchestrator 61700 65080 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:39:29,840 ai_orchestrator 61700 65080 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}
+INFO 2025-02-27 09:39:30,356 basehttp 61700 65080 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 09:39:32,907 basehttp 61700 65080 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:39:39,991 ai_orchestrator 61700 65080 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:39:39,991 ai_orchestrator 61700 65080 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:39:47,458 ai_orchestrator 61700 65080 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}
+INFO 2025-02-27 09:39:48,089 basehttp 61700 65080 "POST /chat/ HTTP/1.1" 200 118
+INFO 2025-02-27 09:39:50,189 basehttp 61700 65080 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:40:39,873 basehttp 61700 69528 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-27 09:40:42,644 basehttp 61700 69528 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:40:54,266 basehttp 61700 69528 "GET /admin/alyawebapp/chathistory/561/change/ HTTP/1.1" 200 18356
+INFO 2025-02-27 09:40:56,488 basehttp 61700 69528 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:41:09,879 basehttp 61700 69528 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-27 09:41:12,041 basehttp 61700 69528 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:41:16,673 autoreload 61700 19500 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:41:18,189 autoreload 40072 58156 Watching for file changes with StatReloader
+INFO 2025-02-27 09:41:34,652 autoreload 40072 58156 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:41:36,080 autoreload 12024 54644 Watching for file changes with StatReloader
+INFO 2025-02-27 09:41:47,136 basehttp 12024 20428 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:41:49,339 basehttp 12024 20428 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:41:49,348 views 12024 67844 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:41:49,348 basehttp 12024 67844 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:41:51,407 basehttp 12024 20928 "GET /admin/alyawebapp/chathistory/560/change/ HTTP/1.1" 200 18292
+INFO 2025-02-27 09:41:53,284 basehttp 12024 20928 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:41:59,632 basehttp 12024 20928 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-27 09:42:01,893 basehttp 12024 20928 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:42:04,507 ai_orchestrator 12024 67844 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:42:04,508 ai_orchestrator 12024 67844 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:42:08,524 ai_orchestrator 12024 67844 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}
+INFO 2025-02-27 09:42:09,975 basehttp 12024 67844 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 09:42:12,086 basehttp 12024 67844 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:43:21,392 ai_orchestrator 12024 67844 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:43:21,407 ai_orchestrator 12024 67844 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:43:25,375 ai_orchestrator 12024 67844 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}
+INFO 2025-02-27 09:43:26,140 basehttp 12024 67844 "POST /chat/ HTTP/1.1" 200 118
+INFO 2025-02-27 09:43:28,345 basehttp 12024 67844 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:43:37,146 basehttp 12024 20928 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-27 09:43:39,211 basehttp 12024 20928 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:45:54,578 autoreload 12024 54644 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:45:56,293 autoreload 73332 75460 Watching for file changes with StatReloader
+INFO 2025-02-27 09:46:05,282 basehttp 73332 41124 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:46:09,206 views 73332 16004 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:46:09,208 basehttp 73332 16004 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:46:09,493 basehttp 73332 41124 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:46:12,593 ai_orchestrator 73332 41124 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:46:12,593 ai_orchestrator 73332 41124 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:46:14,613 ai_orchestrator 73332 41124 Nouveau chat_id défini: 252
+INFO 2025-02-27 09:46:16,509 ai_orchestrator 73332 41124 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}
+INFO 2025-02-27 09:46:17,293 basehttp 73332 41124 "POST /chat/ HTTP/1.1" 200 107
+INFO 2025-02-27 09:47:29,192 autoreload 73332 75460 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:47:30,668 autoreload 23344 13432 Watching for file changes with StatReloader
+INFO 2025-02-27 09:47:35,964 autoreload 23344 13432 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:47:37,433 autoreload 25916 71120 Watching for file changes with StatReloader
+INFO 2025-02-27 09:47:48,195 basehttp 25916 77076 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:47:50,445 views 25916 67648 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:47:50,445 basehttp 25916 67648 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:47:50,445 basehttp 25916 77076 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:47:54,011 basehttp 25916 41796 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-27 09:47:55,861 basehttp 25916 41796 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:48:04,827 ai_orchestrator 25916 77076 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:48:04,827 ai_orchestrator 25916 77076 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:48:07,493 ai_orchestrator 25916 77076 Nouveau chat_id défini: 253
+INFO 2025-02-27 09:48:09,375 ai_orchestrator 25916 77076 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}
+INFO 2025-02-27 09:48:10,209 basehttp 25916 77076 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 09:48:12,845 basehttp 25916 77076 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:48:28,425 ai_orchestrator 25916 77076 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:48:28,425 ai_orchestrator 25916 77076 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:48:30,527 ai_orchestrator 25916 77076 Nouveau chat_id défini: 254
+INFO 2025-02-27 09:48:31,609 ai_orchestrator 25916 77076 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'is_continuation': False, 'confidence': 0.95, 'context_type': 'new_request'}
+INFO 2025-02-27 09:48:33,359 basehttp 25916 77076 "POST /chat/ HTTP/1.1" 200 199
+INFO 2025-02-27 09:48:35,788 basehttp 25916 77076 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:48:54,892 ai_orchestrator 25916 77076 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:48:54,892 ai_orchestrator 25916 77076 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:48:56,927 ai_orchestrator 25916 77076 Nouveau chat_id défini: 255
+INFO 2025-02-27 09:48:58,694 ai_orchestrator 25916 77076 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'is_continuation': False, 'confidence': 0.85, 'context_type': 'new_request'}
+ERROR 2025-02-27 09:49:00,509 ai_orchestrator 25916 77076 Erreur lors de la gestion de la requête Trello: Liste 'À faire' non trouvée
+INFO 2025-02-27 09:49:00,759 basehttp 25916 77076 "POST /chat/ HTTP/1.1" 200 149
+INFO 2025-02-27 09:49:04,615 basehttp 25916 77076 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:49:21,761 ai_orchestrator 25916 77076 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:49:21,761 ai_orchestrator 25916 77076 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:49:24,461 ai_orchestrator 25916 77076 Nouveau chat_id défini: 256
+INFO 2025-02-27 09:49:26,179 ai_orchestrator 25916 77076 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'is_continuation': False, 'confidence': 0.95, 'context_type': 'new_request'}
+INFO 2025-02-27 09:49:30,178 basehttp 25916 77076 "POST /chat/ HTTP/1.1" 200 168
+INFO 2025-02-27 09:49:32,395 basehttp 25916 77076 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:49:59,178 ai_orchestrator 25916 77076 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:49:59,178 ai_orchestrator 25916 77076 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:50:01,761 ai_orchestrator 25916 77076 Nouveau chat_id défini: 257
+INFO 2025-02-27 09:50:03,060 ai_orchestrator 25916 77076 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0.8, 'context_type': 'new_request'}
+INFO 2025-02-27 09:50:03,910 basehttp 25916 77076 "POST /chat/ HTTP/1.1" 200 118
+INFO 2025-02-27 09:50:06,084 basehttp 25916 77076 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:50:14,433 basehttp 25916 41796 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-27 09:50:16,339 basehttp 25916 41796 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:50:26,278 basehttp 25916 41796 "GET /admin/alyawebapp/chathistory/576/change/ HTTP/1.1" 200 18286
+INFO 2025-02-27 09:50:29,004 basehttp 25916 41796 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 09:50:44,473 basehttp 25916 41796 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-27 09:53:05,666 autoreload 25916 71120 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:53:07,243 autoreload 24940 38528 Watching for file changes with StatReloader
+INFO 2025-02-27 09:53:12,677 autoreload 24940 38528 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:53:14,188 autoreload 61472 35144 Watching for file changes with StatReloader
+INFO 2025-02-27 09:54:14,929 autoreload 61472 35144 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:54:16,487 autoreload 36212 78016 Watching for file changes with StatReloader
+INFO 2025-02-27 09:54:21,973 autoreload 36212 78016 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 09:54:23,443 autoreload 23904 49868 Watching for file changes with StatReloader
+INFO 2025-02-27 09:54:34,628 basehttp 23904 65052 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 09:54:37,166 views 23904 40908 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 09:54:37,166 basehttp 23904 65052 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:54:37,167 basehttp 23904 40908 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 09:54:42,046 ai_orchestrator 23904 40908 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:54:42,062 ai_orchestrator 23904 40908 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:54:44,196 ai_orchestrator 23904 40908 Nouveau chat_id défini: 258
+INFO 2025-02-27 09:54:46,611 ai_orchestrator 23904 40908 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0.9, 'context_type': 'new_request'}
+INFO 2025-02-27 09:54:47,044 basehttp 23904 40908 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 09:54:49,150 basehttp 23904 40908 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:55:34,145 ai_orchestrator 23904 40908 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:55:34,145 ai_orchestrator 23904 40908 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:55:36,194 ai_orchestrator 23904 40908 Nouveau chat_id défini: 259
+INFO 2025-02-27 09:55:38,113 ai_orchestrator 23904 40908 Intention détectée: {'integration': 'trello', 'action': 'create_task', 'is_continuation': True, 'confidence': 1, 'context_type': 'continuation'}
+INFO 2025-02-27 09:55:41,051 basehttp 23904 40908 "POST /chat/ HTTP/1.1" 200 169
+INFO 2025-02-27 09:55:43,176 basehttp 23904 40908 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:57:41,960 ai_orchestrator 23904 40908 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:57:41,961 ai_orchestrator 23904 40908 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:57:44,044 ai_orchestrator 23904 40908 Nouveau chat_id défini: 260
+INFO 2025-02-27 09:57:45,849 ai_orchestrator 23904 40908 Intention détectée: {'integration': 'trello', 'action': 'get_overdue_tasks', 'is_continuation': False, 'confidence': 1, 'context_type': 'new_request'}
+ERROR 2025-02-27 09:57:47,406 ai_orchestrator 23904 40908 Erreur lors de la gestion de la requête Trello: Liste 'À faire' non trouvée
+INFO 2025-02-27 09:57:47,675 basehttp 23904 40908 "POST /chat/ HTTP/1.1" 200 149
+INFO 2025-02-27 09:57:50,393 basehttp 23904 40908 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:58:02,651 ai_orchestrator 23904 40908 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 09:58:02,651 ai_orchestrator 23904 40908 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 09:58:05,315 ai_orchestrator 23904 40908 Nouveau chat_id défini: 261
+INFO 2025-02-27 09:58:07,646 ai_orchestrator 23904 40908 Intention détectée: {'integration': 'trello', 'action': 'get_overdue_tasks', 'is_continuation': False, 'confidence': 0.9, 'context_type': 'new_request'}
+ERROR 2025-02-27 09:58:08,880 ai_orchestrator 23904 40908 Erreur lors de la gestion de la requête Trello: Liste 'À faire' non trouvée
+INFO 2025-02-27 09:58:09,145 basehttp 23904 40908 "POST /chat/ HTTP/1.1" 200 149
+INFO 2025-02-27 09:58:11,239 basehttp 23904 40908 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 09:58:25,779 basehttp 23904 71724 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 15103
+INFO 2025-02-27 09:58:27,679 basehttp 23904 64980 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 10:00:06,381 autoreload 23904 49868 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:00:08,049 autoreload 43016 50500 Watching for file changes with StatReloader
+INFO 2025-02-27 10:00:16,494 autoreload 43016 50500 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:00:18,029 autoreload 29432 65808 Watching for file changes with StatReloader
+INFO 2025-02-27 10:00:30,212 basehttp 29432 15424 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 10:00:32,429 views 29432 25192 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 10:00:32,444 basehttp 29432 25192 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 10:00:32,497 basehttp 29432 15424 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:00:55,214 ai_orchestrator 29432 15424 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:00:55,217 ai_orchestrator 29432 15424 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:00:55,463 ai_orchestrator 29432 15424 Nouveau chat_id défini: None
+INFO 2025-02-27 10:00:57,914 ai_orchestrator 29432 15424 Intention détectée: {'integration': 'trello', 'action': 'get_overdue_tasks', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+ERROR 2025-02-27 10:00:59,346 ai_orchestrator 29432 15424 Erreur lors de la gestion de la requête Trello: Liste 'À faire' non trouvée
+INFO 2025-02-27 10:00:59,597 basehttp 29432 15424 "POST /chat/ HTTP/1.1" 200 149
+INFO 2025-02-27 10:01:02,004 basehttp 29432 15424 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:02:32,018 autoreload 29432 65808 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:02:33,868 autoreload 67876 49664 Watching for file changes with StatReloader
+INFO 2025-02-27 10:02:40,265 autoreload 67876 49664 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:02:41,727 autoreload 57916 62580 Watching for file changes with StatReloader
+INFO 2025-02-27 10:06:17,598 autoreload 57916 62580 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:06:19,832 autoreload 29460 18516 Watching for file changes with StatReloader
+INFO 2025-02-27 10:07:02,930 autoreload 29460 18516 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\models.py changed, reloading.
+INFO 2025-02-27 10:07:04,418 autoreload 24544 49312 Watching for file changes with StatReloader
+INFO 2025-02-27 10:09:19,151 autoreload 24544 49312 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:09:20,682 autoreload 79512 62472 Watching for file changes with StatReloader
+INFO 2025-02-27 10:10:44,904 autoreload 79512 62472 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:10:46,544 autoreload 61940 37656 Watching for file changes with StatReloader
+INFO 2025-02-27 10:11:31,763 autoreload 61940 37656 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:11:33,416 autoreload 73780 32388 Watching for file changes with StatReloader
+INFO 2025-02-27 10:11:40,637 autoreload 73780 32388 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:11:43,213 autoreload 29700 36244 Watching for file changes with StatReloader
+INFO 2025-02-27 10:11:53,531 basehttp 29700 26056 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 10:11:55,933 basehttp 29700 26056 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:11:57,200 views 29700 70652 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 10:11:57,200 basehttp 29700 70652 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 10:12:00,583 ai_orchestrator 29700 70652 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:12:00,583 ai_orchestrator 29700 70652 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:12:00,850 ai_orchestrator 29700 70652 Nouveau chat_id défini: None
+INFO 2025-02-27 10:12:03,417 ai_orchestrator 29700 70652 Intention détectée: {'integration': '', 'action': '', 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}
+INFO 2025-02-27 10:12:03,685 basehttp 29700 70652 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 10:12:05,834 basehttp 29700 70652 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:12:16,418 ai_orchestrator 29700 70652 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:12:16,418 ai_orchestrator 29700 70652 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:12:16,668 ai_orchestrator 29700 70652 Nouveau chat_id défini: None
+INFO 2025-02-27 10:12:18,650 ai_orchestrator 29700 70652 Intention détectée: {'integration': 'trello', 'action': 'get_overdue_tasks', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 10:12:20,431 basehttp 29700 70652 "POST /chat/ HTTP/1.1" 200 186
+INFO 2025-02-27 10:12:22,551 basehttp 29700 70652 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:12:34,233 ai_orchestrator 29700 70652 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:12:34,233 ai_orchestrator 29700 70652 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:12:34,502 ai_orchestrator 29700 70652 Nouveau chat_id défini: None
+INFO 2025-02-27 10:12:36,799 ai_orchestrator 29700 70652 Intention détectée: {'integration': 'trello', 'action': 'get_overdue_tasks', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+ERROR 2025-02-27 10:12:38,102 ai_orchestrator 29700 70652 Erreur lors de la gestion de la requête Trello: Liste 'À faire' non trouvée
+INFO 2025-02-27 10:12:38,416 basehttp 29700 70652 "POST /chat/ HTTP/1.1" 200 149
+INFO 2025-02-27 10:12:40,565 basehttp 29700 70652 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:14:39,201 autoreload 29700 36244 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:14:40,803 autoreload 12220 51156 Watching for file changes with StatReloader
+INFO 2025-02-27 10:14:50,493 basehttp 12220 75632 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 10:14:53,271 basehttp 12220 75632 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:14:53,373 views 12220 13072 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 10:14:53,374 basehttp 12220 13072 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 10:14:55,135 basehttp 12220 54720 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 17970
+INFO 2025-02-27 10:14:57,293 basehttp 12220 54720 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 10:15:20,469 ai_orchestrator 12220 13072 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:15:20,469 ai_orchestrator 12220 13072 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:15:20,737 ai_orchestrator 12220 13072 Nouveau chat_id défini: None
+INFO 2025-02-27 10:15:22,968 ai_orchestrator 12220 13072 Intention détectée: {'integration': '', 'action': '', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 10:15:23,278 basehttp 12220 13072 "POST /chat/ HTTP/1.1" 200 77
+INFO 2025-02-27 10:15:25,437 basehttp 12220 13072 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:15:34,138 basehttp 12220 54720 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 18686
+INFO 2025-02-27 10:15:36,034 basehttp 12220 54720 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-02-27 10:16:03,352 ai_orchestrator 12220 13072 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:16:03,352 ai_orchestrator 12220 13072 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:16:03,605 ai_orchestrator 12220 13072 Nouveau chat_id défini: None
+INFO 2025-02-27 10:16:04,369 basehttp 12220 13072 "POST /chat/ HTTP/1.1" 200 95
+INFO 2025-02-27 10:16:06,505 basehttp 12220 13072 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:16:28,852 ai_orchestrator 12220 13072 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:16:28,852 ai_orchestrator 12220 13072 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:16:29,102 ai_orchestrator 12220 13072 Nouveau chat_id défini: None
+INFO 2025-02-27 10:16:32,002 ai_orchestrator 12220 13072 Intention détectée: {'integration': 'hubspot', 'action': 'create_contact', 'is_continuation': False, 'confidence': 0.95, 'context_type': 'new_request'}
+INFO 2025-02-27 10:16:32,002 ai_orchestrator 12220 13072 Changement d'état pour user 2: None -> contact_creation_start
+INFO 2025-02-27 10:16:32,253 basehttp 12220 13072 "POST /chat/ HTTP/1.1" 200 132
+INFO 2025-02-27 10:16:34,826 basehttp 12220 13072 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:16:40,534 ai_orchestrator 12220 13072 Changement d'état pour user 2: contact_creation_start -> None
+INFO 2025-02-27 10:16:40,534 ai_orchestrator 12220 13072 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:16:41,034 ai_orchestrator 12220 13072 Nouveau chat_id défini: None
+INFO 2025-02-27 10:16:43,652 ai_orchestrator 12220 13072 Intention détectée: {'integration': 'hubspot', 'action': 'create_contact', 'is_continuation': False, 'confidence': 0.9, 'context_type': 'new_request'}
+INFO 2025-02-27 10:16:43,652 ai_orchestrator 12220 13072 Changement d'état pour user 2: None -> contact_creation_start
+INFO 2025-02-27 10:16:43,923 basehttp 12220 13072 "POST /chat/ HTTP/1.1" 200 132
+INFO 2025-02-27 10:16:46,428 basehttp 12220 13072 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:16:54,385 ai_orchestrator 12220 13072 Changement d'état pour user 2: contact_creation_start -> None
+INFO 2025-02-27 10:16:54,385 ai_orchestrator 12220 13072 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:16:54,653 ai_orchestrator 12220 13072 Nouveau chat_id défini: None
+INFO 2025-02-27 10:16:56,235 ai_orchestrator 12220 13072 Intention détectée: {'integration': 'hubspot', 'action': 'create_contact', 'is_continuation': False, 'confidence': 0.9, 'context_type': 'new_request'}
+INFO 2025-02-27 10:16:56,235 ai_orchestrator 12220 13072 Changement d'état pour user 2: None -> contact_creation_start
+INFO 2025-02-27 10:16:56,501 basehttp 12220 13072 "POST /chat/ HTTP/1.1" 200 132
+INFO 2025-02-27 10:16:58,780 basehttp 12220 13072 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:18:15,743 autoreload 12220 51156 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:18:17,354 autoreload 53964 67160 Watching for file changes with StatReloader
+INFO 2025-02-27 10:18:47,052 basehttp 53964 67504 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 10:18:49,257 views 53964 36492 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 10:18:49,257 basehttp 53964 36492 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 10:18:49,270 basehttp 53964 67504 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:18:55,635 ai_orchestrator 53964 67504 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:18:55,635 ai_orchestrator 53964 67504 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:18:55,885 ai_orchestrator 53964 67504 Chat actif: 261
+INFO 2025-02-27 10:18:58,330 ai_orchestrator 53964 67504 Intention détectée: {'integration': 'Non spécifié', 'action': 'Non spécifié', 'is_continuation': False, 'confidence': 0.8, 'context_type': 'new_request'}
+INFO 2025-02-27 10:18:58,635 basehttp 53964 67504 "POST /chat/ HTTP/1.1" 200 148
+INFO 2025-02-27 10:19:06,949 autoreload 53964 67160 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:19:08,651 autoreload 25068 26404 Watching for file changes with StatReloader
+INFO 2025-02-27 10:19:17,388 autoreload 25068 26404 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:19:19,306 autoreload 71240 58592 Watching for file changes with StatReloader
+INFO 2025-02-27 10:19:30,422 basehttp 71240 36408 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 10:19:32,710 views 71240 29816 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 10:19:32,710 basehttp 71240 29816 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 10:19:33,044 basehttp 71240 36408 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-02-27 10:19:36,840 ai_orchestrator 71240 36408 Changement d'état pour user 2: None -> None
+INFO 2025-02-27 10:19:36,840 ai_orchestrator 71240 36408 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-02-27 10:19:37,087 ai_orchestrator 71240 36408 Chat actif: 261
+INFO 2025-02-27 10:19:38,835 ai_orchestrator 71240 36408 Intention détectée: {'integration': 'non spécifié', 'action': 'non spécifié', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 10:19:39,102 basehttp 71240 36408 "POST /chat/ HTTP/1.1" 200 148
+INFO 2025-02-27 10:20:48,916 autoreload 71240 58592 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-02-27 10:20:50,565 autoreload 55640 13828 Watching for file changes with StatReloader
