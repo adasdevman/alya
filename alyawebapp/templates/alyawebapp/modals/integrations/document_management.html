@@ -1,0 +1,39 @@
+{% include "alyawebapp/modals/integrations/styles.html" %}
+
+<!-- Modal Document Management -->
+<div class="modal fade" id="documentManagementModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Gestion Documentaire</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <!-- Google Drive -->
+                    <div class="integration-item">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="google_drive"
+                                   id="switch-google-drive">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Google Drive</h6>
+                            <p class="integration-description">Gestion et partage de documents</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="google_drive"
+                                data-auth-provider="auth0"
+                                id="config-btn-google-drive">
+                            <i class="fab fa-google-drive"></i> Connecter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div> 

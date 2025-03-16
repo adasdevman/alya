@@ -17,6 +17,66 @@
 
                 <!-- Liste des intégrations -->
                 <div class="row row-cols-2 row-cols-md-3 g-2">
+                    <!-- Slack -->
+                    <div class="col integration-card">
+                        <div class="card" style="margin: 0 auto; height: 120px;">
+                            <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
+                                <i class="fab fa-slack fa-lg"></i>
+                                <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">Slack</h6>
+                                <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
+                                    Communication interne avec Slack
+                                </p>
+                                <button class="btn btn-sm btn-outline-dark"
+                                        data-integration-id="slack"
+                                        data-auth-provider="auth0"
+                                        style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
+                                    <i class="fas fa-plug me-1"></i>
+                                    Configurer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gmail -->
+                    <div class="col integration-card">
+                        <div class="card" style="margin: 0 auto; height: 120px;">
+                            <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
+                                <i class="fa fa-envelope fa-lg"></i>
+                                <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">Gmail</h6>
+                                <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
+                                    Service de messagerie électronique
+                                </p>
+                                <button class="btn btn-sm btn-outline-dark"
+                                        data-integration-id="gmail"
+                                        data-auth-provider="auth0"
+                                        style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
+                                    <i class="fas fa-plug me-1"></i>
+                                    Configurer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Google Drive -->
+                    <div class="col integration-card">
+                        <div class="card" style="margin: 0 auto; height: 120px;">
+                            <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
+                                <i class="fab fa-google-drive fa-lg"></i>
+                                <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">Google Drive</h6>
+                                <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
+                                    Gestion et partage de documents
+                                </p>
+                                <button class="btn btn-sm btn-outline-dark"
+                                        data-integration-id="google_drive"
+                                        data-auth-provider="auth0"
+                                        style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
+                                    <i class="fas fa-plug me-1"></i>
+                                    Configurer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     {% for integration in integrations %}
                     <div class="col integration-card">
                         <div class="card" style="margin: 0 auto; height: 120px;">
@@ -44,15 +104,15 @@
                                         {{ integration.description|truncatechars:30 }}
                                     </p>
                                     <button class="btn btn-sm {% if integration.id in user_integrations %}btn-success disabled{% else %}btn-outline-dark{% endif %} config-integration"
-                                            data-integration-id="{{ integration.id }}"
+                                        data-integration-id="{{ integration.id }}"
                                             style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
                                         <i class="fas {% if integration.id in user_integrations %}fa-check{% else %}fa-cog{% endif %}"></i>
                                         {% if integration.id in user_integrations %}
                                             Déjà configuré
                                         {% else %}
-                                            Configurer
+                                    Configurer
                                         {% endif %}
-                                    </button>
+                                </button>
                                 {% endif %}
                             </div>
                         </div>

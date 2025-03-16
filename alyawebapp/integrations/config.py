@@ -1,66 +1,181 @@
 INTEGRATION_CONFIGS = {
-    # Analytics
     'Amplitude': {
+        'name': 'Amplitude',
+        'description': 'Analytics produit',
+        'icon': 'fa-chart-line',
         'fields': [
             {
                 'name': 'api_key',
-                'label': 'Clé API Amplitude',
-                'type': 'text',
-                'required': False,
-                'help_text': 'Optionnel : Votre clé API Amplitude'
-            }
-        ],
-        'documentation_url': 'https://help.amplitude.com/hc/en-us/articles/360058073772-Create-and-manage-API-credentials',
-        'optional_config': True
-    },
-    'Google Analytics': {
-        'fields': [
-            {
-                'name': 'view_id',
-                'label': 'View ID',
-                'type': 'text',
-                'required': True,
-                'help_text': 'ID de la vue Google Analytics'
-            },
-            {
-                'name': 'service_account_json',
-                'label': 'Service Account JSON',
-                'type': 'textarea',
-                'required': True,
-                'help_text': 'Contenu JSON du compte de service'
-            },
-            {
-                'name': 'tracking_id',
-                'label': 'ID de suivi',
-                'type': 'text',
-                'required': False,
-                'help_text': 'Optionnel : Votre ID de suivi Google Analytics'
-            }
-        ],
-        'documentation_url': 'https://developers.google.com/analytics/devguides/reporting/core/v4',
-        'auth_type': 'service_account',
-        'optional_config': True
-    },
-    'Mixpanel': {
-        'fields': [
-            {
-                'name': 'project_token',
-                'label': 'Jeton de projet',
-                'type': 'text',
-                'required': False,
-                'help_text': 'Optionnel : Votre jeton de projet Mixpanel'
-            },
-            {
-                'name': 'api_secret',
-                'label': 'API Secret',
+                'label': 'Clé API',
                 'type': 'password',
-                'required': True,
-                'help_text': 'Secret API Mixpanel'
+                'required': True
             }
         ],
-        'documentation_url': 'https://developer.mixpanel.com/reference/project-token',
-        'auth_type': 'api_key',
-        'optional_config': True
+        'category': 'analytics'
+    },
+    
+    'Asana': {
+        'name': 'Asana',
+        'description': 'Gestion de projet collaborative',
+        'icon': 'fa-tasks',
+        'fields': [
+            {
+                'name': 'access_token',
+                'label': 'Token d\'accès',
+                'type': 'password',
+                'required': True
+            }
+        ],
+        'category': 'project_management'
+    },
+
+    'HubSpot': {
+        'name': 'HubSpot CRM',
+        'description': 'Gestion de la relation client',
+        'icon': 'fa-users',
+        'auth_type': 'oauth2',
+        'oauth_config': {
+            'authorize_url': 'https://app.hubspot.com/oauth/authorize',
+            'token_url': 'https://api.hubapi.com/oauth/v1/token',
+            'scope': ['contacts', 'timeline', 'content']
+        },
+        'category': 'crm',
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-dark btn-sm',
+            'action': 'configure'
+        },
+        'auth_provider': 'auth0'
+    },
+
+    'Trello': {
+        'name': 'Trello',
+        'description': 'Gérez vos projets et tâches d\'équipe',
+        'icon': 'fab fa-trello',
+        'auth_type': 'oauth2',
+        'oauth_config': {
+            'authorize_url': 'https://trello.com/1/authorize',
+            'scope': ['read', 'write', 'account']
+        },
+        'category': 'project_management',
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-dark btn-sm',
+            'action': 'configure'
+        },
+        'auth_provider': 'auth0'
+    },
+
+    'Gmail': {
+        'name': 'Gmail',
+        'description': 'Service de messagerie électronique',
+        'icon': 'fa-envelope',
+        'auth_type': 'oauth2',
+        'oauth_config': {
+            'scopes': ['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/gmail.compose']
+        },
+        'category': 'communication',
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-dark btn-sm',
+            'action': 'configure'
+        },
+        'auth_provider': 'auth0'
+    },
+
+    'Salesforce': {
+        'name': 'Salesforce',
+        'description': 'Plateforme CRM complète',
+        'icon': 'fa-cloud',
+        'auth_type': 'oauth2',
+        'category': 'crm',
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-dark btn-sm',
+            'action': 'configure'
+        },
+        'auth_provider': 'auth0'
+    },
+
+    'QuickBooks': {
+        'name': 'QuickBooks',
+        'description': 'Comptabilité',
+        'icon': 'fa-calculator',
+        'auth_type': 'oauth2',
+        'oauth_config': {
+            'authorize_url': 'https://appcenter.intuit.com/connect/oauth2',
+            'scope': ['com.intuit.quickbooks.accounting']
+        },
+        'category': 'finance',
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-dark btn-sm',
+            'action': 'configure'
+        },
+        'auth_provider': 'auth0'
+    },
+
+    'Slack': {
+        'name': 'Slack',
+        'description': 'Communication interne avec Slack',
+        'icon': 'fab fa-slack',
+        'auth_type': 'oauth2',
+        'oauth_config': {
+            'scopes': ['chat:write', 'channels:read', 'reactions:read', 'groups:read']
+        },
+        'category': 'communication',
+        'documentation_url': 'https://api.slack.com/web',
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-dark btn-sm',
+            'action': 'configure'
+        },
+        'auth_provider': 'auth0'
+    },
+
+    # Ajout des autres intégrations...
+    'Google Analytics': {
+        'name': 'Google Analytics',
+        'description': 'Analyse web',
+        'icon': 'fa-chart-bar',
+        'auth_type': 'oauth2',
+        'category': 'analytics'
+    },
+
+    'Mailchimp': {
+        'name': 'Mailchimp',
+        'description': 'Email marketing',
+        'icon': 'fa-envelope',
+        'fields': [
+            {
+                'name': 'api_key',
+                'label': 'Clé API',
+                'type': 'password',
+                'required': True
+            }
+        ],
+        'category': 'marketing'
+    },
+
+    'Stripe': {
+        'name': 'Stripe',
+        'description': 'Paiements en ligne',
+        'icon': 'fa-credit-card',
+        'fields': [
+            {
+                'name': 'secret_key',
+                'label': 'Clé secrète',
+                'type': 'password',
+                'required': True
+            },
+            {
+                'name': 'publishable_key',
+                'label': 'Clé publique',
+                'type': 'text',
+                'required': True
+            }
+        ],
+        'category': 'payment'
     },
 
     # Marketing
@@ -99,27 +214,6 @@ INTEGRATION_CONFIGS = {
         'auth_type': 'oauth2',
         'optional_config': False
     },
-    'Mailchimp': {
-        'fields': [
-            {
-                'name': 'api_key',
-                'label': 'Clé API Mailchimp',
-                'type': 'text',
-                'required': True,
-                'help_text': 'Trouvez votre clé API dans les paramètres de votre compte Mailchimp'
-            },
-            {
-                'name': 'server_prefix',
-                'label': 'Server Prefix',
-                'type': 'text',
-                'required': True,
-                'help_text': 'Préfixe du serveur (ex: us1)'
-            }
-        ],
-        'documentation_url': 'https://mailchimp.com/help/about-api-keys/',
-        'auth_type': 'api_key',
-        'optional_config': False
-    },
     'Sendinblue': {
         'fields': [
             {
@@ -136,27 +230,6 @@ INTEGRATION_CONFIGS = {
     },
 
     # CRM
-    'HubSpot': {
-        'fields': [
-            {
-                'name': 'api_key',
-                'label': 'Clé API HubSpot',
-                'type': 'text',
-                'required': True,
-                'help_text': 'Trouvez votre clé API dans les paramètres de votre compte HubSpot'
-            },
-            {
-                'name': 'deal_pipeline_id',
-                'label': 'ID du Pipeline de Vente',
-                'type': 'text',
-                'required': True,
-                'help_text': 'ID du pipeline de vente dans HubSpot'
-            }
-        ],
-        'documentation_url': 'https://developers.hubspot.com/docs/api/private-apps',
-        'auth_type': 'api_key',
-        'optional_config': False
-    },
     'Pipedrive': {
         'fields': [
             {
@@ -170,33 +243,6 @@ INTEGRATION_CONFIGS = {
         'documentation_url': 'https://developers.pipedrive.com/',
         'auth_type': 'api_key',
         'optional_config': False
-    },
-    'Salesforce': {
-        'fields': [
-            {
-                'name': 'username',
-                'label': 'Username',
-                'type': 'text',
-                'required': True,
-                'help_text': 'Nom d\'utilisateur Salesforce'
-            },
-            {
-                'name': 'password',
-                'label': 'Password',
-                'type': 'password',
-                'required': True,
-                'help_text': 'Mot de passe'
-            },
-            {
-                'name': 'security_token',
-                'label': 'Security Token',
-                'type': 'password',
-                'required': True,
-                'help_text': 'Token de sécurité'
-            }
-        ],
-        'documentation_url': 'https://developer.salesforce.com/',
-        'auth_type': 'password'
     },
 
     # Support
@@ -262,52 +308,39 @@ INTEGRATION_CONFIGS = {
     },
 
     # Finance
-    'QuickBooks': {
+    'Xero': {
         'fields': [
             {
                 'name': 'client_id',
                 'label': 'Client ID',
                 'type': 'text',
                 'required': True,
-                'help_text': 'ID Client QuickBooks'
+                'help_text': 'ID Client Xero'
             },
             {
                 'name': 'client_secret',
                 'label': 'Client Secret',
                 'type': 'password',
                 'required': True,
-                'help_text': 'Secret Client QuickBooks'
+                'help_text': 'Secret Client Xero'
             },
             {
                 'name': 'refresh_token',
                 'label': 'Refresh Token',
                 'type': 'password',
                 'required': True,
-                'help_text': 'Token de rafraîchissement'
-            }
-        ],
-        'documentation_url': 'https://developer.intuit.com/app/developer/qbo/docs/develop',
-        'auth_type': 'oauth2'
-    },
-    'Stripe': {
-        'fields': [
-            {
-                'name': 'secret_key',
-                'label': 'Secret Key',
-                'type': 'password',
-                'required': True,
-                'help_text': 'Clé secrète Stripe'
+                'help_text': 'Token de rafraîchissement OAuth2'
             },
             {
-                'name': 'publishable_key',
-                'label': 'Publishable Key',
+                'name': 'tenant_id',
+                'label': 'Tenant ID',
                 'type': 'text',
                 'required': True,
-                'help_text': 'Clé publique Stripe'
+                'help_text': 'ID du tenant Xero'
             }
         ],
-        'documentation_url': 'https://stripe.com/docs/api',
-        'auth_type': 'api_key'
+        'documentation_url': 'https://developer.xero.com/',
+        'auth_type': 'oauth2'
     },
 
     # RH
@@ -360,19 +393,6 @@ INTEGRATION_CONFIGS = {
     },
 
     # Projet
-    'Asana': {
-        'fields': [
-            {
-                'name': 'access_token',
-                'label': 'Personal Access Token',
-                'type': 'password',
-                'required': True,
-                'help_text': 'Token d\'accès personnel Asana'
-            }
-        ],
-        'documentation_url': 'https://developers.asana.com/docs',
-        'auth_type': 'bearer'
-    },
     'Jira': {
         'fields': [
             {
@@ -636,75 +656,6 @@ INTEGRATION_CONFIGS = {
         'auth_type': 'api_key'
     },
 
-    # Projet (ajout)
-    'Trello': {
-        'fields': [
-            {
-                'name': 'api_key',
-                'label': 'API Key',
-                'type': 'password',
-                'required': True,
-                'help_text': 'Clé API Trello'
-            },
-            {
-                'name': 'token',
-                'label': 'Token',
-                'type': 'password',
-                'required': True,
-                'help_text': 'Token d\'authentification'
-            }
-        ],
-        'documentation_url': 'https://developer.atlassian.com/cloud/trello/rest/',
-        'auth_type': 'api_key',
-        'actions': {
-            'create_task': {
-                'name': 'Créer une tâche',
-                'description': 'Crée une nouvelle tâche dans Trello',
-                'parameters': ['name', 'list_name', 'description', 'due_date', 'assignee']
-            },
-            'get_overdue_tasks': {
-                'name': 'Tâches en retard',
-                'description': 'Récupère la liste des tâches en retard',
-                'parameters': []
-            },
-            'create_board': {
-                'name': 'Créer un tableau',
-                'description': 'Crée un nouveau tableau Trello',
-                'parameters': ['name', 'description', 'background_color']
-            },
-            'create_list': {
-                'name': 'Créer une liste',
-                'description': 'Crée une nouvelle liste dans un tableau',
-                'parameters': ['board_name', 'list_name', 'position']
-            },
-            'move_card': {
-                'name': 'Déplacer une carte',
-                'description': 'Déplace une carte vers une autre liste',
-                'parameters': ['card_name', 'source_list', 'target_list']
-            },
-            'add_comment': {
-                'name': 'Ajouter un commentaire',
-                'description': 'Ajoute un commentaire à une carte',
-                'parameters': ['card_name', 'comment']
-            },
-            'add_checklist': {
-                'name': 'Ajouter une checklist',
-                'description': 'Ajoute une checklist à une carte',
-                'parameters': ['card_name', 'checklist_name', 'items']
-            },
-            'add_label': {
-                'name': 'Ajouter un label',
-                'description': 'Ajoute un label à une carte',
-                'parameters': ['card_name', 'label_name', 'color']
-            },
-            'get_board_activity': {
-                'name': 'Activité du tableau',
-                'description': 'Récupère l\'activité récente d\'un tableau',
-                'parameters': ['board_name', 'limit']
-            }
-        }
-    },
-
     # Marketing (ajouts manquants)
     'Google Ads': {
         'fields': [
@@ -804,42 +755,6 @@ INTEGRATION_CONFIGS = {
         'auth_type': 'oauth2'
     },
 
-    # Finance (ajout manquant)
-    'Xero': {
-        'fields': [
-            {
-                'name': 'client_id',
-                'label': 'Client ID',
-                'type': 'text',
-                'required': True,
-                'help_text': 'ID Client Xero'
-            },
-            {
-                'name': 'client_secret',
-                'label': 'Client Secret',
-                'type': 'password',
-                'required': True,
-                'help_text': 'Secret Client Xero'
-            },
-            {
-                'name': 'refresh_token',
-                'label': 'Refresh Token',
-                'type': 'password',
-                'required': True,
-                'help_text': 'Token de rafraîchissement OAuth2'
-            },
-            {
-                'name': 'tenant_id',
-                'label': 'Tenant ID',
-                'type': 'text',
-                'required': True,
-                'help_text': 'ID du tenant Xero'
-            }
-        ],
-        'documentation_url': 'https://developer.xero.com/',
-        'auth_type': 'oauth2'
-    },
-
     # RH (ajout manquant)
     'LinkedIn Recruiter': {
         'fields': [
@@ -868,4 +783,79 @@ INTEGRATION_CONFIGS = {
         'documentation_url': 'https://docs.microsoft.com/en-us/linkedin/talent/',
         'auth_type': 'oauth2'
     },
+
+    'Google Drive': {
+        'name': 'Google Drive',
+        'description': 'Gestion et partage de documents',
+        'icon': 'fab fa-google-drive',
+        'auth_type': 'oauth2',
+        'oauth_config': {
+            'scopes': [
+                'https://www.googleapis.com/auth/drive.file',
+                'https://www.googleapis.com/auth/drive.metadata.readonly'
+            ]
+        },
+        'category': 'document_management',
+        'documentation_url': 'https://developers.google.com/drive/api/v3/reference',
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-dark btn-sm',
+            'action': 'configure'
+        },
+        'auth_provider': 'auth0'
+    },
+
+    'Zoho CRM': {
+        'name': 'Zoho CRM',
+        'description': 'Solution CRM intégrée',
+        'icon': 'fa-users-cog',
+        'category': 'crm',
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-dark btn-sm',
+            'action': 'configure'
+        }
+    },
+
+    'HubSpot Marketing': {
+        'name': 'HubSpot Marketing',
+        'description': 'Marketing automation',
+        'icon': 'fa-bullhorn',
+        'category': 'marketing',
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-dark btn-sm',
+            'action': 'configure'
+        }
+    },
+
+    'Mixpanel': {
+        'name': 'Mixpanel',
+        'description': 'Analyse produit',
+        'icon': 'fa-chart-pie',
+        'category': 'analytics',
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-dark btn-sm',
+            'action': 'configure'
+        }
+    },
+}
+
+# Catégories d'intégrations
+INTEGRATION_CATEGORIES = {
+    'crm': 'Gestion de la relation client',
+    'project_management': 'Gestion de projet',
+    'communication': 'Communication',
+    'analytics': 'Analyse de données',
+    'marketing': 'Marketing',
+    'finance': 'Finance',
+    'payment': 'Paiement',
+    'document_management': 'Gestion documentaire',
+    'logistics': 'Logistique',
+    'legal': 'Juridique',
+    'erp': 'ERP',
+    'other': 'Autres',
+    'support': 'Support Client',
+    'rh': 'Ressources Humaines'
 } 

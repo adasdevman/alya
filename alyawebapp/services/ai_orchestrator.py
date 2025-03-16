@@ -161,48 +161,22 @@ class AIOrchestrator:
     def _detect_intent(self, message, conversation_history):
         """Détecte l'intention de l'utilisateur avec l'IA"""
         try:
-            # Vérifier d'abord si c'est une expression de fin de conversation
-            end_conversation = [
-                'merci', 'au revoir', 'bye', 'bonne journée', 'à bientôt',
-                'c\'est parfait', 'super merci', 'ok merci', 'parfait merci',
-                'très bien merci', 'c\'est tout', 'c\'est bon'
-            ]
-            
-            if message.lower().strip() in end_conversation or any(
-                exp in message.lower() for exp in end_conversation
-            ):
-                return {
-                    'integration': 'conversation',
-                    'action': 'end',
-                    'is_continuation': True,
-                    'confidence': 1,
-                    'context_type': 'end_conversation'
-                }
-            
             # Construire le prompt pour détecter l'intention
             prompt = {
                 "role": "system",
-                "content": """Tu es un expert en analyse d'intention. Analyse le message et le contexte pour déterminer 
-                    les informations suivantes et retourne-les au format JSON :
+                "content": """Tu es un expert en analyse d'intention. Analyse le message et le contexte pour déterminer :
                     1. L'intégration concernée (trello, hubspot, etc.)
-                    2. L'action demandée (create_task, update_task, etc.)
+                    2. L'action demandée (create_task, get_overdue_tasks, etc.)
                     3. Si c'est une continuation d'une demande précédente
                     4. Le niveau de confiance (0-1)
-                    5. Le type de contexte (new_request, continuation, clarification)
                     
-                    Utilise le contexte de la conversation pour comprendre si le message actuel
-                    fait référence à une conversation précédente. Par exemple, si le message
-                    précédent parlait de Trello et que le nouveau message est une réponse courte,
-                    considère que c'est une continuation de la conversation Trello.
+                    Pour Trello, détecte spécifiquement :
+                    - La création de tâche (mots clés : ajoute, crée, nouvelle tâche)
+                    - La consultation des tâches en retard (mots clés : retard, en retard, dépassées)
+                    - L'assignation de tâches (mots clés : assigne, attribue à)
+                    - Les dates d'échéance (mots clés : échéance, deadline, pour vendredi)
                     
-                    Retourne ta réponse sous forme d'objet JSON avec les clés :
-                    {
-                        "integration": string,
-                        "action": string,
-                        "is_continuation": boolean,
-                        "confidence": number,
-                        "context_type": string
-                    }"""
+                    Retourne ta réponse sous forme d'objet JSON."""
             }
 
             # Ajouter le contexte de la conversation
@@ -325,53 +299,20 @@ class AIOrchestrator:
 
             # Si c'est une demande de tâches en retard
             if "tâches en retard" in message.lower():
-                try:
-                    # Récupérer toutes les listes du tableau
-                    lists_response = requests.get(
-                        f"{settings.TRELLO_API_URL}/boards/{self.trello_integration.get_active_board_id()}/lists",
-                        params={
-                            'key': settings.TRELLO_API_KEY,
-                            'token': self.trello_integration.access_token
-                        }
-                    )
-                    lists_response.raise_for_status()
-                    lists = lists_response.json()
-                    
-                    # Récupérer toutes les cartes avec une date d'échéance
-                    cards_response = requests.get(
-                        f"{settings.TRELLO_API_URL}/boards/{self.trello_integration.get_active_board_id()}/cards",
-                        params={
-                            'key': settings.TRELLO_API_KEY,
-                            'token': self.trello_integration.access_token,
-                            'fields': 'name,due,idList,dueComplete'
-                        }
-                    )
-                    cards_response.raise_for_status()
-                    all_cards = cards_response.json()
-                    
-                    # Filtrer les cartes en retard
-                    now = datetime.now(timezone.utc)
-                    overdue_cards = [
-                        card for card in all_cards
-                        if card.get('due') and not card.get('dueComplete') and
-                        datetime.fromisoformat(card['due'].replace('Z', '+00:00')) < now
-                    ]
-                    
-                    if not overdue_cards:
-                        return "✅ Bonne nouvelle ! Aucune tâche n'est en retard."
-                    
-                    # Créer le message de réponse
-                    response = "📅 Voici les tâches en retard :\n\n"
-                    for card in overdue_cards:
-                        list_name = next(lst['name'] for lst in lists if lst['id'] == card['idList'])
-                        due_date = datetime.fromisoformat(card['due'].replace('Z', '+00:00'))
-                        response += f"• {card['name']} (dans '{list_name}')\n"
-                        response += f"  Échéance : {due_date.strftime('%d/%m/%Y')}\n"
-                    
-                    return response
-                except Exception as e:
-                    self.logger.error(f"Erreur lors de la récupération des tâches en retard: {str(e)}")
-                    return "Désolée, je n'arrive pas à récupérer les tâches en retard. Veuillez réessayer."
+                overdue_tasks = self.get_overdue_tasks(self.trello_integration)
+                
+                if not overdue_tasks:
+                    return "✅ Bonne nouvelle ! Aucune tâche n'est en retard."
+                
+                response = "📅 Voici les tâches en retard :\n\n"
+                for task in overdue_tasks:
+                    response += f"• {task['name']} (dans '{task['list']}')\n"
+                    if task['assignees']:
+                        response += f"  Assignée à : {', '.join(task['assignees'])}\n"
+                    response += f"  Échéance : {task['due_date'].strftime('%d/%m/%Y')}\n\n"
+                
+                response += "Voulez-vous que j'envoie un rappel aux responsables ?"
+                return response
 
             # Si c'est une réponse simple avec juste le nom d'un membre
             if self.task_info and message.strip().lower() in [
@@ -462,6 +403,64 @@ class AIOrchestrator:
         except Exception as e:
             self.logger.error(f"Erreur lors de la gestion de la requête Trello: {str(e)}")
             return "Désolée, une erreur s'est produite lors de la création de la tâche. Veuillez réessayer."
+
+    def get_overdue_tasks(self, user_integration):
+        """Récupère les tâches en retard de Trello"""
+        try:
+            # Récupérer toutes les listes du tableau
+            lists_response = requests.get(
+                f"{settings.TRELLO_API_URL}/boards/{user_integration.get_active_board_id()}/lists",
+                params={
+                    'key': settings.TRELLO_API_KEY,
+                    'token': user_integration.access_token
+                }
+            )
+            lists_response.raise_for_status()
+            lists = lists_response.json()
+            
+            # Récupérer toutes les cartes avec une date d'échéance
+            cards_response = requests.get(
+                f"{settings.TRELLO_API_URL}/boards/{user_integration.get_active_board_id()}/cards",
+                params={
+                    'key': settings.TRELLO_API_KEY,
+                    'token': user_integration.access_token,
+                    'fields': 'name,due,idList,dueComplete,idMembers'
+                }
+            )
+            cards_response.raise_for_status()
+            all_cards = cards_response.json()
+            
+            # Récupérer les membres du tableau
+            members_response = requests.get(
+                f"{settings.TRELLO_API_URL}/boards/{user_integration.get_active_board_id()}/members",
+                params={
+                    'key': settings.TRELLO_API_KEY,
+                    'token': user_integration.access_token
+                }
+            )
+            members_response.raise_for_status()
+            members = {m['id']: m['username'] for m in members_response.json()}
+            
+            # Filtrer les cartes en retard
+            now = datetime.now(timezone.utc)
+            overdue_cards = []
+            for card in all_cards:
+                if (card.get('due') and not card.get('dueComplete') and 
+                    datetime.fromisoformat(card['due'].replace('Z', '+00:00')) < now):
+                    list_name = next(lst['name'] for lst in lists if lst['id'] == card['idList'])
+                    assignees = [members.get(member_id) for member_id in card.get('idMembers', [])]
+                    overdue_cards.append({
+                        'name': card['name'],
+                        'list': list_name,
+                        'due_date': datetime.fromisoformat(card['due'].replace('Z', '+00:00')),
+                        'assignees': assignees
+                    })
+            
+            return overdue_cards
+
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la récupération des tâches en retard: {str(e)}")
+            raise
 
     def _get_list_id(self, list_name):
         """Récupère l'ID d'une liste Trello"""

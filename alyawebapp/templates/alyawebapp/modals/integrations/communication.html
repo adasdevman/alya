@@ -1,0 +1,59 @@
+{% include "alyawebapp/modals/integrations/styles.html" %}
+
+<!-- Modal Communication -->
+<div class="modal fade" id="communicationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Communication</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="integrations-list">
+                    <!-- Slack -->
+                    <div class="integration-item">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="slack"
+                                   id="switch-slack">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Slack</h6>
+                            <p class="integration-description">Communication interne avec Slack</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="slack"
+                                data-auth-provider="auth0"
+                                id="config-btn-slack">
+                            <i class="fab fa-slack"></i> Connecter
+                        </button>
+                    </div>
+
+                    <!-- Gmail -->
+                    <div class="integration-item">
+                        <div class="form-check form-switch me-3">
+                            <input type="checkbox" 
+                                   class="form-check-input integration-switch" 
+                                   data-integration-id="gmail"
+                                   id="switch-gmail">
+                        </div>
+                        <div class="integration-content">
+                            <h6 class="integration-title">Gmail</h6>
+                            <p class="integration-description">Service de messagerie électronique</p>
+                        </div>
+                        <button class="btn btn-outline-dark btn-sm config-integration" 
+                                data-integration-id="gmail"
+                                data-auth-provider="auth0"
+                                id="config-btn-gmail">
+                            <i class="fa fa-envelope"></i> Connecter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div> 

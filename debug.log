@@ -20102,3 +20102,129 @@ INFO 2025-02-27 10:28:20,589 ai_orchestrator 55640 61436 Changement d'état pour 
 INFO 2025-02-27 10:28:20,589 ai_orchestrator 55640 61436 Initialisation d'AIOrchestrator pour user_id: 2
 INFO 2025-02-27 10:28:20,840 ai_orchestrator 55640 61436 Chat actif: 263
 INFO 2025-02-27 10:28:23,371 ai_orchestrator 55640 61436 Intention détectée: {'integration': 'trello', 'action': 'get_overdue_tasks', 'is_continuation': True, 'confidence': 0.9, 'context_type': 'continuation'}
+INFO 2025-02-27 10:28:24,971 basehttp 55640 61436 "POST /chat/ HTTP/1.1" 200 186
+INFO 2025-02-27 10:28:29,418 basehttp 55640 72700 "GET /get-chat-history/ HTTP/1.1" 200 498
+INFO 2025-02-27 10:28:37,426 basehttp 55640 72700 "GET /compte/ HTTP/1.1" 200 223243
+INFO 2025-02-27 10:28:39,578 views 55640 53168 Intégrations activées trouvées: [8, 26]
+INFO 2025-02-27 10:28:39,578 basehttp 55640 53168 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-02-27 10:28:41,648 basehttp 55640 72700 "GET /get-chat-history/ HTTP/1.1" 200 498
+INFO 2025-02-27 10:29:01,973 basehttp 55640 61408 "GET /admin/alyawebapp/chathistory/ HTTP/1.1" 200 28710
+INFO 2025-02-27 10:29:03,867 basehttp 55640 61408 "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO 2025-03-15 09:17:28,039 autoreload 2324 8740 Watching for file changes with StatReloader
+INFO 2025-03-15 09:36:22,424 autoreload 796 6256 Watching for file changes with StatReloader
+INFO 2025-03-15 09:40:51,415 autoreload 796 6256 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-15 09:40:56,285 autoreload 9132 12940 Watching for file changes with StatReloader
+INFO 2025-03-15 09:41:11,512 autoreload 9132 12940 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-15 09:41:14,758 autoreload 6636 10588 Watching for file changes with StatReloader
+INFO 2025-03-15 09:43:52,716 autoreload 6636 10588 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\hubspot\manager.py changed, reloading.
+INFO 2025-03-15 09:43:57,091 autoreload 14284 24140 Watching for file changes with StatReloader
+INFO 2025-03-15 09:48:50,389 autoreload 14284 24140 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\hubspot\manager.py changed, reloading.
+INFO 2025-03-15 09:48:53,824 autoreload 18280 19304 Watching for file changes with StatReloader
+INFO 2025-03-15 09:52:51,383 basehttp 18280 17432 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-15 09:52:51,750 basehttp 18280 21100 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-15 09:52:51,839 basehttp 18280 24488 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-15 09:52:52,053 basehttp 18280 17432 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-15 09:52:52,129 basehttp 18280 12348 "GET /static/css/home.css HTTP/1.1" 200 3613
+INFO 2025-03-15 09:52:52,236 basehttp 18280 7300 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-15 09:52:53,468 log 18280 7300 Not Found: /favicon.ico
+WARNING 2025-03-15 09:52:53,468 basehttp 18280 7300 "GET /favicon.ico HTTP/1.1" 404 11356
+INFO 2025-03-15 09:52:56,649 basehttp 18280 7300 "GET /login/ HTTP/1.1" 200 6036
+INFO 2025-03-15 09:53:09,329 autoreload 18280 19304 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-15 09:53:14,794 autoreload 18532 2944 Watching for file changes with StatReloader
+INFO 2025-03-15 09:54:16,258 basehttp 18532 20460 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-15 09:54:20,243 basehttp 18532 20460 "GET /compte/ HTTP/1.1" 200 224733
+INFO 2025-03-15 09:54:20,657 basehttp 18532 23516 "GET /static/css/components/info-tag.css HTTP/1.1" 200 380
+INFO 2025-03-15 09:54:20,661 basehttp 18532 22080 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-15 09:54:20,666 basehttp 18532 20460 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-15 09:54:23,379 views 18532 22080 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-15 09:54:23,384 basehttp 18532 22080 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-15 09:54:23,389 basehttp 18532 20460 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-15 09:56:07,347 autoreload 18532 2944 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-15 09:56:11,055 autoreload 1864 19232 Watching for file changes with StatReloader
+INFO 2025-03-15 09:56:30,733 autoreload 1864 19232 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-15 09:56:35,457 autoreload 13492 7488 Watching for file changes with StatReloader
+INFO 2025-03-15 09:57:33,739 autoreload 13492 7488 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-15 09:57:37,256 autoreload 5828 13300 Watching for file changes with StatReloader
+INFO 2025-03-15 09:58:07,517 basehttp 5828 6816 "GET /compte/ HTTP/1.1" 200 219773
+INFO 2025-03-15 09:58:10,147 views 5828 25788 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-15 09:58:10,147 basehttp 5828 6816 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-15 09:58:10,149 basehttp 5828 25788 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-15 10:00:17,087 basehttp 5828 25788 "GET /compte/ HTTP/1.1" 200 214737
+INFO 2025-03-15 10:00:19,991 basehttp 5828 25788 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-15 10:00:20,188 views 5828 6816 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-15 10:00:20,196 basehttp 5828 6816 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-15 10:02:09,773 autoreload 5828 13300 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-15 10:02:15,489 autoreload 27548 1864 Watching for file changes with StatReloader
+INFO 2025-03-15 10:03:03,475 autoreload 27548 1864 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-15 10:03:08,896 autoreload 13820 10872 Watching for file changes with StatReloader
+INFO 2025-03-15 10:03:28,710 autoreload 13820 10872 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-15 10:03:32,996 autoreload 12844 23652 Watching for file changes with StatReloader
+INFO 2025-03-15 10:04:03,735 basehttp 12844 17280 "GET / HTTP/1.1" 200 12891
+INFO 2025-03-15 10:04:10,938 basehttp 12844 17280 "GET /compte/ HTTP/1.1" 200 220719
+INFO 2025-03-15 10:04:13,654 views 12844 21672 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-15 10:04:13,654 basehttp 12844 21672 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-15 10:04:13,673 basehttp 12844 17280 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-15 10:06:14,443 autoreload 12844 23652 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-15 10:06:18,585 autoreload 908 12504 Watching for file changes with StatReloader
+INFO 2025-03-15 10:06:40,751 basehttp 908 18148 "GET /compte/ HTTP/1.1" 200 221486
+INFO 2025-03-15 10:06:43,478 views 908 18344 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-15 10:06:43,480 basehttp 908 18148 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-15 10:06:43,480 basehttp 908 18344 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 07:42:47,521 basehttp 908 2400 "GET /compte/ HTTP/1.1" 200 185345
+INFO 2025-03-16 07:42:52,317 views 908 12260 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 07:42:52,317 basehttp 908 2400 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 07:42:52,317 basehttp 908 12260 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 07:45:14,355 autoreload 908 12504 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-16 07:45:28,414 autoreload 9632 21200 Watching for file changes with StatReloader
+INFO 2025-03-16 07:46:19,119 basehttp 9632 7552 "GET /compte/ HTTP/1.1" 200 221486
+INFO 2025-03-16 07:46:22,141 views 9632 20400 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 07:46:22,145 basehttp 9632 7552 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 07:46:22,145 basehttp 9632 20400 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 07:49:15,601 autoreload 9632 21200 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-16 07:49:21,460 autoreload 10372 16796 Watching for file changes with StatReloader
+INFO 2025-03-16 07:51:15,062 autoreload 10372 16796 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\integrations\config.py changed, reloading.
+INFO 2025-03-16 07:51:19,773 autoreload 14172 17356 Watching for file changes with StatReloader
+INFO 2025-03-16 07:51:34,723 basehttp 14172 16768 "GET /compte/ HTTP/1.1" 200 221720
+INFO 2025-03-16 07:51:37,533 views 14172 23476 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 07:51:37,535 basehttp 14172 16768 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 07:51:37,765 basehttp 14172 23476 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 07:59:20,521 basehttp 14172 25296 "GET /compte/ HTTP/1.1" 200 221720
+INFO 2025-03-16 07:59:23,323 views 14172 14988 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 07:59:23,329 basehttp 14172 14988 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 07:59:23,339 basehttp 14172 25296 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 08:02:16,956 basehttp 14172 25296 "GET /compte/ HTTP/1.1" 200 221720
+INFO 2025-03-16 08:02:19,577 basehttp 14172 25296 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 08:02:19,625 views 14172 14988 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 08:02:19,627 basehttp 14172 14988 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 08:04:52,648 basehttp 14172 14988 "GET /compte/ HTTP/1.1" 200 221779
+INFO 2025-03-16 08:04:55,195 basehttp 14172 14988 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 08:04:55,303 views 14172 25296 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 08:04:55,307 basehttp 14172 25296 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 08:13:04,757 basehttp 14172 26320 "GET /compte/ HTTP/1.1" 200 221779
+INFO 2025-03-16 08:13:08,184 views 14172 23468 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 08:13:08,184 basehttp 14172 26320 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 08:13:08,184 basehttp 14172 23468 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 08:13:25,319 basehttp 14172 23468 "GET /compte/ HTTP/1.1" 200 222122
+INFO 2025-03-16 08:13:28,049 views 14172 26320 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 08:13:28,049 basehttp 14172 23468 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 08:13:28,052 basehttp 14172 26320 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 08:13:51,681 basehttp 14172 26320 - Broken pipe from ('127.0.0.1', 52111)
+INFO 2025-03-16 08:13:53,482 basehttp 14172 23468 "GET /compte/ HTTP/1.1" 200 222122
+INFO 2025-03-16 08:13:57,231 views 14172 8276 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 08:13:57,236 basehttp 14172 23468 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 08:13:57,236 basehttp 14172 8276 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 08:16:45,956 basehttp 14172 8276 "GET /compte/ HTTP/1.1" 200 226187
+INFO 2025-03-16 08:16:48,748 views 14172 23468 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 08:16:48,754 basehttp 14172 23468 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 08:16:48,763 basehttp 14172 8276 "GET /get-chat-history/ HTTP/1.1" 200 34
+ERROR 2025-03-16 08:16:56,935 views 14172 8276 Erreur dans toggle_integration: Field 'id' expected a number but got 'slack'.
+ERROR 2025-03-16 08:16:56,935 log 14172 8276 Internal Server Error: /toggle-integration/
+ERROR 2025-03-16 08:16:56,942 basehttp 14172 8276 "POST /toggle-integration/ HTTP/1.1" 500 79
+INFO 2025-03-16 08:23:06,431 basehttp 14172 21828 "GET /compte/ HTTP/1.1" 200 225517
+INFO 2025-03-16 08:23:09,152 views 14172 5948 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 08:23:09,152 basehttp 14172 21828 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 08:23:09,161 basehttp 14172 5948 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-16 08:26:25,814 basehttp 14172 5948 "GET /compte/ HTTP/1.1" 200 225544
+INFO 2025-03-16 08:26:28,645 views 14172 21828 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-16 08:26:28,645 basehttp 14172 5948 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-16 08:26:28,645 basehttp 14172 21828 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
