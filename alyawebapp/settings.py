@@ -12,4 +12,4 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Vérifiez si ce middleware est présent et retirez-le
     # 'alyawebapp.middleware.OnboardingMiddleware',
-] 
+]

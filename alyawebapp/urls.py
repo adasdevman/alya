@@ -36,4 +36,6 @@ urlpatterns = [
     path('integrations/trello/oauth/', views.trello_oauth, name='trello_oauth'),
     path('integrations/trello/callback/', views.trello_callback, name='trello_callback'),
     path('integrations/trello/save-token/', views.trello_save_token, name='trello_save_token'),
+    path('integration/slack/oauth', views.slack_oauth, name="slack_oauth"),
+    path('integration/slack/callback', views.slack_callback, name="slack_callback")
 ] 

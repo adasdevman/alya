@@ -1,3 +1,4 @@
+from urllib.parse import urlencode
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
@@ -61,7 +62,7 @@ print(f"API Key trouvée: {'Oui' if api_key else 'Non'}")  # Pour vérifier si l
 
 def home(request):
     return render(request, 'alyawebapp/home.html')
-
+@csrf_protect
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -1067,3 +1068,40 @@ def trello_save_token(request):
         logger.error(f"Erreur sauvegarde token Trello: {str(e)}")
         return JsonResponse({'success': False, 'error': str(e)})
 
+# Authentification slack
+def slack_oauth(request):
+    slack_auth_url = "https://slack.com/oauth/v2/authorize"
+    params = {
+        "client_id": os.getenv("SLACK_CLIENT_ID"),
+        "scope": "users:read",  # Ajustez en fonction de vos besoins
+        "redirect_uri": "https://alya-166a.onrender.com/integration/slack/callback",
+    }
+    return redirect(f"{slack_auth_url}?{urlencode(params)}")
+
+def slack_callback(request):
+    code = request.GET.get('code')
+    if not code:
+        return redirect('slack_login')
+
+    # Échanger le code d'autorisation contre un token
+    token_url = "https://slack.com/api/oauth.v2.access"
+    response = request.post(token_url, data={
+        "client_id": os.getenv("SLACK_CLIENT_ID"),
+        "client_secret": os.getenv("SLACK_CLIENT_SECRET"),
+        "code": code,
+        "redirect_uri": "https://alya-166a.onrender.com/integration/slack/callback",
+    })
+
+    data = response.json()
+
+    if data.get('ok'):
+        # Vous avez maintenant le token d'accès et les informations de l'utilisateur
+        user_info = data['authed_user']
+        access_token = user_info['access_token']
+
+        # Utilisez `access_token` pour récupérer des informations supplémentaires ou connecter l'utilisateur
+        context = {'user_info': user_info}
+        return render(request, 'slack_oauth_success.html', context)
+    else:
+        # Gestion des erreurs
+        return render(request, 'slack_oauth_error.html', {'error': data.get('error')})
