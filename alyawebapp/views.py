@@ -15,6 +15,7 @@ import os
 from dotenv import load_dotenv
 from django.db import transaction
 from django.views.decorators.http import require_http_methods
+import requests
 # Importer les modèles après avoir chargé les variables d'environnement
 from .models import (
     CustomUser,
@@ -46,6 +47,7 @@ from django.urls import reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.safestring import mark_safe
 from .integrations.trello.handler import TrelloHandler
+from google_auth_oauthlib.flow import Flow
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -1071,37 +1073,119 @@ def trello_save_token(request):
 # Authentification slack
 def slack_oauth(request):
     slack_auth_url = "https://slack.com/oauth/v2/authorize"
+    ssl_link = os.getenv('SSL_LINK')
+
+    redirect_uri = ssl_link + "/integration/gmail/callback"
     params = {
         "client_id": os.getenv("SLACK_CLIENT_ID"),
         "scope": "users:read",  # Ajustez en fonction de vos besoins
-        "redirect_uri": "https://alya-166a.onrender.com/integration/slack/callback",
+        "redirect_uri": redirect_uri,
     }
     return redirect(f"{slack_auth_url}?{urlencode(params)}")
 
 def slack_callback(request):
     code = request.GET.get('code')
+    ssl_link = os.getenv('SSL_LINK')
+
+    redirect_uri = ssl_link + "/integration/gmail/callback"
     if not code:
         return redirect('slack_login')
 
     # Échanger le code d'autorisation contre un token
     token_url = "https://slack.com/api/oauth.v2.access"
-    response = request.post(token_url, data={
+    response = requests.post(token_url, data={
         "client_id": os.getenv("SLACK_CLIENT_ID"),
         "client_secret": os.getenv("SLACK_CLIENT_SECRET"),
         "code": code,
-        "redirect_uri": "https://alya-166a.onrender.com/integration/slack/callback",
+        "redirect_uri": redirect_uri,
     })
 
     data = response.json()
 
     if data.get('ok'):
         # Vous avez maintenant le token d'accès et les informations de l'utilisateur
-        user_info = data['authed_user']
-        access_token = user_info['access_token']
+        # user_info = data['authed_user']
+        # access_token = user_info['access_token']
 
-        # Utilisez `access_token` pour récupérer des informations supplémentaires ou connecter l'utilisateur
-        context = {'user_info': user_info}
-        return render(request, 'slack_oauth_success.html', context)
+        # integration = Integration.objects.get_or_create(name='slack')
+        # user_integration, created = UserIntegration.objects.get_or_create(
+           # user=request.user,
+            #integration=integration
+        #)
+
+        #user_integration.access_token = data.get('access_token')
+        #user_integration.enabled = True
+        #user_integration.save()
+
+        return JsonResponse({'success': True, 'access' : data.get('access_token')})
     else:
         # Gestion des erreurs
-        return render(request, 'slack_oauth_error.html', {'error': data.get('error')})
+        return JsonResponse({'success': False, 'error': data.get('error'), 'secret' : os.getenv("SLACK_CLIENT_SECRET"), 'data' :  data})
+        # return render(request, 'slack_oauth_error.html', {'error': data.get('error')})
+
+
+# INTEGRATION GMAIL
+def gmail_oauth(request):
+    # Lire les informations du client depuis le .env
+    client_id = os.getenv('GOOGLE_CLIENT_ID')
+    client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
+    ssl_link = os.getenv('SSL_LINK')
+
+    redirect_uri = ssl_link + "/integration/gmail/callback"
+
+    flow = Flow.from_client_config({
+        "web": {
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "redirect_uris": [redirect_uri]
+        }
+    }, scopes=['https://www.googleapis.com/auth/gmail.readonly'])
+
+    flow.redirect_uri = redirect_uri
+
+    authorization_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true'
+    )
+
+    # Sauvegarder l'état de la requête pour vérification plus tard
+    request.session['state'] = state
+
+    return redirect(authorization_url)
+
+def gmail_callback(request):
+    state = request.session['state']
+
+    client_id = os.getenv('GOOGLE_CLIENT_ID')
+    client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
+    ssl_link = os.getenv('SSL_LINK')
+
+    redirect_uri = ssl_link + "/integration/gmail/callback"
+
+    flow = Flow.from_client_config({
+        "web": {
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "redirect_uris": [redirect_uri]
+        }
+    }, scopes=['https://www.googleapis.com/auth/gmail.readonly'], state=state)
+
+    flow.redirect_uri = redirect_uri
+
+    url = request.build_absolute_uri()
+    if not url.startswith("https://"):
+        url = url.replace("http://", "https://")
+
+    # Échanger le code d'autorisation contre des jetons
+    flow.fetch_token(authorization_response=url)
+
+    credentials = flow.credentials
+    access_token = credentials.token
+
+    # Stocker l'access_token pour une utilisation ultérieure
+    request.session['access_token'] = access_token
+    return JsonResponse({'success': True, 'access' : access_token})

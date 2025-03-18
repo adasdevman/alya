@@ -20394,3 +20394,820 @@ INFO 2025-03-18 19:08:49,821 views 31015 6217248768 Intégrations activées trou
 INFO 2025-03-18 19:08:49,822 basehttp 31015 6217248768 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
 INFO 2025-03-18 19:08:50,200 basehttp 31015 6200422400 "GET /get-chat-history/ HTTP/1.1" 200 34
 INFO 2025-03-18 19:09:32,464 basehttp 31015 6199848960 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 19:22:06,599 autoreload 31015 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:22:07,115 autoreload 31505 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:23:11,740 autoreload 31505 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:23:12,207 autoreload 31530 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:23:39,692 autoreload 31530 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:23:40,080 autoreload 31546 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:24:45,584 autoreload 31546 8517667840 /Users/yveslenoir/project/alya/alyawebapp/urls.py changed, reloading.
+INFO 2025-03-18 19:24:46,034 autoreload 31569 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:25:13,374 autoreload 31569 8517667840 /Users/yveslenoir/project/alya/alyawebapp/urls.py changed, reloading.
+INFO 2025-03-18 19:25:13,753 autoreload 31582 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 19:26:59,663 views 31582 6197620736 FATAL COMPTE ERROR: Reverse for 'gmail_oauth' not found. 'gmail_oauth' is not a valid view function or pattern name.
+INFO 2025-03-18 19:26:59,666 basehttp 31582 6197620736 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-03-18 19:27:01,809 basehttp 31582 6197620736 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-18 19:27:01,852 basehttp 31582 6197620736 "GET /static/css/base.css HTTP/1.1" 304 0
+INFO 2025-03-18 19:27:01,858 basehttp 31582 6214447104 "GET /static/css/modals.css HTTP/1.1" 304 0
+INFO 2025-03-18 19:27:01,862 basehttp 31582 6197620736 "GET /static/css/compte.css HTTP/1.1" 304 0
+INFO 2025-03-18 19:27:01,879 basehttp 31582 6231273472 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-18 19:27:01,880 basehttp 31582 6248099840 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+ERROR 2025-03-18 19:27:08,465 views 31582 6197620736 FATAL COMPTE ERROR: Reverse for 'gmail_oauth' not found. 'gmail_oauth' is not a valid view function or pattern name.
+INFO 2025-03-18 19:27:08,468 basehttp 31582 6197620736 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-03-18 19:27:10,614 basehttp 31582 6197620736 "GET / HTTP/1.1" 200 12879
+ERROR 2025-03-18 19:27:18,806 views 31582 6264926208 FATAL COMPTE ERROR: Reverse for 'gmail_oauth' not found. 'gmail_oauth' is not a valid view function or pattern name.
+INFO 2025-03-18 19:27:18,809 basehttp 31582 6264926208 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-03-18 19:27:20,659 basehttp 31582 6264926208 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-18 19:28:50,331 autoreload 31582 8517667840 /Users/yveslenoir/project/alya/alyawebapp/urls.py changed, reloading.
+INFO 2025-03-18 19:28:50,891 autoreload 31679 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:29:13,269 autoreload 31679 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:29:13,656 autoreload 31698 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:29:22,345 basehttp 31698 6133936128 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 19:29:22,390 basehttp 31698 6133936128 "GET /static/css/chat.css HTTP/1.1" 304 0
+INFO 2025-03-18 19:29:22,392 basehttp 31698 6133936128 "GET /static/css/components/info-tag.css HTTP/1.1" 304 0
+INFO 2025-03-18 19:29:22,393 basehttp 31698 6150762496 "GET /static/js/compte/integrations.js HTTP/1.1" 304 0
+INFO 2025-03-18 19:29:24,729 views 31698 6133936128 Intégrations activées trouvées: [26]
+INFO 2025-03-18 19:29:24,730 basehttp 31698 6133936128 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 19:29:24,731 basehttp 31698 6150762496 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 19:29:29,848 basehttp 31698 6133936128 "GET /integration/gmail/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 19:31:17,829 basehttp 31698 6150762496 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 19:31:20,126 views 31698 6167588864 Intégrations activées trouvées: [26]
+INFO 2025-03-18 19:31:20,126 basehttp 31698 6150762496 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 19:31:20,127 basehttp 31698 6167588864 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 19:31:24,423 basehttp 31698 6167588864 "GET /integration/gmail/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 19:34:04,638 autoreload 31698 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:34:05,095 autoreload 31827 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 19:34:10,948 log 31827 6161920000 Internal Server Error: /integration/gmail/oauth
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/middleware/clickjacking.py", line 27, in process_response
+    if response.get("X-Frame-Options") is not None:
+       ^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+ERROR 2025-03-18 19:34:10,949 basehttp 31827 6161920000 "GET /integration/gmail/oauth HTTP/1.1" 500 68260
+INFO 2025-03-18 19:35:11,750 autoreload 31827 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:35:12,221 autoreload 31849 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 19:35:17,973 log 31849 6200782848 Internal Server Error: /integration/gmail/oauth
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 204, in _get_response
+    self.check_response(response, callback)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 332, in check_response
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: The view alyawebapp.views.gmail_oauth didn't return an HttpResponse object. It returned None instead.
+ERROR 2025-03-18 19:35:17,975 basehttp 31849 6200782848 "GET /integration/gmail/oauth HTTP/1.1" 500 69753
+INFO 2025-03-18 19:35:33,702 autoreload 31849 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:35:34,127 autoreload 31869 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:35:40,067 basehttp 31869 6130970624 "GET /integration/gmail/oauth HTTP/1.1" 302 0
+ERROR 2025-03-18 19:35:42,493 log 31869 6130970624 Internal Server Error: /integration/gmail/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1160, in gmail_callback
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 244, in fetch_token
+    self._client.parse_request_uri_response(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        authorization_response, state=self._state
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/web_application.py", line 220, in parse_request_uri_response
+    response = parse_authorization_code_response(uri, state=state)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 272, in parse_authorization_code_response
+    raise InsecureTransportError()
+oauthlib.oauth2.rfc6749.errors.InsecureTransportError: (insecure_transport) OAuth 2 MUST utilize https.
+ERROR 2025-03-18 19:35:42,496 basehttp 31869 6130970624 "GET /integration/gmail/callback?state=3V3FdmN9WrUKcbjzWrB44ajjeNQBdE&code=4%2F0AQSTgQHiHzFA6r8jm_LJbxDJr-xXFz_Gtvvf_Ok3yCUcQhStZlZYxi2GtIdb3mEDvtMHdw&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 500 91460
+INFO 2025-03-18 19:38:53,161 autoreload 31985 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:42:58,479 autoreload 32080 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:46:40,477 autoreload 32187 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:47:46,725 basehttp 32187 6270201856 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 19:47:47,927 basehttp 32187 6337507328 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-18 19:47:47,928 basehttp 32187 6270201856 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-18 19:47:49,118 basehttp 32187 6270201856 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-18 19:47:49,118 basehttp 32187 6287028224 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-18 19:47:49,120 basehttp 32187 6219722752 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-18 19:47:50,804 log 32187 6270201856 Not Found: /favicon.ico
+WARNING 2025-03-18 19:47:50,805 basehttp 32187 6270201856 "GET /favicon.ico HTTP/1.1" 404 12483
+INFO 2025-03-18 19:47:53,824 basehttp 32187 6270201856 "GET /login/ HTTP/1.1" 200 6036
+WARNING 2025-03-18 19:48:02,738 log 32187 6270201856 Forbidden (Origin checking failed - https://yellow-crabs-hide.loca.lt does not match any trusted origins.): /login/
+WARNING 2025-03-18 19:48:02,739 basehttp 32187 6270201856 "POST /login/ HTTP/1.1" 403 2589
+INFO 2025-03-18 19:49:51,677 autoreload 32187 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 19:49:52,189 autoreload 32313 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:50:01,328 autoreload 32347 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:50:19,239 basehttp 32347 6137245696 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-18 19:50:23,450 basehttp 32347 6137245696 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 19:50:24,857 basehttp 32347 6137245696 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-18 19:50:25,292 basehttp 32347 6238203904 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-18 19:50:25,841 basehttp 32347 6137245696 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-18 19:50:29,838 basehttp 32347 6221377536 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 19:50:29,955 views 32347 6238203904 Intégrations activées trouvées: [26]
+INFO 2025-03-18 19:50:29,956 basehttp 32347 6238203904 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 19:51:48,428 basehttp 32347 6221377536 "GET /integration/gmail/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 19:52:06,453 basehttp 32347 6221377536 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 19:52:10,173 basehttp 32347 6221377536 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 19:52:11,264 views 32347 6136098816 Intégrations activées trouvées: [26]
+INFO 2025-03-18 19:52:11,266 basehttp 32347 6136098816 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 19:53:38,653 basehttp 32347 6221377536 "GET /integration/gmail/oauth HTTP/1.1" 302 0
+ERROR 2025-03-18 19:53:44,663 log 32347 6221377536 Internal Server Error: /integration/gmail/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1160, in gmail_callback
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 244, in fetch_token
+    self._client.parse_request_uri_response(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        authorization_response, state=self._state
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/web_application.py", line 220, in parse_request_uri_response
+    response = parse_authorization_code_response(uri, state=state)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 272, in parse_authorization_code_response
+    raise InsecureTransportError()
+oauthlib.oauth2.rfc6749.errors.InsecureTransportError: (insecure_transport) OAuth 2 MUST utilize https.
+ERROR 2025-03-18 19:53:44,666 basehttp 32347 6221377536 "GET /integration/gmail/callback?state=lq3LVUcuYPUUMOt3TmSqpv7AZUecA8&code=4%2F0AQSTgQGyzPcyUS7FVI7LIfUH4K-5jS_NIjxlK9AC9sK8QYAQHjZxmKsuoANIh5YOO1-xqA&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 500 91685
+INFO 2025-03-18 19:54:32,585 autoreload 32347 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:54:33,108 autoreload 32447 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:54:52,515 autoreload 32447 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:54:52,934 autoreload 32463 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:55:17,344 autoreload 32463 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:55:17,760 autoreload 32477 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:55:32,884 autoreload 32477 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:55:33,279 autoreload 32491 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 19:56:06,698 log 32491 12935360512 Internal Server Error: /integration/gmail/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1160, in gmail_callback
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 244, in fetch_token
+    self._client.parse_request_uri_response(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        authorization_response, state=self._state
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/web_application.py", line 220, in parse_request_uri_response
+    response = parse_authorization_code_response(uri, state=state)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 272, in parse_authorization_code_response
+    raise InsecureTransportError()
+oauthlib.oauth2.rfc6749.errors.InsecureTransportError: (insecure_transport) OAuth 2 MUST utilize https.
+ERROR 2025-03-18 19:56:06,701 basehttp 32491 12935360512 "GET /integration/gmail/callback?state=lq3LVUcuYPUUMOt3TmSqpv7AZUecA8&code=4%2F0AQSTgQGyzPcyUS7FVI7LIfUH4K-5jS_NIjxlK9AC9sK8QYAQHjZxmKsuoANIh5YOO1-xqA&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 500 91835
+INFO 2025-03-18 19:56:12,217 basehttp 32491 12935360512 "GET /login HTTP/1.1" 301 0
+INFO 2025-03-18 19:56:14,667 basehttp 32491 6284570624 "GET /login/ HTTP/1.1" 200 7741
+INFO 2025-03-18 19:56:32,159 basehttp 32491 6284570624 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-18 19:56:36,579 basehttp 32491 6284570624 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 19:56:42,777 basehttp 32491 6284570624 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 19:56:43,366 views 32491 12935360512 Intégrations activées trouvées: [26]
+INFO 2025-03-18 19:56:43,367 basehttp 32491 12935360512 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 19:57:06,477 ai_orchestrator 32491 6284570624 Changement d'état pour user 9: None -> None
+INFO 2025-03-18 19:57:06,479 ai_orchestrator 32491 6284570624 Initialisation d'AIOrchestrator pour user_id: 9
+INFO 2025-03-18 19:57:07,246 ai_orchestrator 32491 6284570624 Chat actif: 266
+INFO 2025-03-18 19:57:10,100 ai_orchestrator 32491 6284570624 Intention détectée: {'integration': 'Aucune', 'action': 'get_current_date', 'is_continuation': True, 'confidence': 1}
+INFO 2025-03-18 19:57:10,349 basehttp 32491 6284570624 "POST /chat/ HTTP/1.1" 200 118
+INFO 2025-03-18 19:57:13,338 basehttp 32491 6284570624 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 19:57:22,204 basehttp 32491 6284570624 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 19:57:53,163 autoreload 32491 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 19:57:53,698 autoreload 32546 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 19:58:24,825 basehttp 32546 6250852352 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 19:58:28,396 basehttp 32546 6250852352 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 19:58:31,159 views 32546 6250852352 Intégrations activées trouvées: [26]
+INFO 2025-03-18 19:58:31,161 basehttp 32546 6250852352 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 19:59:18,889 basehttp 32546 6250852352 "GET /integration/slack/oauth HTTP/1.1" 302 0
+ERROR 2025-03-18 19:59:39,048 log 32546 6250852352 Internal Server Error: /integration/slack/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1089, in slack_callback
+    response = request.post(token_url, data={
+               ^^^^^^^^^^^^
+AttributeError: 'WSGIRequest' object has no attribute 'post'
+ERROR 2025-03-18 19:59:39,052 basehttp 32546 6250852352 "GET /integration/slack/callback?code=1954618556998.8632409590385.575fb147c3e0b0d5e82dba6fcc119251b98b1fdce5052380cb1f9aa53286a997&state= HTTP/1.1" 500 70871
+INFO 2025-03-18 20:03:11,389 autoreload 32546 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:03:11,885 autoreload 32619 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 20:03:45,059 log 32619 6176288768 Internal Server Error: /integration/slack/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1089, in slack_callback
+    response = request.POST(token_url, data={
+        "client_id": os.getenv("SLACK_CLIENT_ID"),
+    ...<2 lines>...
+        "redirect_uri": "https://yellow-crabs-hide.loca.lt/integration/slack/callback",
+    })
+TypeError: 'QueryDict' object is not callable
+ERROR 2025-03-18 20:03:45,061 basehttp 32619 6176288768 "GET /integration/slack/callback?code=1954618556998.8632409590385.575fb147c3e0b0d5e82dba6fcc119251b98b1fdce5052380cb1f9aa53286a997&state= HTTP/1.1" 500 70737
+INFO 2025-03-18 20:06:02,535 autoreload 32619 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:06:03,032 autoreload 32647 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 20:06:20,245 log 32647 6224048128 Internal Server Error: /integration/slack/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1089, in slack_callback
+    response = request.POST(token_url, data={
+        "client_id": os.getenv("SLACK_CLIENT_ID"),
+    ...<2 lines>...
+        "redirect_uri": "https://yellow-crabs-hide.loca.lt/integration/slack/callback",
+    })
+TypeError: 'QueryDict' object is not callable
+ERROR 2025-03-18 20:06:20,247 basehttp 32647 6224048128 "GET /integration/slack/callback?code=1954618556998.8632409590385.575fb147c3e0b0d5e82dba6fcc119251b98b1fdce5052380cb1f9aa53286a997&state= HTTP/1.1" 500 70737
+INFO 2025-03-18 20:07:39,691 autoreload 32647 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:07:40,136 autoreload 32672 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:09:12,745 autoreload 32716 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:09:32,077 autoreload 32716 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:09:32,498 autoreload 32728 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 20:09:40,518 log 32728 6301167616 Internal Server Error: /integration/slack/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1109, in slack_callback
+    return render(request, 'slack_oauth_error.html', {'error': data.get('error')})
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: slack_oauth_error.html
+ERROR 2025-03-18 20:09:40,520 basehttp 32728 6301167616 "GET /integration/slack/callback?code=1954618556998.8632409590385.575fb147c3e0b0d5e82dba6fcc119251b98b1fdce5052380cb1f9aa53286a997&state= HTTP/1.1" 500 87075
+INFO 2025-03-18 20:11:25,334 autoreload 32728 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:11:25,785 autoreload 32749 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:11:31,060 basehttp 32749 6165098496 "GET /integration/slack/callback?code=1954618556998.8632409590385.575fb147c3e0b0d5e82dba6fcc119251b98b1fdce5052380cb1f9aa53286a997&state= HTTP/1.1" 200 45
+INFO 2025-03-18 20:13:13,574 autoreload 32749 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:13:14,112 autoreload 32788 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:13:19,828 basehttp 32788 6193295360 "GET /integration/slack/callback?code=1954618556998.8632409590385.575fb147c3e0b0d5e82dba6fcc119251b98b1fdce5052380cb1f9aa53286a997&state= HTTP/1.1" 200 91
+INFO 2025-03-18 20:13:48,902 autoreload 32788 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:13:49,318 autoreload 32808 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:13:52,891 basehttp 32808 6124466176 "GET /integration/slack/callback?code=1954618556998.8632409590385.575fb147c3e0b0d5e82dba6fcc119251b98b1fdce5052380cb1f9aa53286a997&state= HTTP/1.1" 200 141
+INFO 2025-03-18 20:14:24,061 basehttp 32808 6124466176 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-18 20:14:31,237 basehttp 32808 6124466176 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 20:14:35,116 basehttp 32808 6124466176 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 20:14:36,958 views 32808 6208598016 Intégrations activées trouvées: [26]
+INFO 2025-03-18 20:14:36,959 basehttp 32808 6208598016 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 20:14:37,580 basehttp 32808 6124466176 "GET /integration/slack/oauth HTTP/1.1" 302 0
+ERROR 2025-03-18 20:14:53,870 log 32808 6124466176 Internal Server Error: /integration/slack/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1102, in slack_callback
+    access_token = user_info['access_token']
+                   ~~~~~~~~~^^^^^^^^^^^^^^^^
+KeyError: 'access_token'
+ERROR 2025-03-18 20:14:53,874 basehttp 32808 6124466176 "GET /integration/slack/callback?code=1954618556998.8620801127349.2d98df8c7204af93232f9f0984a2eeb5b0a92b8c9f9652b95eb1a5011936c509&state= HTTP/1.1" 500 71814
+INFO 2025-03-18 20:16:02,007 autoreload 32808 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:16:02,521 autoreload 32884 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 20:16:09,034 log 32884 6238040064 Internal Server Error: /integration/slack/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 204, in _get_response
+    self.check_response(response, callback)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 332, in check_response
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: The view alyawebapp.views.slack_callback didn't return an HttpResponse object. It returned None instead.
+ERROR 2025-03-18 20:16:09,035 basehttp 32884 6238040064 "GET /integration/slack/callback?code=1954618556998.8620801127349.2d98df8c7204af93232f9f0984a2eeb5b0a92b8c9f9652b95eb1a5011936c509&state= HTTP/1.1" 500 71174
+INFO 2025-03-18 20:16:26,175 autoreload 32884 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:16:26,611 autoreload 32902 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:16:30,242 basehttp 32902 6164262912 "GET /integration/slack/callback?code=1954618556998.8620801127349.2d98df8c7204af93232f9f0984a2eeb5b0a92b8c9f9652b95eb1a5011936c509&state= HTTP/1.1" 200 48
+INFO 2025-03-18 20:16:39,022 basehttp 32902 6164262912 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-18 20:16:45,628 basehttp 32902 6164262912 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 20:16:50,881 basehttp 32902 6164262912 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 20:16:51,286 views 32902 6147436544 Intégrations activées trouvées: [26]
+INFO 2025-03-18 20:16:51,286 basehttp 32902 6147436544 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 20:16:54,983 basehttp 32902 6164262912 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 20:17:00,117 basehttp 32902 6164262912 "GET /integration/slack/callback?code=1954618556998.8632504909777.f6215f90a08736c28a7f41279510970b98221b0d1f3591536e3a4d530201ac54&state= HTTP/1.1" 200 415
+INFO 2025-03-18 20:18:01,194 autoreload 32902 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:18:01,655 autoreload 32935 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:18:09,970 basehttp 32935 6310621184 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 20:18:14,766 basehttp 32935 6310621184 "GET /integration/slack/callback?code=1954618556998.8620816599509.12dd5186109c4e136db6d3b552e997897fa4690f77de58cddc04fc2b80277780&state= HTTP/1.1" 200 69
+INFO 2025-03-18 20:18:41,602 autoreload 32935 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:18:42,013 autoreload 32961 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:20:27,446 autoreload 32961 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:20:27,912 autoreload 32980 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:20:49,244 autoreload 32980 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:20:49,641 autoreload 32997 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:21:15,098 autoreload 32997 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:21:15,523 autoreload 33017 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:24:17,274 autoreload 33017 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:24:17,731 autoreload 33052 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:26:38,352 autoreload 33052 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:26:38,804 autoreload 33112 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:27:26,943 basehttp 33112 6195589120 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 20:27:26,943 basehttp 33112 6229241856 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 20:27:27,394 basehttp 33112 6229241856 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-18 20:27:27,856 basehttp 33112 6229241856 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-18 20:27:28,360 basehttp 33112 6229241856 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-18 20:27:28,857 basehttp 33112 6229241856 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-18 20:27:29,339 basehttp 33112 6229241856 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-18 20:27:32,229 log 33112 6229241856 Not Found: /favicon.ico
+WARNING 2025-03-18 20:27:32,229 basehttp 33112 6229241856 "GET /favicon.ico HTTP/1.1" 404 12480
+INFO 2025-03-18 20:27:32,984 basehttp 33112 6229241856 "GET /login/ HTTP/1.1" 200 6036
+WARNING 2025-03-18 20:27:37,814 log 33112 6229241856 Forbidden (Origin checking failed - https://major-keys-hug.loca.lt does not match any trusted origins.): /login/
+WARNING 2025-03-18 20:27:37,815 basehttp 33112 6229241856 "POST /login/ HTTP/1.1" 403 2586
+INFO 2025-03-18 20:28:05,150 autoreload 33112 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 20:28:05,612 autoreload 33167 8517667840 Watching for file changes with StatReloader
+WARNING 2025-03-18 20:28:18,313 log 33167 6129922048 Forbidden (Origin checking failed - https://major-keys-hug.loca.lt does not match any trusted origins.): /login/
+WARNING 2025-03-18 20:28:18,314 basehttp 33167 6129922048 "POST /login/ HTTP/1.1" 403 2586
+INFO 2025-03-18 20:28:27,712 autoreload 33199 8517667840 Watching for file changes with StatReloader
+WARNING 2025-03-18 20:28:42,919 log 33199 6229848064 Forbidden (Origin checking failed - https://major-keys-hug.loca.lt does not match any trusted origins.): /login/
+WARNING 2025-03-18 20:28:42,920 basehttp 33199 6229848064 "POST /login/ HTTP/1.1" 403 2586
+INFO 2025-03-18 20:29:07,509 autoreload 33199 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 20:29:07,941 autoreload 33223 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:29:24,938 autoreload 33256 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:29:37,523 basehttp 33256 6217953280 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 20:29:49,812 basehttp 33256 6217953280 "GET /login/ HTTP/1.1" 200 6036
+WARNING 2025-03-18 20:30:07,979 log 33256 6217953280 Forbidden (Origin checking failed - https://major-keys-hug.loca.lt does not match any trusted origins.): /login/
+WARNING 2025-03-18 20:30:07,979 basehttp 33256 6217953280 "POST /login/ HTTP/1.1" 403 2586
+INFO 2025-03-18 20:31:16,713 autoreload 33256 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 20:31:17,154 autoreload 33285 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:31:24,416 basehttp 33285 6213120000 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 20:32:16,407 autoreload 33324 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:32:20,874 basehttp 33324 6187593728 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 20:32:25,703 basehttp 33324 6187593728 "GET /login/ HTTP/1.1" 200 6036
+INFO 2025-03-18 20:32:33,963 basehttp 33324 6187593728 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-18 20:32:37,910 basehttp 33324 6187593728 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 20:32:39,135 basehttp 33324 6187593728 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-18 20:32:39,392 basehttp 33324 6187593728 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-18 20:32:40,262 basehttp 33324 6187593728 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-18 20:32:43,152 basehttp 33324 6187593728 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 20:32:43,534 views 33324 6153940992 Intégrations activées trouvées: [26]
+INFO 2025-03-18 20:32:43,536 basehttp 33324 6153940992 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 20:32:44,932 basehttp 33324 6187593728 "GET /integration/slack/oauth HTTP/1.1" 302 0
+ERROR 2025-03-18 20:32:53,997 log 33324 6187593728 Internal Server Error: /integration/slack/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1104, in slack_callback
+    integration = Integration.objects.get(name__iexact='slack')
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 649, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+alyawebapp.models.Integration.DoesNotExist: Integration matching query does not exist.
+ERROR 2025-03-18 20:32:54,002 basehttp 33324 6187593728 "GET /integration/slack/callback?code=1954618556998.8615512520790.027f596eed9ff98a226e39848313f064e8ace18234dc5721cd4b3146e27985af&state= HTTP/1.1" 500 81015
+INFO 2025-03-18 20:39:07,542 autoreload 33324 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:39:08,006 autoreload 33450 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:39:17,919 basehttp 33450 6201864192 "GET /integration/slack/callback?code=1954618556998.8615512520790.027f596eed9ff98a226e39848313f064e8ace18234dc5721cd4b3146e27985af&state= HTTP/1.1" 200 137
+INFO 2025-03-18 20:39:32,724 basehttp 33450 6201864192 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 20:39:36,638 basehttp 33450 6201864192 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 20:39:37,430 views 33450 6269169664 Intégrations activées trouvées: [26]
+INFO 2025-03-18 20:39:37,431 basehttp 33450 6269169664 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 20:39:38,223 basehttp 33450 6201864192 "GET /integration/slack/oauth HTTP/1.1" 302 0
+ERROR 2025-03-18 20:39:51,684 log 33450 6201864192 Internal Server Error: /integration/slack/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 948, in get_or_create
+    return self.get(**kwargs), False
+           ~~~~~~~~^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 649, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+alyawebapp.models.Integration.DoesNotExist: Integration matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.NotNullViolation: null value in column "domain_id" of relation "alyawebapp_integration" violates not-null constraint
+DETAIL:  Failing row contains (28, slack, null, , null).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1104, in slack_callback
+    integration, created = Integration.objects.get_or_create(name='slack')
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 955, in get_or_create
+    return self.create(**params), True
+           ~~~~~~~~~~~^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/base.py", line 892, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/base.py", line 998, in save_base
+    updated = self._save_table(
+        raw,
+    ...<4 lines>...
+        update_fields,
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/base.py", line 1161, in _save_table
+    results = self._do_insert(
+        cls._base_manager, using, fields, returning_fields, raw
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/base.py", line 1202, in _do_insert
+    return manager._insert(
+           ~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1836, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.IntegrityError: null value in column "domain_id" of relation "alyawebapp_integration" violates not-null constraint
+DETAIL:  Failing row contains (28, slack, null, , null).
+
+ERROR 2025-03-18 20:39:51,691 basehttp 33450 6201864192 "GET /integration/slack/callback?code=1954618556998.8615544866134.2a0ccd05501beb07c4a1dbce3e07642318d7c7e2703191615f22523a82711aff&state= HTTP/1.1" 500 168837
+INFO 2025-03-18 20:44:20,610 autoreload 33450 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 20:44:21,198 autoreload 33525 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 20:44:43,291 basehttp 33525 6181089280 "GET /integration/slack/callback?code=1954618556998.8615544866134.2a0ccd05501beb07c4a1dbce3e07642318d7c7e2703191615f22523a82711aff&state= HTTP/1.1" 200 137
+INFO 2025-03-18 20:44:55,200 basehttp 33525 6181089280 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 20:44:59,985 basehttp 33525 6181089280 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 20:45:00,265 views 33525 6231568384 Intégrations activées trouvées: [26]
+INFO 2025-03-18 20:45:00,266 basehttp 33525 6231568384 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 20:45:21,255 basehttp 33525 6181089280 "GET /integration/slack/oauth HTTP/1.1" 302 0
+ERROR 2025-03-18 20:45:35,322 log 33525 6181089280 Internal Server Error: /integration/slack/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 948, in get_or_create
+    return self.get(**kwargs), False
+           ~~~~~~~~^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 649, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+alyawebapp.models.Integration.DoesNotExist: Integration matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.NotNullViolation: null value in column "domain_id" of relation "alyawebapp_integration" violates not-null constraint
+DETAIL:  Failing row contains (29, slack, null, , null).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1104, in slack_callback
+    integration = Integration.objects.get_or_create(name='slack')
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 955, in get_or_create
+    return self.create(**params), True
+           ~~~~~~~~~~~^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/base.py", line 892, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/base.py", line 998, in save_base
+    updated = self._save_table(
+        raw,
+    ...<4 lines>...
+        update_fields,
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/base.py", line 1161, in _save_table
+    results = self._do_insert(
+        cls._base_manager, using, fields, returning_fields, raw
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/base.py", line 1202, in _do_insert
+    return manager._insert(
+           ~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1836, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.IntegrityError: null value in column "domain_id" of relation "alyawebapp_integration" violates not-null constraint
+DETAIL:  Failing row contains (29, slack, null, , null).
+
+ERROR 2025-03-18 20:45:35,329 basehttp 33525 6181089280 "GET /integration/slack/callback?code=1954618556998.8624018328786.81357adcf1701947e3b86a12520cea0c1d1019f557db5be6953b3420a711fb91&state= HTTP/1.1" 500 168801
+INFO 2025-03-18 21:00:49,074 autoreload 33525 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:00:49,615 autoreload 33738 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:02:00,487 autoreload 33738 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:02:00,927 autoreload 33767 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:02:24,332 autoreload 33767 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 21:02:24,753 autoreload 33793 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:03:14,477 basehttp 33793 6265696256 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-03-18 21:03:15,926 basehttp 33793 6265696256 "GET /login/?next=/compte/ HTTP/1.1" 200 6036
+INFO 2025-03-18 21:03:17,130 basehttp 33793 6265696256 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-18 21:03:17,247 basehttp 33793 6282522624 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-18 21:03:17,759 basehttp 33793 6248869888 "GET /static/css/modals.css HTTP/1.1" 200 7625
+WARNING 2025-03-18 21:03:18,783 log 33793 6265696256 Not Found: /favicon.ico
+WARNING 2025-03-18 21:03:18,783 basehttp 33793 6265696256 "GET /favicon.ico HTTP/1.1" 404 12482
+INFO 2025-03-18 21:03:28,832 basehttp 33793 6265696256 "POST /login/?next=/compte/ HTTP/1.1" 302 0
+INFO 2025-03-18 21:03:33,335 basehttp 33793 6265696256 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 21:03:35,929 basehttp 33793 6366654464 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-18 21:03:35,930 basehttp 33793 6265696256 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-18 21:03:36,499 basehttp 33793 6383480832 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-18 21:03:40,634 views 33793 6232043520 Intégrations activées trouvées: [26]
+INFO 2025-03-18 21:03:40,635 basehttp 33793 6232043520 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 21:03:40,906 basehttp 33793 6366654464 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 21:03:41,519 basehttp 33793 6232043520 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 21:03:47,658 basehttp 33793 6366654464 "GET /integration/slack/callback?code=1954618556998.8624558081235.ecf3f2ada144a13fa1c984eed69ae4f678a4202c2bf15d716661ba6ff36f207c&state= HTTP/1.1" 200 88
+INFO 2025-03-18 21:03:59,660 basehttp 33793 6366654464 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 21:04:03,017 basehttp 33793 6215217152 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 21:04:50,736 basehttp 33793 6215217152 "GET /integration/slack/callback?code=1954618556998.8632740031297.297b5d38406e6ef10f17ded40ed4e2612ace302b1a32ce8dfa7f344520422a31&state= HTTP/1.1" 200 88
+INFO 2025-03-18 21:05:28,829 basehttp 33793 6215217152 "GET /integration/slack/callback?code=1954618556998.8632740031297.297b5d38406e6ef10f17ded40ed4e2612ace302b1a32ce8dfa7f344520422a31&state= HTTP/1.1" 200 137
+INFO 2025-03-18 21:05:46,174 basehttp 33793 6215217152 "GET /integration/slack/callback?code=1954618556998.8632740031297.297b5d38406e6ef10f17ded40ed4e2612ace302b1a32ce8dfa7f344520422a31&state= HTTP/1.1" 200 137
+INFO 2025-03-18 21:06:01,535 basehttp 33793 6215217152 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-18 21:06:02,192 basehttp 33793 6232043520 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-18 21:06:02,194 basehttp 33793 6215217152 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+INFO 2025-03-18 21:06:10,614 basehttp 33793 6232043520 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 21:06:14,834 basehttp 33793 6232043520 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 21:06:15,017 views 33793 6197817344 Intégrations activées trouvées: [26]
+INFO 2025-03-18 21:06:15,018 basehttp 33793 6197817344 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 21:06:20,396 basehttp 33793 6232043520 "GET /integration/gmail/oauth HTTP/1.1" 302 0
+ERROR 2025-03-18 21:06:23,829 log 33793 6232043520 Internal Server Error: /integration/gmail/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1170, in gmail_callback
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 244, in fetch_token
+    self._client.parse_request_uri_response(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        authorization_response, state=self._state
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/web_application.py", line 220, in parse_request_uri_response
+    response = parse_authorization_code_response(uri, state=state)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 272, in parse_authorization_code_response
+    raise InsecureTransportError()
+oauthlib.oauth2.rfc6749.errors.InsecureTransportError: (insecure_transport) OAuth 2 MUST utilize https.
+ERROR 2025-03-18 21:06:23,834 basehttp 33793 6232043520 "GET /integration/gmail/callback?state=6qOsaefEAtebEtSVdwaY7oKiiqIIBQ&code=4%2F0AQSTgQG3Bzx2s-VzyKzUt17Y3gn8pi3CXsqkKc0OVgv93CIPgOmLixCp6rEmHKte_Bietw&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 500 91687
+INFO 2025-03-18 21:06:57,399 autoreload 33793 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:06:57,848 autoreload 33928 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 21:08:38,050 log 33928 6192295936 Internal Server Error: /integration/gmail/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1170, in gmail_callback
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 244, in fetch_token
+    self._client.parse_request_uri_response(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        authorization_response, state=self._state
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/web_application.py", line 220, in parse_request_uri_response
+    response = parse_authorization_code_response(uri, state=state)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 272, in parse_authorization_code_response
+    raise InsecureTransportError()
+oauthlib.oauth2.rfc6749.errors.InsecureTransportError: (insecure_transport) OAuth 2 MUST utilize https.
+ERROR 2025-03-18 21:08:38,052 basehttp 33928 6192295936 "GET /integration/gmail/callback?state=6qOsaefEAtebEtSVdwaY7oKiiqIIBQ&code=4%2F0AQSTgQG3Bzx2s-VzyKzUt17Y3gn8pi3CXsqkKc0OVgv93CIPgOmLixCp6rEmHKte_Bietw&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 500 91813
+INFO 2025-03-18 21:08:48,341 basehttp 33928 6192295936 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 21:08:53,476 views 33928 6209122304 Intégrations activées trouvées: [26]
+INFO 2025-03-18 21:08:53,477 basehttp 33928 6209122304 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 21:08:53,666 basehttp 33928 6192295936 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 21:09:01,080 basehttp 33928 6209122304 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 21:09:06,381 basehttp 33928 6209122304 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 21:09:06,771 views 33928 6191722496 Intégrations activées trouvées: [26]
+INFO 2025-03-18 21:09:06,771 basehttp 33928 6191722496 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 21:09:11,033 basehttp 33928 6209122304 "GET /integration/gmail/oauth HTTP/1.1" 302 0
+ERROR 2025-03-18 21:09:15,530 log 33928 6209122304 Internal Server Error: /integration/gmail/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1170, in gmail_callback
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 244, in fetch_token
+    self._client.parse_request_uri_response(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        authorization_response, state=self._state
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/web_application.py", line 220, in parse_request_uri_response
+    response = parse_authorization_code_response(uri, state=state)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 272, in parse_authorization_code_response
+    raise InsecureTransportError()
+oauthlib.oauth2.rfc6749.errors.InsecureTransportError: (insecure_transport) OAuth 2 MUST utilize https.
+ERROR 2025-03-18 21:09:15,534 basehttp 33928 6209122304 "GET /integration/gmail/callback?state=OcBEOT1AMDwoHczR76HNqTXSmbfEkL&code=4%2F0AQSTgQH5qS_6tFKWT8kePYeTUdJCSiOR_Fmn_cTmeJZ6U8WG8PCjgv14BBLfOq75ISmxxw&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 500 91675
+INFO 2025-03-18 21:11:10,660 autoreload 33928 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:11:11,182 autoreload 34172 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 21:11:19,021 log 34172 6235598848 Internal Server Error: /integration/gmail/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1170, in gmail_callback
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 244, in fetch_token
+    self._client.parse_request_uri_response(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        authorization_response, state=self._state
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/web_application.py", line 220, in parse_request_uri_response
+    response = parse_authorization_code_response(uri, state=state)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 272, in parse_authorization_code_response
+    raise InsecureTransportError()
+oauthlib.oauth2.rfc6749.errors.InsecureTransportError: (insecure_transport) OAuth 2 MUST utilize https.
+ERROR 2025-03-18 21:11:19,024 basehttp 34172 6235598848 "GET /integration/gmail/callback?state=OcBEOT1AMDwoHczR76HNqTXSmbfEkL&code=4%2F0AQSTgQH5qS_6tFKWT8kePYeTUdJCSiOR_Fmn_cTmeJZ6U8WG8PCjgv14BBLfOq75ISmxxw&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 500 91813
+INFO 2025-03-18 21:12:26,213 autoreload 34172 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:12:26,677 autoreload 34195 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 21:12:32,315 log 34195 6148599808 Internal Server Error: /integration/gmail/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1170, in gmail_callback
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 244, in fetch_token
+    self._client.parse_request_uri_response(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        authorization_response, state=self._state
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/web_application.py", line 220, in parse_request_uri_response
+    response = parse_authorization_code_response(uri, state=state)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 272, in parse_authorization_code_response
+    raise InsecureTransportError()
+oauthlib.oauth2.rfc6749.errors.InsecureTransportError: (insecure_transport) OAuth 2 MUST utilize https.
+ERROR 2025-03-18 21:12:32,317 basehttp 34195 6148599808 "GET /integration/gmail/callback?state=OcBEOT1AMDwoHczR76HNqTXSmbfEkL&code=4%2F0AQSTgQH5qS_6tFKWT8kePYeTUdJCSiOR_Fmn_cTmeJZ6U8WG8PCjgv14BBLfOq75ISmxxw&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 500 91813
+INFO 2025-03-18 21:13:07,766 autoreload 34195 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:13:08,202 autoreload 34216 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:13:14,506 basehttp 34216 6205403136 "GET /integration/gmail/callback?state=OcBEOT1AMDwoHczR76HNqTXSmbfEkL&code=4%2F0AQSTgQH5qS_6tFKWT8kePYeTUdJCSiOR_Fmn_cTmeJZ6U8WG8PCjgv14BBLfOq75ISmxxw&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 200 248
+INFO 2025-03-18 21:15:27,926 autoreload 34216 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:15:28,412 autoreload 34246 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:15:35,247 basehttp 34246 6199390208 "GET /integration/gmail/callback?state=OcBEOT1AMDwoHczR76HNqTXSmbfEkL&code=4%2F0AQSTgQH5qS_6tFKWT8kePYeTUdJCSiOR_Fmn_cTmeJZ6U8WG8PCjgv14BBLfOq75ISmxxw&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 200 504
+INFO 2025-03-18 21:16:00,223 autoreload 34246 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:16:00,657 autoreload 34274 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:16:05,509 autoreload 34274 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:16:05,823 autoreload 34282 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:18:16,856 autoreload 34282 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:18:17,370 autoreload 34350 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:18:38,757 autoreload 34350 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:18:39,191 autoreload 34372 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:19:48,707 autoreload 34372 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:19:49,158 autoreload 34399 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:20:14,601 autoreload 34399 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:20:15,019 autoreload 34415 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:20:36,321 autoreload 34415 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:20:36,782 autoreload 34429 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:20:52,993 basehttp 34429 6176305152 "GET /compte/ HTTP/1.1" 200 225511
+INFO 2025-03-18 21:20:58,163 basehttp 34429 6176305152 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 21:20:58,775 views 34429 6209957888 Intégrations activées trouvées: [26]
+INFO 2025-03-18 21:20:58,777 basehttp 34429 6209957888 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
