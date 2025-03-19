@@ -949,7 +949,7 @@ class AIOrchestrator:
                 # Sauvegarder la réponse
                 self._save_assistant_message(chat.id, response)
                 return response
-            except Exception as e:
+        except Exception as e:
                 self.logger.error(f"Erreur lors de la génération de réponse libre: {str(e)}")
                 return "Je ne suis pas sûre de comprendre. Pouvez-vous reformuler votre question ?"
             
@@ -1063,11 +1063,11 @@ class AIOrchestrator:
             
             for integration in hubspot_integrations:
                 try:
-                    user_integration = UserIntegration.objects.get(
-                        user=self.user,
+            user_integration = UserIntegration.objects.get(
+                user=self.user,
                         integration=integration,
-                        enabled=True
-                    )
+                enabled=True
+            )
                     if user_integration:
                         break
                 except UserIntegration.DoesNotExist:
