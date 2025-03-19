@@ -192,14 +192,13 @@ class AIOrchestrator:
 
     def __init__(self, user):
         self.user = user
+        self.logger = logging.getLogger(__name__)
+        self.openai_client = openai.OpenAI(
+            api_key=settings.OPENAI_API_KEY
+        )
         self.session_state = self._get_or_create_session()
         self.active_chat = None
         self.current_conversation = None
-        self.openai_client = openai.OpenAI(
-            api_key=settings.OPENAI_API_KEY,
-            timeout=API_TIMEOUT,
-            max_retries=MAX_RETRIES
-        )
         self.trello_integration = None
         self._initialize_trello()
         self.conversation_history = []
@@ -212,7 +211,6 @@ class AIOrchestrator:
         self.max_message_length = 4000  # Limite de longueur des messages
         self.max_retries_per_session = 5  # Limite de tentatives par session
         self.session_retry_count = 0  # Compteur de tentatives pour la session
-        self.logger = logging.getLogger(__name__)
         self.retry_handler = RetryHandler(
             max_retries=MAX_RETRIES,
             base_delay=1,
@@ -268,24 +266,19 @@ class AIOrchestrator:
             
             Retourne un JSON avec ces informations."""
             
-            messages = [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": message_content}
-            ]
-            
-            # Ajouter le contexte de conversation si disponible
-            if conversation_history:
-                messages.extend(conversation_history[-3:])  # Utiliser les 3 derniers messages
-            
-            response = call_openai_api(
-                model_name=INTENT_MODEL,
-                messages=messages,
+            response = self.openai_client.chat.completions.create(
+                model=INTENT_MODEL,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": message_content}
+                ],
                 temperature=0.3
             )
+            response_content = response.choices[0].message.content
             
             # Analyser la réponse JSON
             try:
-                intent_data = json.loads(response)
+                intent_data = json.loads(response_content)
                 return {
                     'integration': intent_data.get('integration', None),
                     'action': intent_data.get('action', None),
@@ -293,7 +286,7 @@ class AIOrchestrator:
                     'confidence_level': intent_data.get('confidence', 0)
                 }
             except json.JSONDecodeError:
-                self.logger.error(f"Erreur de décodage JSON: {response}")
+                self.logger.error(f"Erreur de décodage JSON: {response_content}")
                 return {
                     'integration': None,
                     'action': None,
@@ -636,43 +629,34 @@ class AIOrchestrator:
         """Obtient une réponse de l'IA pour un message donné"""
         try:
             # Message système pour Alya
-            system_message = """Tu es Alya, une assistante IA experte. 
-            Réponds de manière claire, précise et détaillée aux questions des utilisateurs."""
+            system_message = """Tu es Alya, une assistante IA experte et conviviale.
+            Instructions :
+            1. Réponds toujours de manière naturelle, amicale et engageante
+            2. Utilise un ton conversationnel et professionnel
+            3. Fournis des réponses détaillées et utiles
+            4. Si tu ne sais pas quelque chose, dis-le honnêtement
+            5. Propose toujours de l'aide supplémentaire si pertinent
+            6. Utilise des émojis avec modération pour rendre la conversation plus vivante
+            7. Adapte ton niveau de langage à celui de l'utilisateur"""
 
-            messages = [
-                {"role": "system", "content": system_message},
-                {"role": "user", "content": message_content}
-            ]
+            response = self.openai_client.chat.completions.create(
+                model=RESPONSE_MODEL,
+                messages=[
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": message_content}
+                ],
+                temperature=0.8
+            )
+            response_content = response.choices[0].message.content
 
-            # Vérifier la signature de la fonction call_openai_api
-            try:
-                # Essayer d'abord avec le paramètre model
-                response = call_openai_api(
-                    model_name=RESPONSE_MODEL,  # Utiliser model_name au lieu de model
-                    messages=[
-                        {"role": "system", "content": system_message},
-                        *messages
-                    ],
-                    temperature=0.7
-                )
-            except TypeError:
-                # Si ça échoue, essayer sans spécifier le modèle (utilise peut-être un modèle par défaut)
-                response = call_openai_api(
-                    messages=[
-                        {"role": "system", "content": system_message},
-                        *messages
-                    ],
-                    temperature=0.7
-                )
+            if not response_content:
+                return "Je suis désolée, je n'ai pas pu générer une réponse appropriée. Pouvez-vous reformuler votre question ? 🤔"
 
-            if not response:
-                raise ValueError("Pas de réponse de l'IA")
-
-            return response
+            return response_content
 
         except Exception as e:
             logger.error(f"Erreur lors de la génération de la réponse IA: {str(e)}")
-            return "Désolée, je n'ai pas pu traiter votre demande. Pouvez-vous reformuler ?"
+            return "Je suis désolée, j'ai rencontré une difficulté technique. 😅 Pouvez-vous reformuler votre question différemment ? Je ferai de mon mieux pour vous aider ! 💪"
 
     def _update_conversation_history(self, role, content):
         """Met à jour l'historique de la conversation"""

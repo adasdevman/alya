@@ -20398,3 +20398,130 @@ INFO 2025-03-19 18:10:13,319 autoreload 45980 35660 C:\Users\Nevada Man\CascadeP
 INFO 2025-03-19 18:10:15,966 autoreload 31924 48036 Watching for file changes with StatReloader
 INFO 2025-03-19 18:11:06,181 autoreload 31924 48036 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
 INFO 2025-03-19 18:11:09,680 autoreload 14448 48576 Watching for file changes with StatReloader
+INFO 2025-03-19 18:19:17,180 basehttp 14448 13080 "GET /compte/ HTTP/1.1" 200 225097
+INFO 2025-03-19 18:19:19,940 views 14448 33484 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-19 18:19:19,944 basehttp 14448 13080 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:19:19,944 basehttp 14448 33484 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 18:19:27,555 ai_orchestrator 14448 33484 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 18:19:27,555 ai_orchestrator 14448 33484 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 18:19:27,842 ai_orchestrator 14448 33484 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+ERROR 2025-03-19 18:19:27,858 ai_orchestrator 14448 33484 Erreur lors de la détection d'intention: call_openai_api() got an unexpected keyword argument 'model_name'
+ERROR 2025-03-19 18:19:29,065 ai_orchestrator 14448 33484 Erreur lors de la génération de la réponse IA: call_openai_api() got an unexpected keyword argument 'messages'
+INFO 2025-03-19 18:19:29,684 basehttp 14448 33484 "POST /chat/ HTTP/1.1" 200 118
+INFO 2025-03-19 18:19:32,069 basehttp 14448 33484 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:19:42,967 ai_orchestrator 14448 33484 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 18:19:42,967 ai_orchestrator 14448 33484 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 18:19:43,255 ai_orchestrator 14448 33484 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+INFO 2025-03-19 18:19:44,460 basehttp 14448 33484 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-03-19 18:19:46,985 basehttp 14448 33484 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:19:55,783 ai_orchestrator 14448 33484 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 18:19:55,783 ai_orchestrator 14448 33484 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 18:19:56,090 ai_orchestrator 14448 33484 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+INFO 2025-03-19 18:19:57,271 basehttp 14448 33484 "POST /chat/ HTTP/1.1" 200 63
+INFO 2025-03-19 18:19:59,957 basehttp 14448 33484 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:22:49,264 ai_orchestrator 14448 33484 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 18:22:49,264 ai_orchestrator 14448 33484 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 18:22:49,668 ai_orchestrator 14448 33484 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+ERROR 2025-03-19 18:22:49,671 ai_orchestrator 14448 33484 Erreur lors de la détection d'intention: call_openai_api() got an unexpected keyword argument 'model_name'
+ERROR 2025-03-19 18:22:50,988 ai_orchestrator 14448 33484 Erreur lors de la génération de la réponse IA: call_openai_api() got an unexpected keyword argument 'messages'
+INFO 2025-03-19 18:22:51,612 basehttp 14448 33484 "POST /chat/ HTTP/1.1" 200 118
+INFO 2025-03-19 18:22:54,146 basehttp 14448 33484 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:24:33,519 autoreload 14448 48576 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 18:24:35,969 autoreload 29384 21020 Watching for file changes with StatReloader
+INFO 2025-03-19 18:24:49,713 basehttp 29384 46200 "GET /compte/ HTTP/1.1" 200 225097
+INFO 2025-03-19 18:24:52,568 views 29384 45004 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-19 18:24:52,568 basehttp 29384 45004 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 18:24:52,592 basehttp 29384 46200 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:25:07,699 ai_orchestrator 29384 46200 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 18:25:07,699 ai_orchestrator 29384 46200 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 18:25:08,020 ai_orchestrator 29384 46200 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+ERROR 2025-03-19 18:25:08,022 ai_orchestrator 29384 46200 Erreur lors de la détection d'intention: call_openai_api() got an unexpected keyword argument 'model_name'
+ERROR 2025-03-19 18:25:09,326 ai_orchestrator 29384 46200 Erreur lors de la génération de la réponse IA: call_openai_api() got an unexpected keyword argument 'messages'
+INFO 2025-03-19 18:25:09,907 basehttp 29384 46200 "POST /chat/ HTTP/1.1" 200 238
+INFO 2025-03-19 18:25:13,543 basehttp 29384 46200 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:26:39,524 autoreload 29384 21020 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 18:26:42,384 autoreload 42032 36180 Watching for file changes with StatReloader
+INFO 2025-03-19 18:27:32,013 autoreload 42032 36180 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 18:27:34,718 autoreload 35556 47828 Watching for file changes with StatReloader
+INFO 2025-03-19 18:32:45,255 basehttp 35556 39432 "GET /compte/ HTTP/1.1" 200 225097
+INFO 2025-03-19 18:32:47,833 basehttp 35556 39432 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:32:47,850 views 35556 48204 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-19 18:32:47,850 basehttp 35556 48204 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 18:32:58,040 ai_orchestrator 35556 48204 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 18:32:58,040 ai_orchestrator 35556 48204 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 18:32:58,369 ai_orchestrator 35556 48204 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+ERROR 2025-03-19 18:32:58,369 ai_orchestrator 35556 48204 Erreur lors de la détection d'intention: call_openai_api() got an unexpected keyword argument 'model'
+ERROR 2025-03-19 18:32:59,600 ai_orchestrator 35556 48204 Erreur lors de la génération de la réponse IA: call_openai_api() got an unexpected keyword argument 'model'
+INFO 2025-03-19 18:33:00,187 basehttp 35556 48204 "POST /chat/ HTTP/1.1" 200 238
+INFO 2025-03-19 18:33:02,598 basehttp 35556 48204 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:35:01,921 autoreload 35556 47828 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 18:35:04,605 autoreload 26036 34720 Watching for file changes with StatReloader
+INFO 2025-03-19 18:36:22,424 basehttp 26036 33620 "GET /compte/ HTTP/1.1" 200 225097
+INFO 2025-03-19 18:36:24,885 views 26036 35240 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-19 18:36:24,885 basehttp 26036 35240 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 18:36:24,892 basehttp 26036 33620 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:36:31,159 ai_orchestrator 26036 33620 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 18:36:31,159 ai_orchestrator 26036 33620 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 18:36:31,458 ai_orchestrator 26036 33620 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+ERROR 2025-03-19 18:36:31,458 ai_orchestrator 26036 33620 Erreur lors de la détection d'intention: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+ERROR 2025-03-19 18:36:32,655 ai_orchestrator 26036 33620 Erreur lors de la génération de la réponse IA: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+INFO 2025-03-19 18:36:33,522 basehttp 26036 33620 "POST /chat/ HTTP/1.1" 200 238
+INFO 2025-03-19 18:36:35,982 basehttp 26036 33620 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:36:43,445 ai_orchestrator 26036 33620 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 18:36:43,445 ai_orchestrator 26036 33620 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 18:36:43,731 ai_orchestrator 26036 33620 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+ERROR 2025-03-19 18:36:43,739 ai_orchestrator 26036 33620 Erreur lors de la détection d'intention: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+ERROR 2025-03-19 18:36:45,326 ai_orchestrator 26036 33620 Erreur lors de la génération de la réponse IA: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+INFO 2025-03-19 18:36:45,958 basehttp 26036 33620 "POST /chat/ HTTP/1.1" 200 238
+INFO 2025-03-19 18:36:48,754 basehttp 26036 33620 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:38:08,340 autoreload 26036 34720 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 18:38:11,161 autoreload 40052 49508 Watching for file changes with StatReloader
+INFO 2025-03-19 18:38:20,486 autoreload 40052 49508 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 18:38:23,771 autoreload 32484 45884 Watching for file changes with StatReloader
+INFO 2025-03-19 18:38:50,026 autoreload 32484 45884 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 18:38:52,973 autoreload 35952 31404 Watching for file changes with StatReloader
+INFO 2025-03-19 18:39:08,190 basehttp 35952 42264 "GET /compte/ HTTP/1.1" 200 225097
+INFO 2025-03-19 18:39:10,861 views 35952 17532 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-19 18:39:10,861 basehttp 35952 17532 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 18:39:11,165 basehttp 35952 42264 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:41:26,381 ai_orchestrator 35952 42264 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 18:41:26,381 ai_orchestrator 35952 42264 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 18:41:26,703 ai_orchestrator 35952 42264 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+INFO 2025-03-19 18:41:45,606 basehttp 35952 42264 "POST /chat/ HTTP/1.1" 200 1351
+INFO 2025-03-19 18:41:48,160 basehttp 35952 42264 "GET /get-chat-history/ HTTP/1.1" 200 34
