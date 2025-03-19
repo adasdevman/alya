@@ -22684,3 +22684,10 @@ INFO 2025-03-19 18:35:28,971 basehttp 51572 6192623616 "GET /integration/mailchi
 INFO 2025-03-19 18:36:40,162 basehttp 51572 6192623616 "GET /integration/mailchimp/callback?code=2dbe3a0de4cc1cb9925d71e04184bf12 HTTP/1.1" 200 351
 INFO 2025-03-19 18:38:02,665 autoreload 51572 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
 INFO 2025-03-19 18:38:03,181 autoreload 51639 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 19:59:35,556 autoreload 54393 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 20:00:31,095 autoreload 54393 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 20:00:31,639 autoreload 54448 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 20:00:40,717 autoreload 54448 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 20:00:41,194 autoreload 54460 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 20:00:46,026 autoreload 54460 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 20:00:46,405 autoreload 54468 8517667840 Watching for file changes with StatReloader

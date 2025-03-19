@@ -1074,9 +1074,9 @@ def trello_save_token(request):
 # INTEGRATION slack
 def slack_oauth(request):
     slack_auth_url = "https://slack.com/oauth/v2/authorize"
-    ssl_link = os.getenv('SSL_LINK')
+    # ssl_link = os.getenv('SLACK_REDIRECT_URI')
 
-    redirect_uri = ssl_link + "/integration/slack/callback"
+    redirect_uri = os.getenv('SLACK_REDIRECT_URI')
     params = {
         "client_id": os.getenv("SLACK_CLIENT_ID"),
         "scope": "users:read",  # Ajustez en fonction de vos besoins
@@ -1086,9 +1086,9 @@ def slack_oauth(request):
 
 def slack_callback(request):
     code = request.GET.get('code')
-    ssl_link = os.getenv('SSL_LINK')
+    # ssl_link = os.getenv('SSL_LINK')
 
-    redirect_uri = ssl_link + "/integration/slack/callback"
+    redirect_uri = os.getenv('SLACK_REDIRECT_URI')
     if not code:
         return redirect('slack_login')
 
