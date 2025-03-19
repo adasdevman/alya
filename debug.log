@@ -22695,3 +22695,4 @@ INFO 2025-03-19 20:32:54,667 autoreload 55721 8517667840 /Users/yveslenoir/proje
 INFO 2025-03-19 20:32:55,016 autoreload 55729 8517667840 Watching for file changes with StatReloader
 INFO 2025-03-19 20:34:23,267 autoreload 55729 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
 INFO 2025-03-19 20:34:23,790 autoreload 55759 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 20:59:59,034 basehttp 55759 6125105152 "GET /integration/mailchimp/callback HTTP/1.1" 200 45
