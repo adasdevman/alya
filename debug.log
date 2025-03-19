@@ -20349,3 +20349,27 @@ INFO 2025-03-19 17:11:40,306 ai_orchestrator 9232 19980 Initialisation d'AIOrche
 INFO 2025-03-19 17:11:40,610 ai_orchestrator 9232 19980 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
 INFO 2025-03-19 17:11:41,834 basehttp 9232 19980 "POST /chat/ HTTP/1.1" 200 245
 INFO 2025-03-19 17:11:44,926 basehttp 9232 19980 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 17:18:51,404 autoreload 9232 24708 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\urls.py changed, reloading.
+INFO 2025-03-19 17:18:53,052 autoreload 2636 25908 Watching for file changes with StatReloader
+INFO 2025-03-19 17:21:35,554 ai_orchestrator 2636 29064 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 17:21:35,556 ai_orchestrator 2636 29064 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 17:21:35,852 ai_orchestrator 2636 29064 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+INFO 2025-03-19 17:21:39,670 ai_orchestrator 2636 29064 Intention détectée: {'integration': None, 'action': None, 'is_continuation': False, 'confidence_level': 0}
+ERROR 2025-03-19 17:21:40,964 ai_orchestrator 2636 29064 Erreur lors de la génération de réponse libre: call_openai_api() got an unexpected keyword argument 'model'
+INFO 2025-03-19 17:21:40,966 basehttp 2636 29064 "POST /chat/ HTTP/1.1" 200 116
+INFO 2025-03-19 17:21:43,724 basehttp 2636 29064 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 17:21:51,403 ai_orchestrator 2636 29064 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 17:21:51,403 ai_orchestrator 2636 29064 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 17:21:51,719 ai_orchestrator 2636 29064 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+INFO 2025-03-19 17:21:52,585 ai_orchestrator 2636 29064 Intention détectée: {'integration': 'Non spécifié', 'action': 'undefined', 'is_continuation': False, 'confidence': 0}
+ERROR 2025-03-19 17:21:53,850 ai_orchestrator 2636 29064 Erreur lors de la génération de réponse libre: call_openai_api() got an unexpected keyword argument 'model'
+INFO 2025-03-19 17:21:53,852 basehttp 2636 29064 "POST /chat/ HTTP/1.1" 200 116
+INFO 2025-03-19 17:21:56,387 basehttp 2636 29064 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 17:23:58,030 autoreload 2636 25908 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 17:23:59,466 autoreload 15724 45608 Watching for file changes with StatReloader
+INFO 2025-03-19 17:24:10,499 autoreload 15724 45608 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 17:24:11,852 autoreload 49112 44540 Watching for file changes with StatReloader
+INFO 2025-03-19 17:24:25,643 basehttp 49112 29688 "GET /compte/ HTTP/1.1" 200 225054
+INFO 2025-03-19 17:24:28,421 basehttp 49112 29688 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 17:24:28,421 views 49112 38536 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-19 17:24:28,421 basehttp 49112 38536 "GET /get-user-integrations-state/ HTTP/1.1" 200 54

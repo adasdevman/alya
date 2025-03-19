@@ -663,17 +663,31 @@ class AIOrchestrator:
                 {"role": "user", "content": message_content}
             ]
 
-            completion = self.openai_client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                    messages=messages,
-                    temperature=0.7,
-                    max_tokens=500
+            # Vérifier la signature de la fonction call_openai_api
+            try:
+                # Essayer d'abord avec le paramètre model
+                response = call_openai_api(
+                    model_name=RESPONSE_MODEL,  # Utiliser model_name au lieu de model
+                    messages=[
+                        {"role": "system", "content": system_message},
+                        *messages
+                    ],
+                    temperature=0.7
                 )
-                
-            if not completion.choices:
+            except TypeError:
+                # Si ça échoue, essayer sans spécifier le modèle (utilise peut-être un modèle par défaut)
+                response = call_openai_api(
+                    messages=[
+                        {"role": "system", "content": system_message},
+                        *messages
+                    ],
+                    temperature=0.7
+                )
+
+            if not response:
                 raise ValueError("Pas de réponse de l'IA")
 
-            return completion.choices[0].message.content
+            return response
 
         except Exception as e:
             logger.error(f"Erreur lors de la génération de la réponse IA: {str(e)}")
@@ -930,14 +944,7 @@ class AIOrchestrator:
                 Tu peux aussi aider avec des intégrations comme Trello, HubSpot, Gmail, etc."""
                 
                 # Appeler l'API OpenAI pour une réponse générale
-                response = call_openai_api(
-                    model=RESPONSE_MODEL,
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        *conversation_context
-                    ],
-                    temperature=0.7
-                )
+                response = self._get_ai_response(system_prompt + "\n" + "\n".join([f"{msg['role']}: {msg['content']}" for msg in conversation_context]))
                 
                 # Sauvegarder la réponse
                 self._save_assistant_message(chat.id, response)
