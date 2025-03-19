@@ -69,15 +69,12 @@ INTEGRATION_CONFIGS = {
     'Gmail': {
         'name': 'Gmail',
         'description': 'Service de messagerie électronique',
-        'icon': 'fa-envelope',
+        'icon': 'fa fa-envelope',
         'auth_type': 'oauth2',
-        'oauth_config': {
-            'scopes': ['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/gmail.compose']
-        },
         'category': 'communication',
         'button_config': {
             'text': 'Configurer',
-            'class': 'btn btn-dark btn-sm',
+            'class': 'btn btn-outline-dark btn-sm',
             'action': 'configure'
         },
         'auth_provider': 'auth0'
@@ -120,14 +117,10 @@ INTEGRATION_CONFIGS = {
         'description': 'Communication interne avec Slack',
         'icon': 'fab fa-slack',
         'auth_type': 'oauth2',
-        'oauth_config': {
-            'scopes': ['chat:write', 'channels:read', 'reactions:read', 'groups:read']
-        },
         'category': 'communication',
-        'documentation_url': 'https://api.slack.com/web',
         'button_config': {
             'text': 'Configurer',
-            'class': 'btn btn-dark btn-sm',
+            'class': 'btn btn-outline-dark btn-sm',
             'action': 'configure'
         },
         'auth_provider': 'auth0'
@@ -789,17 +782,10 @@ INTEGRATION_CONFIGS = {
         'description': 'Gestion et partage de documents',
         'icon': 'fab fa-google-drive',
         'auth_type': 'oauth2',
-        'oauth_config': {
-            'scopes': [
-                'https://www.googleapis.com/auth/drive.file',
-                'https://www.googleapis.com/auth/drive.metadata.readonly'
-            ]
-        },
         'category': 'document_management',
-        'documentation_url': 'https://developers.google.com/drive/api/v3/reference',
         'button_config': {
             'text': 'Configurer',
-            'class': 'btn btn-dark btn-sm',
+            'class': 'btn btn-outline-dark btn-sm',
             'action': 'configure'
         },
         'auth_provider': 'auth0'
@@ -851,7 +837,7 @@ INTEGRATION_CATEGORIES = {
     'marketing': 'Marketing',
     'finance': 'Finance',
     'payment': 'Paiement',
-    'document_management': 'Gestion documentaire',
+    'document_management': 'Gestion Documentaire',
     'logistics': 'Logistique',
     'legal': 'Juridique',
     'erp': 'ERP',

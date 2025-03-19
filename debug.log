@@ -20228,3 +20228,113 @@ INFO 2025-03-16 08:26:25,814 basehttp 14172 5948 "GET /compte/ HTTP/1.1" 200 225
 INFO 2025-03-16 08:26:28,645 views 14172 21828 Intégrations activées trouvées: [8, 26]
 INFO 2025-03-16 08:26:28,645 basehttp 14172 5948 "GET /get-chat-history/ HTTP/1.1" 200 34
 INFO 2025-03-16 08:26:28,645 basehttp 14172 21828 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 08:00:10,135 autoreload 16304 5824 Watching for file changes with StatReloader
+INFO 2025-03-19 08:08:32,366 basehttp 16304 23660 - Broken pipe from ('127.0.0.1', 56569)
+INFO 2025-03-19 08:08:33,355 basehttp 16304 15624 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-19 08:08:33,735 basehttp 16304 25124 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-19 08:08:33,756 basehttp 16304 15792 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-19 08:08:33,756 basehttp 16304 15624 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-19 08:08:33,756 basehttp 16304 4996 "GET /static/css/home.css HTTP/1.1" 200 3613
+INFO 2025-03-19 08:08:33,796 basehttp 16304 15624 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-19 08:08:36,987 log 16304 15624 Not Found: /favicon.ico
+WARNING 2025-03-19 08:08:36,987 basehttp 16304 15624 "GET /favicon.ico HTTP/1.1" 404 11356
+INFO 2025-03-19 08:08:38,297 basehttp 16304 15624 "GET /login/ HTTP/1.1" 200 6036
+INFO 2025-03-19 08:08:53,944 basehttp 16304 15624 "POST /login/ HTTP/1.1" 200 6036
+INFO 2025-03-19 16:14:29,444 autoreload 16304 5824 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:14:33,521 autoreload 28612 29368 Watching for file changes with StatReloader
+INFO 2025-03-19 16:17:11,588 autoreload 28612 29368 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:17:13,119 autoreload 20056 14108 Watching for file changes with StatReloader
+INFO 2025-03-19 16:17:19,491 autoreload 20056 14108 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:17:21,452 autoreload 22348 2584 Watching for file changes with StatReloader
+INFO 2025-03-19 16:17:27,979 autoreload 22348 2584 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:17:29,920 autoreload 26712 356 Watching for file changes with StatReloader
+INFO 2025-03-19 16:18:08,351 autoreload 27792 27528 Watching for file changes with StatReloader
+INFO 2025-03-19 16:18:46,627 basehttp 26712 9232 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-19 16:18:50,101 basehttp 26712 9232 "GET /compte/ HTTP/1.1" 200 225054
+INFO 2025-03-19 16:18:50,251 basehttp 26712 9232 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-19 16:18:50,251 basehttp 26712 21684 "GET /static/css/components/info-tag.css HTTP/1.1" 200 380
+INFO 2025-03-19 16:18:50,251 basehttp 26712 21684 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-19 16:18:52,959 views 26712 9232 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-19 16:18:52,960 basehttp 26712 9232 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 16:18:53,099 basehttp 26712 21684 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 16:20:37,458 ai_orchestrator 26712 21684 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 16:20:37,459 ai_orchestrator 26712 21684 Initialisation d'AIOrchestrator pour user_id: 2
+ERROR 2025-03-19 16:20:37,459 ai_orchestrator 26712 21684 Erreur lors du traitement du message: 'AIOrchestrator' object has no attribute '_save_user_message'
+ERROR 2025-03-19 16:20:37,459 views 26712 21684 Erreur dans le chat: 'AIOrchestrator' object has no attribute '_save_user_message'
+ERROR 2025-03-19 16:20:37,459 log 26712 21684 Internal Server Error: /chat/
+ERROR 2025-03-19 16:20:37,459 basehttp 26712 21684 "POST /chat/ HTTP/1.1" 500 95
+INFO 2025-03-19 16:20:48,586 ai_orchestrator 26712 21684 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 16:20:48,588 ai_orchestrator 26712 21684 Initialisation d'AIOrchestrator pour user_id: 2
+ERROR 2025-03-19 16:20:48,588 ai_orchestrator 26712 21684 Erreur lors du traitement du message: 'AIOrchestrator' object has no attribute '_save_user_message'
+ERROR 2025-03-19 16:20:48,588 views 26712 21684 Erreur dans le chat: 'AIOrchestrator' object has no attribute '_save_user_message'
+ERROR 2025-03-19 16:20:48,588 log 26712 21684 Internal Server Error: /chat/
+ERROR 2025-03-19 16:20:48,588 basehttp 26712 21684 "POST /chat/ HTTP/1.1" 500 95
+INFO 2025-03-19 16:22:02,986 autoreload 26712 356 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:22:04,601 autoreload 17900 3920 Watching for file changes with StatReloader
+INFO 2025-03-19 16:29:11,382 autoreload 17900 3920 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:29:12,818 autoreload 9168 20840 Watching for file changes with StatReloader
+INFO 2025-03-19 16:33:58,789 basehttp 9168 11772 "GET /compte/ HTTP/1.1" 200 225054
+INFO 2025-03-19 16:34:01,302 views 9168 23804 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-19 16:34:01,302 basehttp 9168 23804 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 16:34:01,364 basehttp 9168 11772 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 16:34:14,708 ai_orchestrator 9168 11772 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 16:34:14,708 ai_orchestrator 9168 11772 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 16:34:16,189 basehttp 9168 11772 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-03-19 16:34:18,981 basehttp 9168 11772 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 16:34:31,272 ai_orchestrator 9168 11772 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 16:34:31,273 ai_orchestrator 9168 11772 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 16:34:34,156 ai_orchestrator 9168 11772 Intention détectée: {'integration': None, 'action': None, 'is_continuation': False, 'confidence': 0}
+ERROR 2025-03-19 16:34:35,392 ai_orchestrator 9168 11772 Erreur lors de la génération de réponse libre: call_openai_api() got an unexpected keyword argument 'model'
+INFO 2025-03-19 16:34:35,392 basehttp 9168 11772 "POST /chat/ HTTP/1.1" 200 116
+INFO 2025-03-19 16:34:37,935 basehttp 9168 11772 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 16:34:50,007 ai_orchestrator 9168 11772 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 16:34:50,022 ai_orchestrator 9168 11772 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 16:34:51,242 basehttp 9168 11772 "POST /chat/ HTTP/1.1" 200 63
+INFO 2025-03-19 16:34:53,785 basehttp 9168 11772 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 16:35:08,724 ai_orchestrator 9168 11772 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 16:35:08,724 ai_orchestrator 9168 11772 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 16:35:10,362 ai_orchestrator 9168 11772 Intention détectée: {'integration': 'HubSpot', 'action': 'create_contact', 'is_continuation': False, 'confidence': 0.9}
+INFO 2025-03-19 16:35:13,610 basehttp 9168 11772 "POST /chat/ HTTP/1.1" 200 143
+INFO 2025-03-19 16:35:16,192 basehttp 9168 11772 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 16:46:27,559 autoreload 9168 20840 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\utils\retry_handler.py changed, reloading.
+INFO 2025-03-19 16:46:29,124 autoreload 19068 28144 Watching for file changes with StatReloader
+INFO 2025-03-19 16:47:28,397 autoreload 19068 28144 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:47:30,167 autoreload 16952 18752 Watching for file changes with StatReloader
+INFO 2025-03-19 16:47:35,910 autoreload 16952 18752 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:47:38,071 autoreload 4112 11132 Watching for file changes with StatReloader
+INFO 2025-03-19 16:48:07,009 autoreload 4112 11132 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:48:08,618 autoreload 16664 6864 Watching for file changes with StatReloader
+INFO 2025-03-19 16:55:42,781 basehttp 16664 29072 "GET /compte/ HTTP/1.1" 200 225054
+INFO 2025-03-19 16:55:45,783 basehttp 16664 29072 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 16:55:45,801 views 16664 5012 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-19 16:55:45,801 basehttp 16664 5012 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 16:55:51,095 ai_orchestrator 16664 5012 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 16:55:51,095 ai_orchestrator 16664 5012 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 16:55:51,415 ai_orchestrator 16664 5012 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+INFO 2025-03-19 16:55:52,731 basehttp 16664 5012 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-03-19 16:55:55,353 basehttp 16664 5012 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 16:56:00,666 ai_orchestrator 16664 5012 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 16:56:00,666 ai_orchestrator 16664 5012 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 16:56:00,980 ai_orchestrator 16664 5012 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+INFO 2025-03-19 16:56:02,327 basehttp 16664 5012 "POST /chat/ HTTP/1.1" 200 245
+INFO 2025-03-19 16:56:05,358 basehttp 16664 5012 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 16:56:33,029 ai_orchestrator 16664 5012 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 16:56:33,029 ai_orchestrator 16664 5012 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 16:56:33,338 ai_orchestrator 16664 5012 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+INFO 2025-03-19 16:56:35,896 ai_orchestrator 16664 5012 Intention détectée: {'integration': 'Hubspot', 'action': 'create_contact', 'is_continuation': False, 'confidence': 0.9}
+INFO 2025-03-19 16:56:39,512 basehttp 16664 5012 "POST /chat/ HTTP/1.1" 200 168
+INFO 2025-03-19 16:56:42,117 basehttp 16664 5012 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 16:58:16,423 autoreload 16664 6864 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:58:17,895 autoreload 10964 17492 Watching for file changes with StatReloader
+INFO 2025-03-19 16:58:26,411 autoreload 10964 17492 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:58:27,879 autoreload 4268 13412 Watching for file changes with StatReloader
+INFO 2025-03-19 16:58:42,136 autoreload 4268 13412 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:58:43,607 autoreload 22184 25240 Watching for file changes with StatReloader
+INFO 2025-03-19 16:58:50,213 autoreload 22184 25240 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 16:58:51,747 autoreload 25196 3920 Watching for file changes with StatReloader
+INFO 2025-03-19 17:06:28,494 autoreload 25196 3920 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 17:06:30,778 autoreload 22696 19208 Watching for file changes with StatReloader
+INFO 2025-03-19 17:06:56,100 autoreload 22696 19208 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 17:06:57,968 autoreload 25708 1908 Watching for file changes with StatReloader
+INFO 2025-03-19 17:07:06,289 autoreload 25708 1908 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 17:07:07,700 autoreload 27608 27792 Watching for file changes with StatReloader

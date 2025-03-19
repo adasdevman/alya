@@ -37,6 +37,104 @@ INTENT_MODEL = "gpt-3.5-turbo"  # Pour la détection d'intention
 RESPONSE_MODEL = "gpt-4"        # Pour les réponses complexes
 TASK_MODEL = "gpt-3.5-turbo"   # Pour l'extraction d'informations simples
 
+# Dictionnaire des capacités des intégrations
+INTEGRATION_CAPABILITIES = {
+    # Actions communes
+    'create_contact': {
+        'name': 'Créer un contact',
+        'integrations': ['HubSpot', 'Salesforce', 'Zoho CRM', 'Gmail'],
+        'required_fields': ['nom', 'email'],
+        'optional_fields': ['téléphone', 'entreprise', 'poste']
+    },
+    'send_email': {
+        'name': 'Envoyer un email',
+        'integrations': ['Gmail', 'Mailchimp', 'HubSpot Marketing'],
+        'required_fields': ['destinataire', 'sujet', 'contenu']
+    },
+    'create_task': {
+        'name': 'Créer une tâche',
+        'integrations': ['Trello', 'Asana', 'Slack'],
+        'required_fields': ['titre', 'description'],
+        'optional_fields': ['date_échéance', 'assigné_à']
+    },
+    'schedule_meeting': {
+        'name': 'Planifier une réunion',
+        'integrations': ['Google Calendar', 'HubSpot', 'Salesforce'],
+        'required_fields': ['date', 'heure', 'participants']
+    },
+    'share_document': {
+        'name': 'Partager un document',
+        'integrations': ['Google Drive', 'Slack'],
+        'required_fields': ['document', 'destinataires']
+    },
+    'create_invoice': {
+        'name': 'Créer une facture',
+        'integrations': ['QuickBooks', 'Stripe'],
+        'required_fields': ['client', 'montant', 'description']
+    },
+    
+    # Intégrations spécifiques
+    'HubSpot': {
+        'actions': ['create_contact', 'create_deal', 'schedule_meeting', 'send_email'],
+        'entities': ['contact', 'entreprise', 'affaire', 'ticket'],
+        'keywords': ['crm', 'client', 'prospect', 'pipeline', 'vente']
+    },
+    'Trello': {
+        'actions': ['create_task', 'assign_task', 'create_board', 'create_list'],
+        'entities': ['carte', 'tableau', 'liste', 'tâche'],
+        'keywords': ['projet', 'kanban', 'tâche', 'assignation']
+    },
+    'Slack': {
+        'actions': ['send_message', 'create_channel', 'share_document'],
+        'entities': ['message', 'canal', 'conversation'],
+        'keywords': ['communication', 'équipe', 'discussion', 'notification']
+    },
+    'Gmail': {
+        'actions': ['send_email', 'create_draft', 'schedule_email'],
+        'entities': ['email', 'brouillon', 'pièce jointe'],
+        'keywords': ['mail', 'message', 'envoyer', 'communiquer']
+    },
+    'Google Drive': {
+        'actions': ['upload_file', 'share_document', 'create_folder'],
+        'entities': ['document', 'dossier', 'fichier'],
+        'keywords': ['stockage', 'partage', 'collaboration', 'fichier']
+    },
+    'Salesforce': {
+        'actions': ['create_contact', 'create_opportunity', 'track_deal'],
+        'entities': ['contact', 'opportunité', 'compte', 'lead'],
+        'keywords': ['vente', 'pipeline', 'client', 'affaire']
+    },
+    'QuickBooks': {
+        'actions': ['create_invoice', 'track_expense', 'generate_report'],
+        'entities': ['facture', 'dépense', 'client', 'paiement'],
+        'keywords': ['comptabilité', 'finance', 'facturation', 'paiement']
+    }
+}
+
+# Dictionnaire des réponses générales (non liées aux intégrations)
+GENERAL_RESPONSES = {
+    'time': {
+        'patterns': ['quelle heure', 'heure actuelle', 'l\'heure'],
+        'response': lambda: f"Il est actuellement {datetime.now().strftime('%H:%M')}."
+    },
+    'date': {
+        'patterns': ['quel jour', 'date aujourd\'hui', 'la date'],
+        'response': lambda: f"Nous sommes le {datetime.now().strftime('%d/%m/%Y')}."
+    },
+    'weather': {
+        'patterns': ['météo', 'temps qu\'il fait', 'température'],
+        'response': "Je ne peux pas accéder aux informations météo en temps réel, mais je peux vous aider à configurer une intégration météo si vous le souhaitez."
+    },
+    'greeting': {
+        'patterns': ['bonjour', 'salut', 'hello', 'coucou'],
+        'response': "Bonjour ! Je suis Alya, votre assistant IA. Comment puis-je vous aider aujourd'hui ?"
+    },
+    'help': {
+        'patterns': ['aide', 'help', 'que peux-tu faire', 'fonctionnalités'],
+        'response': "Je peux vous aider avec vos intégrations comme Trello, HubSpot, Gmail, etc. Je peux créer des contacts, envoyer des emails, créer des tâches et bien plus encore. Que souhaitez-vous faire ?"
+    }
+}
+
 class NetworkError(Exception):
     """Exception personnalisée pour les erreurs réseau"""
     pass
@@ -717,97 +815,160 @@ class AIOrchestrator:
             self.logger.error(f"Contexte: {{'intent': {intent}, 'message': {message}}}")
             return "Désolée, une erreur s'est produite. Pouvez-vous reformuler votre demande ?"
 
-    def process_message(self, chat_id, message_content):
-        try:
-            self._update_session_activity()
-            
-            # Récupérer le dernier chat actif ou en créer un nouveau
-            if not chat_id:
-                chat = Chat.objects.filter(
-                    user=self.user,
-                    is_active=True
-                ).order_by('-created_at').first()
-                
-                if not chat:
-                    chat = Chat.objects.create(
-                        user=self.user,
-                        is_active=True
-                    )
-                chat_id = chat.id
-            else:
-                chat = Chat.objects.get(id=chat_id)
-            
-            # Stocker le chat_id dans la session pour les prochains messages
-            self.current_chat_id = chat_id
-            self.logger.info(f"Chat actif: {chat_id}")
+    def _detect_general_query(self, message):
+        """Détecte si le message est une question générale non liée aux intégrations"""
+        message_lower = message.lower()
+        
+        for category, info in GENERAL_RESPONSES.items():
+            if any(pattern in message_lower for pattern in info['patterns']):
+                if callable(info['response']):
+                    return info['response']()
+                return info['response']
+        
+        return None
 
-            # Sauvegarder d'abord le message de l'utilisateur
-            ChatHistory.objects.create(
-                chat=chat,
+    def _suggest_integrations_for_action(self, action):
+        """Suggère des intégrations appropriées pour une action donnée"""
+        if action in INTEGRATION_CAPABILITIES:
+            capability = INTEGRATION_CAPABILITIES[action]
+            available_integrations = []
+            
+            # Vérifier quelles intégrations sont configurées pour l'utilisateur
+            user_integrations = UserIntegration.objects.filter(
                 user=self.user,
-                content=message_content,
-                is_user=True
-            )
+                enabled=True
+            ).select_related('integration')
             
-            # Récupérer TOUT l'historique du chat pour le contexte
-            chat_history = ChatHistory.objects.filter(
-                chat=chat
-            ).order_by('created_at')
+            # Liste des intégrations actives de l'utilisateur
+            user_integration_names = [ui.integration.name for ui in user_integrations]
+            self.logger.info(f"Intégrations actives: {user_integration_names}")
             
-            # Mettre à jour l'historique de conversation
-            self.conversation_history = [
-                {'role': 'user' if msg.is_user else 'assistant', 'content': msg.content}
-                for msg in chat_history
-            ]
+            for integration_name in capability['integrations']:
+                # Recherche plus souple des intégrations
+                for user_int_name in user_integration_names:
+                    # Vérifier si le nom de l'intégration est contenu dans le nom complet
+                    # Par exemple, "HubSpot" dans "HubSpot CRM"
+                    if integration_name.lower() in user_int_name.lower():
+                        available_integrations.append(user_int_name)
+                        break
+            
+            if available_integrations:
+                return {
+                    'action': capability['name'],
+                    'integrations': available_integrations,
+                    'required_fields': capability['required_fields']
+                }
+            else:
+                return {
+                    'action': capability['name'],
+                    'integrations': capability['integrations'],
+                    'message': "Vous n'avez pas encore configuré ces intégrations. Souhaitez-vous en configurer une maintenant ?"
+                }
+        
+        return None
 
-            # Vérifier si nous sommes dans un processus de création de contact
-            if self.conversation_state and 'contact_creation' in self.conversation_state:
-                response = self.handle_contact_creation(message_content)
-                ChatHistory.objects.create(
-                    chat=chat,
-                    user=self.user,
-                    content=response,
-                    is_user=False
-                )
-                return response
-
-            # Détecter l'intention
+    def process_message(self, chat_id, message_content):
+        """Traite un message utilisateur et génère une réponse"""
+        try:
+            # Débogage: vérifier les intégrations actives
+            active_integrations = self._get_active_integrations()
+            self.logger.info(f"Intégrations actives pour l'utilisateur {self.user.id}: {active_integrations}")
+            
+            # Vérifier d'abord si c'est une question générale
+            general_response = self._detect_general_query(message_content)
+            if general_response:
+                # Enregistrer le message utilisateur
+                self._save_user_message(chat_id, message_content)
+                # Enregistrer la réponse générale
+                self._save_assistant_message(chat_id, general_response)
+                return general_response
+            
+            # Détecter l'intention (création de contact, tâche, etc.)
             intent = self._detect_intent(message_content, self.conversation_history)
             
-            # Gérer la réponse selon l'intention
-            if intent.get('integration') == 'hubspot' and intent.get('action') == 'create_contact':
-                self.conversation_state = 'contact_creation_start'
-                self.contact_info = {}
-                response = ("Je vais vous aider à créer un nouveau contact. \n"
-                          "Quel est le prénom du contact ?")
-            else:
-                response = self._handle_intent(intent, message_content)
+            if intent and 'action' in intent:
+                action = intent['action']
+                suggestion = self._suggest_integrations_for_action(action)
+                
+                if suggestion:
+                    if 'message' in suggestion:
+                        # Aucune intégration configurée
+                        response = f"{suggestion['message']}"
+                    else:
+                        # Proposer les intégrations disponibles
+                        integrations_list = ", ".join(suggestion['integrations'])
+                        response = f"Je peux {suggestion['action'].lower()} dans les intégrations suivantes : {integrations_list}. Quelle intégration souhaitez-vous utiliser ?"
+                    
+                    # Enregistrer le message utilisateur
+                    self._save_user_message(chat_id, message_content)
+                    # Enregistrer la réponse
+                    self._save_assistant_message(chat_id, response)
+                    return response
             
-            # Sauvegarder la réponse
-            ChatHistory.objects.create(
-                chat=chat,
-                user=self.user,
-                content=response,
-                is_user=False
-            )
+            # Si ce n'est pas une question générale ni une action d'intégration reconnue,
+            # générer une réponse libre avec GPT-4
+            try:
+                # Récupérer le chat actif
+                chat = Chat.objects.get(id=chat_id) if chat_id else self._get_or_create_active_chat()
+                
+                # Sauvegarder le message utilisateur
+                self._save_user_message(chat.id, message_content)
+                
+                # Récupérer l'historique de conversation pour le contexte
+                chat_history = ChatHistory.objects.filter(chat=chat).order_by('created_at')
+                conversation_context = [
+                    {'role': 'user' if msg.is_user else 'assistant', 'content': msg.content}
+                    for msg in chat_history.order_by('-created_at')[:10]  # Limiter aux 10 derniers messages
+                ]
+                conversation_context.reverse()  # Remettre dans l'ordre chronologique
+                
+                # Préparer le prompt pour une réponse générale
+                system_prompt = """Tu es Alya, un assistant IA intelligent et serviable. 
+                Tu peux répondre à des questions générales sur n'importe quel sujet.
+                Tu es amical, poli et tu fournis des informations précises et utiles.
+                Si tu ne connais pas la réponse à une question, tu le dis honnêtement.
+                Tu peux aussi aider avec des intégrations comme Trello, HubSpot, Gmail, etc."""
+                
+                # Appeler l'API OpenAI pour une réponse générale
+                response = call_openai_api(
+                    model=RESPONSE_MODEL,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        *conversation_context
+                    ],
+                    temperature=0.7
+                )
+                
+                # Sauvegarder la réponse
+                self._save_assistant_message(chat.id, response)
+                return response
+            except Exception as e:
+                self.logger.error(f"Erreur lors de la génération de réponse libre: {str(e)}")
+                return "Je ne suis pas sûre de comprendre. Pouvez-vous reformuler votre question ?"
             
-            return response
-
         except Exception as e:
-            self.logger.error(f"Erreur dans process_message: {str(e)}")
-            return self._handle_error(e)
+            self.logger.error(f"Erreur lors du traitement du message: {str(e)}")
+            raise
 
     @RetryHandler(max_retries=3, base_delay=2, max_delay=15)
     def handle_hubspot_request(self, text):
         """Gère les requêtes liées à HubSpot"""
         try:
-            # Vérifier si l'intégration HubSpot est active
-            hubspot_integration = Integration.objects.get(name__iexact='hubspot crm')
-            user_integration = UserIntegration.objects.get(
-                user=self.user,
-                integration=hubspot_integration,
-                enabled=True
-            )
+            # Recherche plus flexible de l'intégration HubSpot
+            hubspot_integrations = Integration.objects.filter(name__icontains='hubspot')
+            user_integration = None
+            
+            for integration in hubspot_integrations:
+                try:
+                    user_integration = UserIntegration.objects.get(
+                        user=self.user,
+                        integration=integration,
+                        enabled=True
+                    )
+                    if user_integration:
+                        break
+                except UserIntegration.DoesNotExist:
+                    continue
 
             if not user_integration:
                 return "L'intégration HubSpot n'est pas configurée. Voulez-vous que je vous aide à la configurer ?"
@@ -890,12 +1051,24 @@ class AIOrchestrator:
     def create_hubspot_contact(self, contact_info):
         try:
             # Vérifier si l'intégration HubSpot est active
-            hubspot_integration = Integration.objects.get(name__iexact='hubspot crm')
-            user_integration = UserIntegration.objects.get(
-                user_id=self.user.id,
-                integration=hubspot_integration,
-                enabled=True
-            )
+            hubspot_integrations = Integration.objects.filter(name__icontains='hubspot')
+            user_integration = None
+            
+            for integration in hubspot_integrations:
+                try:
+                    user_integration = UserIntegration.objects.get(
+                        user=self.user,
+                        integration=integration,
+                        enabled=True
+                    )
+                    if user_integration:
+                        break
+                except UserIntegration.DoesNotExist:
+                    continue
+            
+            if not user_integration:
+                logger.error("Intégration HubSpot manquante")
+                return "L'intégration HubSpot n'est pas activée. Veuillez l'activer dans la section Intégrations de votre compte."
             
             # Récupérer le token HubSpot
             logger.info(f"Configuration de l'utilisateur pour HubSpot: {user_integration.config}")
@@ -1273,17 +1446,62 @@ class AIOrchestrator:
             # Chercher un chat actif existant
             active_chat = Chat.objects.filter(
                 user=self.user,
-                # Vous pouvez ajouter un champ is_active dans le modèle Chat
-                # is_active=True
+                is_active=True
             ).order_by('-created_at').first()
             
             if not active_chat:
-                active_chat = Chat.objects.create(user=self.user)
+                active_chat = Chat.objects.create(
+                    user=self.user,
+                    is_active=True
+                )
             
             return active_chat
         except Exception as e:
             self.logger.error(f"Erreur lors de la récupération du chat actif: {str(e)}")
-            return Chat.objects.create(user=self.user)
+            # Créer un nouveau chat en cas d'erreur
+            return Chat.objects.create(
+                user=self.user,
+                is_active=True
+            )
+
+    def _save_user_message(self, chat_id, content):
+        """Sauvegarde un message utilisateur dans l'historique"""
+        try:
+            chat = Chat.objects.get(id=chat_id) if chat_id else self._get_or_create_active_chat()
+            ChatHistory.objects.create(
+                chat=chat,
+                user=self.user,
+                content=content,
+                is_user=True
+            )
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la sauvegarde du message utilisateur: {str(e)}")
+
+    def _save_assistant_message(self, chat_id, content):
+        """Sauvegarde un message assistant dans l'historique"""
+        try:
+            chat = Chat.objects.get(id=chat_id) if chat_id else self._get_or_create_active_chat()
+            ChatHistory.objects.create(
+                chat=chat,
+                user=self.user,
+                content=content,
+                is_user=False
+            )
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la sauvegarde du message assistant: {str(e)}")
+
+    def _get_active_integrations(self):
+        """Récupère la liste des intégrations actives pour l'utilisateur"""
+        try:
+            user_integrations = UserIntegration.objects.filter(
+                user=self.user,
+                enabled=True
+            ).select_related('integration')
+            
+            return [ui.integration.name for ui in user_integrations]
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la récupération des intégrations actives: {str(e)}")
+            return []
 
 # Exemple de fonction pour appeler le modèle GPT-4o
 def call_gpt_model(model_input):
