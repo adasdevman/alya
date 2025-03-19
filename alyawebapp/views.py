@@ -1071,7 +1071,7 @@ def trello_save_token(request):
         logger.error(f"Erreur sauvegarde token Trello: {str(e)}")
         return JsonResponse({'success': False, 'error': str(e)})
 
-# Authentification slack
+# INTEGRATION slack
 def slack_oauth(request):
     slack_auth_url = "https://slack.com/oauth/v2/authorize"
     ssl_link = os.getenv('SSL_LINK')
@@ -1248,5 +1248,47 @@ def google_drive_callback(request):
     
     return JsonResponse({'files': credentials})
    
+# ssh -R yourcustomsubdomain:80:localhost:8000 serveo.net
+# INTEGRATION MAILCHIMP
+def mailchimp_oauth(request): 
+    query_params = {
+        "response_type": "code",
+        "client_id": os.getenv('MAILCHIMP_CLIENT_ID'),
+        "redirect_uri": os.getenv('MAILCHIMP_REDIRECT_URI'),
+    }
+    auth_url = f"{os.getenv('MAILCHIMP_AUTHORIZATION_URL')}?{urlencode(query_params)}"
+    return redirect(auth_url)
 
-   # ssh -R yourcustomsubdomain:80:localhost:8000 serveo.net
+# Step 2: Handle callback and exchange code for token
+def mailchimp_callback(request):
+    code = request.GET.get('code')
+    if not code:
+        return JsonResponse({'error': 'Aucun code fournit par Mailchimp'})
+
+    # Exchange authorization code for access token
+    token_data = {
+        'grant_type': 'authorization_code',
+        'client_id': os.getenv('MAILCHIMP_CLIENT_ID'),
+        'client_secret': os.getenv('MAILCHIMP_CLIENT_SECRET'),
+        'redirect_uri': os.getenv('MAILCHIMP_REDIRECT_URI'),
+        'code': code,
+    }
+    response = requests.post(os.getenv('MAILCHIMP_TOKEN_URL'), data=token_data)
+    token_json = response.json()
+
+    if 'access_token' in token_json:
+        # Save the token or user details as per your requirement
+        access_token = token_json['access_token']
+
+        # Now you can use the access token to make Mailchimp API requests
+        # Example: Get the authenticated account details
+        account_url = "https://login.mailchimp.com/oauth2/metadata"
+        headers = {
+            "Authorization": f"Bearer {access_token}"
+        }
+        account_response = requests.get(account_url, headers=headers)
+        account_data = account_response.json()
+
+        return JsonResponse({'account_data': account_data, 'access_token' : access_token})
+    else:
+        return JsonResponse({'error': 'Failed to obtain access token'})

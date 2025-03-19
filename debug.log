@@ -22488,3 +22488,199 @@ Traceback (most recent call last):
     )
 alyawebapp.models.Integration.DoesNotExist: Integration matching query does not exist.
 ERROR 2025-03-19 13:12:24,349 basehttp 45999 6184120320 "GET /integration/slack/oauth HTTP/1.1" 500 81170
+INFO 2025-03-19 17:40:18,454 autoreload 50341 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 17:40:46,884 basehttp 50341 12901707776 "GET /login/ HTTP/1.1" 200 6036
+WARNING 2025-03-19 17:41:12,788 log 50341 12901707776 Not Found: /favicon.ico
+WARNING 2025-03-19 17:41:12,789 basehttp 50341 12901707776 "GET /favicon.ico HTTP/1.1" 404 13075
+INFO 2025-03-19 17:41:42,056 basehttp 50341 12901707776 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-19 17:41:57,145 basehttp 50341 12901707776 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 17:42:06,357 basehttp 50341 12918534144 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-19 17:42:07,148 basehttp 50341 12935360512 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-19 17:43:21,618 basehttp 50341 12935360512 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-19 17:43:43,476 basehttp 50341 12935360512 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 17:44:05,495 views 50341 12918534144 Intégrations activées trouvées: [26]
+INFO 2025-03-19 17:44:05,497 basehttp 50341 12918534144 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 17:47:31,929 autoreload 50341 8517667840 /Users/yveslenoir/project/alya/alyawebapp/urls.py changed, reloading.
+INFO 2025-03-19 17:47:32,483 autoreload 50706 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 17:47:47,706 autoreload 50706 8517667840 /Users/yveslenoir/project/alya/alyawebapp/urls.py changed, reloading.
+INFO 2025-03-19 17:47:48,077 autoreload 50718 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 17:48:07,224 autoreload 50718 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 17:48:07,682 autoreload 50733 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 17:50:44,461 autoreload 50733 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 17:50:44,916 autoreload 50770 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 17:54:45,080 autoreload 50770 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 17:54:45,520 autoreload 50813 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 17:55:22,406 autoreload 50813 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 17:55:22,840 autoreload 50831 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 17:55:38,067 autoreload 50831 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 17:55:38,521 autoreload 50848 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-19 18:01:23,268 log 50848 6167670784 Internal Server Error: /compte/
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "dpg-cufhqdogph6c73845rcg-a.oregon-postgres.render.com" (35.227.164.209), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 57, in _view_wrapper
+    test_pass = test_func(request.user)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 80, in <lambda>
+    lambda u: u.is_authenticated,
+              ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "dpg-cufhqdogph6c73845rcg-a.oregon-postgres.render.com" (35.227.164.209), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+ERROR 2025-03-19 18:01:23,276 basehttp 50848 6167670784 "GET /compte/ HTTP/1.1" 500 224479
+ERROR 2025-03-19 18:01:59,226 views 50848 6184497152 FATAL COMPTE ERROR: Unexpected end of expression in if tag.
+INFO 2025-03-19 18:01:59,245 basehttp 50848 6184497152 "GET /compte/ HTTP/1.1" 302 0
+ERROR 2025-03-19 18:02:15,100 views 50848 6184497152 FATAL COMPTE ERROR: Unexpected end of expression in if tag.
+INFO 2025-03-19 18:02:15,102 basehttp 50848 6184497152 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-03-19 18:02:25,747 basehttp 50848 6184497152 "GET / HTTP/1.1" 200 12879
+ERROR 2025-03-19 18:03:18,995 views 50848 6184497152 FATAL COMPTE ERROR: Unexpected end of expression in if tag.
+INFO 2025-03-19 18:03:18,997 basehttp 50848 6184497152 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-03-19 18:03:29,790 basehttp 50848 6184497152 "GET / HTTP/1.1" 200 12879
+ERROR 2025-03-19 18:04:07,093 views 50848 6184497152 FATAL COMPTE ERROR: Unexpected end of expression in if tag.
+INFO 2025-03-19 18:04:07,097 basehttp 50848 6184497152 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-03-19 18:04:17,383 basehttp 50848 6184497152 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 18:05:54,013 basehttp 50848 6184497152 "GET /compte/ HTTP/1.1" 200 225661
+INFO 2025-03-19 18:07:21,672 basehttp 50848 6184497152 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 18:07:25,007 views 50848 6167670784 Intégrations activées trouvées: [26]
+INFO 2025-03-19 18:07:25,008 basehttp 50848 6167670784 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 18:07:51,781 basehttp 50848 6167670784 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 18:11:39,359 basehttp 50848 6167670784 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 18:14:08,178 basehttp 50848 6167670784 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 18:14:53,923 autoreload 50848 8517667840 /Users/yveslenoir/project/alya/alyawebapp/urls.py changed, reloading.
+INFO 2025-03-19 18:14:54,477 autoreload 51223 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 18:15:46,293 basehttp 51223 6164525056 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 18:16:15,993 autoreload 51317 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 18:17:06,908 basehttp 51317 6192263168 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 18:21:36,593 basehttp 51317 6192263168 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 18:21:46,922 basehttp 51317 6192263168 "GET /integration/mailchimp/callback?error=redirect_uri_mismatch HTTP/1.1" 200 45
+INFO 2025-03-19 18:22:50,627 basehttp 51317 6192263168 "GET /integration/mailchimp/callback?error=redirect_uri_mismatch HTTP/1.1" 200 45
+INFO 2025-03-19 18:23:33,019 basehttp 51317 6192263168 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 18:23:45,249 basehttp 51317 6192263168 "GET /integration/mailchimp/callback?error=redirect_uri_mismatch HTTP/1.1" 200 45
+INFO 2025-03-19 18:30:06,308 basehttp 51317 6192263168 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 18:30:11,043 basehttp 51317 6192263168 "GET /integration/mailchimp/callback?error=redirect_uri_mismatch HTTP/1.1" 200 45
+INFO 2025-03-19 18:31:11,825 basehttp 51317 6192263168 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 18:34:39,455 log 51317 6192263168 Internal Server Error: /integration/mailchimp/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1276, in mailchimp_callback
+    response = requests.post(os.get('MAILCHIMP_TOKEN_URL'), data=token_data)
+                             ^^^^^^
+AttributeError: module 'os' has no attribute 'get'
+ERROR 2025-03-19 18:34:39,461 basehttp 51317 6192263168 "GET /integration/mailchimp/callback?code=0666c693893031bb3e8f6b9bddaaa69f HTTP/1.1" 500 73434
+INFO 2025-03-19 18:35:09,248 autoreload 51317 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 18:35:09,822 autoreload 51572 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 18:35:28,971 basehttp 51572 6192623616 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 18:36:40,162 basehttp 51572 6192623616 "GET /integration/mailchimp/callback?code=2dbe3a0de4cc1cb9925d71e04184bf12 HTTP/1.1" 200 351
+INFO 2025-03-19 18:38:02,665 autoreload 51572 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 18:38:03,181 autoreload 51639 8517667840 Watching for file changes with StatReloader

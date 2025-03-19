@@ -26,7 +26,7 @@ ALLOWED_HOSTS = ['https://alya-166a.onrender.com/', 'localhost', '127.0.0.1','al
 
 CSRF_TRUSTED_ORIGINS = [
     os.getenv('SSL_LINK'),
-    'https://3d09b723573466838c02a82057a1ff48.serveo.net'
+    'https://ed648020a54caf7b9c434a9a0243a8a4.serveo.net'
 ]
 
 
