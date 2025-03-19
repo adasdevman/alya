@@ -22488,3 +22488,28 @@ Traceback (most recent call last):
     )
 alyawebapp.models.Integration.DoesNotExist: Integration matching query does not exist.
 ERROR 2025-03-19 13:12:24,349 basehttp 45999 6184120320 "GET /integration/slack/oauth HTTP/1.1" 500 81170
+INFO 2025-03-19 15:25:20,689 autoreload 48557 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 15:25:52,965 basehttp 48557 6157414400 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-19 15:25:55,121 basehttp 48557 6157414400 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-19 15:25:56,228 basehttp 48557 6191067136 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-19 15:25:56,228 basehttp 48557 6174240768 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-19 15:25:56,229 basehttp 48557 6157414400 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-19 15:26:00,017 basehttp 48557 6191067136 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+INFO 2025-03-19 15:26:04,524 basehttp 48557 6207893504 "GET /login/ HTTP/1.1" 200 6036
+WARNING 2025-03-19 15:26:24,723 log 48557 6207893504 Not Found: /favicon.ico
+WARNING 2025-03-19 15:26:24,723 basehttp 48557 6207893504 "GET /favicon.ico HTTP/1.1" 404 13075
+WARNING 2025-03-19 15:26:27,717 log 48557 6207893504 Forbidden (Origin checking failed - https://3d09b723573466838c02a82057a1ff48.serveo.net does not match any trusted origins.): /login/
+WARNING 2025-03-19 15:26:28,143 basehttp 48557 6207893504 "POST /login/ HTTP/1.1" 403 2607
+INFO 2025-03-19 15:27:02,809 autoreload 48557 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-19 15:27:03,266 autoreload 48676 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 15:27:18,778 basehttp 48676 6199980032 "GET /login/ HTTP/1.1" 200 6036
+INFO 2025-03-19 15:27:42,537 basehttp 48676 6199980032 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-19 15:27:56,852 basehttp 48676 6199980032 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 15:27:59,417 basehttp 48676 6216806400 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-19 15:27:59,417 basehttp 48676 6233632768 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-19 15:28:43,853 basehttp 48676 6233632768 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-19 15:29:09,346 views 48676 6233632768 Intégrations activées trouvées: [26]
+INFO 2025-03-19 15:29:09,348 basehttp 48676 6233632768 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 15:29:10,604 basehttp 48676 6216806400 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 17:31:07,337 autoreload 48676 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-19 17:31:08,019 autoreload 49607 8517667840 Watching for file changes with StatReloader
