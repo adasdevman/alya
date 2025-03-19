@@ -48,7 +48,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.safestring import mark_safe
 from .integrations.trello.handler import TrelloHandler
 from google_auth_oauthlib.flow import Flow
-import pickle
 from googleapiclient.discovery import build
 
 # Charger les variables d'environnement

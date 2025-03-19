@@ -22443,3 +22443,48 @@ ERROR 2025-03-19 11:03:05,059 ai_orchestrator 42965 6212415488 Erreur dans _hand
 ERROR 2025-03-19 11:03:05,059 ai_orchestrator 42965 6212415488 Contexte: {'intent': {'integration': None, 'action': None, 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}, 'message': test}
 INFO 2025-03-19 11:03:05,348 basehttp 42965 6212415488 "POST /chat/ HTTP/1.1" 200 121
 INFO 2025-03-19 11:03:07,960 basehttp 42965 6212415488 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 12:57:58,104 autoreload 42965 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 12:57:58,804 autoreload 45732 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 13:00:59,665 autoreload 45732 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 13:01:00,223 autoreload 45798 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 13:01:24,780 autoreload 45798 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 13:01:25,183 autoreload 45820 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 13:02:21,543 autoreload 45820 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 13:02:22,000 autoreload 45844 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 13:02:34,175 autoreload 45844 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 13:02:34,565 autoreload 45861 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 13:07:25,869 autoreload 45999 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 13:07:43,841 basehttp 45999 6133641216 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-19 13:07:57,345 basehttp 45999 6133641216 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-19 13:07:57,813 basehttp 45999 6167293952 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-19 13:07:57,813 basehttp 45999 6150467584 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-19 13:07:58,565 basehttp 45999 6184120320 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-19 13:08:03,178 basehttp 45999 6167293952 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+INFO 2025-03-19 13:08:32,984 basehttp 45999 6133641216 "GET /login/ HTTP/1.1" 200 6036
+WARNING 2025-03-19 13:08:50,798 log 45999 6133641216 Not Found: /favicon.ico
+WARNING 2025-03-19 13:08:50,799 basehttp 45999 6133641216 "GET /favicon.ico HTTP/1.1" 404 13075
+INFO 2025-03-19 13:09:51,850 basehttp 45999 6133641216 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-19 13:10:04,240 basehttp 45999 6133641216 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 13:10:06,730 basehttp 45999 6167293952 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-19 13:10:07,213 basehttp 45999 6150467584 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-19 13:11:44,976 basehttp 45999 6167293952 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-19 13:12:13,519 basehttp 45999 6150467584 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 13:12:14,793 views 45999 6167293952 Intégrations activées trouvées: [26]
+INFO 2025-03-19 13:12:14,795 basehttp 45999 6167293952 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+ERROR 2025-03-19 13:12:24,344 log 45999 6184120320 Internal Server Error: /integration/slack/oauth
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1086, in slack_oauth
+    integration = Integration.objects.get(name__iexact='slack')
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 649, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+alyawebapp.models.Integration.DoesNotExist: Integration matching query does not exist.
+ERROR 2025-03-19 13:12:24,349 basehttp 45999 6184120320 "GET /integration/slack/oauth HTTP/1.1" 500 81170
