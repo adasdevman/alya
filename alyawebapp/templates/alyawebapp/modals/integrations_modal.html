@@ -97,6 +97,22 @@
                                             Connecter
                                         {% endif %}
                                     </button>
+                                {% elif integration.name == 'Mailchimp'%}
+                                <i class="{{ integration.icon_class }} fa-lg"></i>
+                                    <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">{{ integration.name }}</h6>
+                                    <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
+                                        {{ integration.description|truncatechars:30 }}
+                                    </p>
+                                    <a href="{% url 'mailchimp_oauth' %}" class="btn btn-sm {% if integration.id in user_integrations %}btn-success disabled{% else %}btn-outline-dark{% endif %} config-integration"
+                                        data-integration-id="{{ integration.id }}"
+                                            style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
+                                        <i class="fas {% if integration.id in user_integrations %}fa-check{% else %}fa-cog{% endif %}"></i>
+                                        {% if integration.id in user_integrations %}
+                                            Déjà configuré
+                                        {% else %}
+                                            Configurer
+                                        {% endif %}
+                                    </a>
                                 {% else %}
                                     <i class="{{ integration.icon_class }} fa-lg"></i>
                                     <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">{{ integration.name }}</h6>
@@ -112,7 +128,7 @@
                                         {% else %}
                                     Configurer
                                         {% endif %}
-                                </button>
+                                    </button>
                                 {% endif %}
                             </div>
                         </div>

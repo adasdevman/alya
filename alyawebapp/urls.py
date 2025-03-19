@@ -42,4 +42,6 @@ urlpatterns = [
     path('integration/gmail/callback', views.gmail_callback, name='gmail_callback'),
     path('integration/gdrive/oauth', views.google_drive_oauth, name='google_drive_oauth'),
     path('integration/gdrive/callback', views.google_drive_callback, name='google_drive_callback'),
+    path('integration/mailchimp/oauth', views.mailchimp_oauth, name='mailchimp_oauth'),
+    path('integration/mailchimp/callback', views.mailchimp_callback, name='mailchimp_callback'),
 ] 

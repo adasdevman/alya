@@ -26,7 +26,7 @@ ALLOWED_HOSTS = ['https://alya-166a.onrender.com/', 'localhost', '127.0.0.1','al
 
 CSRF_TRUSTED_ORIGINS = [
     os.getenv('SSL_LINK'),
-    'https://a4e508dda548b4f875e71c3302107819.serveo.net'
+    'https://ed648020a54caf7b9c434a9a0243a8a4.serveo.net'
 ]
 
 
@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'alyawebapp',
-    'sslserver'
+    'alyawebapp'
 ]
 
 MIDDLEWARE = [
