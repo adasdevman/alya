@@ -22430,3 +22430,16 @@ INFO 2025-03-19 10:51:32,310 basehttp 42912 6165786624 "GET /compte/ HTTP/1.1" 2
 INFO 2025-03-19 10:51:38,571 autoreload 42965 8517667840 Watching for file changes with StatReloader
 INFO 2025-03-19 10:51:58,828 basehttp 42965 6195589120 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
 INFO 2025-03-19 10:52:10,041 basehttp 42965 6195589120 "GET /integration/gdrive/callback?state=zbaRuvJKKOWJs6FLYUJjYIFWonaGg6&code=4/0AQSTgQFBtdYA15MN7h6SL_u6oGwoZ9jMw4uvBv_2qwlFEELwd_qwGUswpQLL021QJQckSw&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 200 548
+INFO 2025-03-19 11:01:06,462 basehttp 42965 6195589120 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 11:01:13,736 basehttp 42965 6195589120 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 11:01:17,867 basehttp 42965 6195589120 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 11:01:17,913 views 42965 6212415488 Intégrations activées trouvées: [26]
+INFO 2025-03-19 11:01:17,913 basehttp 42965 6212415488 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 11:03:01,842 ai_orchestrator 42965 6212415488 Changement d'état pour user 9: None -> None
+INFO 2025-03-19 11:03:01,844 ai_orchestrator 42965 6212415488 Initialisation d'AIOrchestrator pour user_id: 9
+INFO 2025-03-19 11:03:02,103 ai_orchestrator 42965 6212415488 Chat actif: 266
+INFO 2025-03-19 11:03:05,059 ai_orchestrator 42965 6212415488 Intention détectée: {'integration': None, 'action': None, 'is_continuation': False, 'confidence': 0}
+ERROR 2025-03-19 11:03:05,059 ai_orchestrator 42965 6212415488 Erreur dans _handle_intent: 'NoneType' object has no attribute 'lower'
+ERROR 2025-03-19 11:03:05,059 ai_orchestrator 42965 6212415488 Contexte: {'intent': {'integration': None, 'action': None, 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}, 'message': test}
+INFO 2025-03-19 11:03:05,348 basehttp 42965 6212415488 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-03-19 11:03:07,960 basehttp 42965 6212415488 "GET /get-chat-history/ HTTP/1.1" 200 34
