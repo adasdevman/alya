@@ -20228,3 +20228,4 @@ INFO 2025-03-16 08:26:25,814 basehttp 14172 5948 "GET /compte/ HTTP/1.1" 200 225
 INFO 2025-03-16 08:26:28,645 views 14172 21828 Int�grations activ�es trouv�es: [8, 26]
 INFO 2025-03-16 08:26:28,645 basehttp 14172 5948 "GET /get-chat-history/ HTTP/1.1" 200 34
 INFO 2025-03-16 08:26:28,645 basehttp 14172 21828 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 20:01:37,123 autoreload 54587 8517667840 Watching for file changes with StatReloader
