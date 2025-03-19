@@ -20340,3 +20340,12 @@ INFO 2025-03-19 17:07:06,289 autoreload 25708 1908 C:\Users\Nevada Man\CascadePr
 INFO 2025-03-19 17:07:07,700 autoreload 27608 27792 Watching for file changes with StatReloader
 INFO 2025-03-19 17:10:06,829 autoreload 27608 27792 C:\Users\Nevada Man\CascadeProjects\alya\alyaprojet\settings.py changed, reloading.
 INFO 2025-03-19 17:10:09,071 autoreload 9232 24708 Watching for file changes with StatReloader
+INFO 2025-03-19 17:11:32,721 basehttp 9232 27412 "GET /compte/ HTTP/1.1" 200 225054
+INFO 2025-03-19 17:11:35,163 basehttp 9232 27412 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 17:11:35,200 views 9232 19980 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-19 17:11:35,200 basehttp 9232 19980 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 17:11:40,306 ai_orchestrator 9232 19980 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 17:11:40,306 ai_orchestrator 9232 19980 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 17:11:40,610 ai_orchestrator 9232 19980 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+INFO 2025-03-19 17:11:41,834 basehttp 9232 19980 "POST /chat/ HTTP/1.1" 200 245
+INFO 2025-03-19 17:11:44,926 basehttp 9232 19980 "GET /get-chat-history/ HTTP/1.1" 200 34
