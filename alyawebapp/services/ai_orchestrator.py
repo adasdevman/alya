@@ -256,76 +256,57 @@ class AIOrchestrator:
             self.logger.error(f"Erreur lors de la construction du contexte: {str(e)}")
             return ""
 
-    def _detect_intent(self, message, conversation_history):
-        """Détecte l'intention de l'utilisateur avec l'IA"""
+    def _detect_intent(self, message_content, conversation_history=None):
+        """Détecte l'intention de l'utilisateur dans le message"""
         try:
-            # Construire le prompt pour détecter l'intention
-            prompt = {
-                "role": "system",
-                "content": """Tu es un expert en analyse d'intention. Analyse le message et le contexte pour déterminer :
-                    1. L'intégration concernée (trello, hubspot, etc.)
-                    2. L'action demandée (create_task, get_overdue_tasks, etc.)
-                    3. Si c'est une continuation d'une demande précédente
-                    4. Le niveau de confiance (0-1)
-                    
-                    Pour Trello, détecte spécifiquement :
-                    - La création de tâche (mots clés : ajoute, crée, nouvelle tâche)
-                    - La consultation des tâches en retard (mots clés : retard, en retard, dépassées)
-                    - L'assignation de tâches (mots clés : assigne, attribue à)
-                    - Les dates d'échéance (mots clés : échéance, deadline, pour vendredi)
-                    
-                    Retourne ta réponse sous forme d'objet JSON."""
-            }
-
-            # Ajouter le contexte de la conversation
-            context_messages = []
+            # Préparer le prompt pour la détection d'intention
+            system_prompt = """Tu es un expert en analyse d'intentions. 
+            Analyse le message pour déterminer :
+            1. L'intégration concernée (hubspot, trello, etc.)
+            2. L'action souhaitée (create_contact, create_task, etc.)
+            3. Si c'est une continuation de conversation
+            
+            Retourne un JSON avec ces informations."""
+            
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": message_content}
+            ]
+            
+            # Ajouter le contexte de conversation si disponible
             if conversation_history:
-                for msg in conversation_history:
-                    role = "Utilisateur" if msg.get('role') == 'user' else "Assistant"
-                    content = msg.get('content', '')
-                    if content:
-                        context_messages.append(f"{role}: {content}")
+                messages.extend(conversation_history[-3:])  # Utiliser les 3 derniers messages
             
-            context = "\n".join(context_messages)
-            
-            user_prompt = {
-                "role": "user",
-                "content": f"""En tenant compte de TOUTE la conversation précédente,
-                    analyse ce message et retourne un JSON avec l'intention :
-                    
-                    Contexte précédent:
-                    {context}
-                    
-                    Message actuel: {message}"""
-            }
-
-            completion = self.openai_client.chat.completions.create(
-                model=INTENT_MODEL,
-                messages=[prompt, user_prompt],
-                temperature=0.3,
-                response_format={ "type": "json_object" }
+            response = call_openai_api(
+                model_name=INTENT_MODEL,
+                messages=messages,
+                temperature=0.3
             )
-
-            intent = json.loads(completion.choices[0].message.content)
-            self.logger.info(f"Intention détectée: {intent}")
             
-            # S'assurer que context_type est présent
-            if 'context_type' not in intent:
-                intent['context_type'] = 'new_request'
-                if intent.get('is_continuation'):
-                    intent['context_type'] = 'continuation'
-            
-            return intent
-
+            # Analyser la réponse JSON
+            try:
+                intent_data = json.loads(response)
+                return {
+                    'integration': intent_data.get('integration', None),
+                    'action': intent_data.get('action', None),
+                    'is_continuation': intent_data.get('is_continuation', False),
+                    'confidence_level': intent_data.get('confidence', 0)
+                }
+            except json.JSONDecodeError:
+                self.logger.error(f"Erreur de décodage JSON: {response}")
+                return {
+                    'integration': None,
+                    'action': None,
+                    'is_continuation': False,
+                    'confidence_level': 0
+                }
         except Exception as e:
-            self.logger.error(f"Erreur dans _detect_intent: {str(e)}")
-            self.logger.error(f"Conversation history: {conversation_history}")
+            self.logger.error(f"Erreur lors de la détection d'intention: {str(e)}")
             return {
                 'integration': None,
                 'action': None,
-                'context_type': 'error',
-                'confidence': 0,
-                'is_continuation': False
+                'is_continuation': False,
+                'confidence_level': 0
             }
 
     def _extract_trello_task_info(self, text):
@@ -891,9 +872,7 @@ class AIOrchestrator:
             # Vérifier d'abord si c'est une question générale
             general_response = self._detect_general_query(message_content)
             if general_response:
-                # Enregistrer le message utilisateur
                 self._save_user_message(chat_id, message_content)
-                # Enregistrer la réponse générale
                 self._save_assistant_message(chat_id, general_response)
                 return general_response
             
@@ -913,9 +892,7 @@ class AIOrchestrator:
                         integrations_list = ", ".join(suggestion['integrations'])
                         response = f"Je peux {suggestion['action'].lower()} dans les intégrations suivantes : {integrations_list}. Quelle intégration souhaitez-vous utiliser ?"
                     
-                    # Enregistrer le message utilisateur
                     self._save_user_message(chat_id, message_content)
-                    # Enregistrer la réponse
                     self._save_assistant_message(chat_id, response)
                     return response
             
@@ -932,9 +909,9 @@ class AIOrchestrator:
                 chat_history = ChatHistory.objects.filter(chat=chat).order_by('created_at')
                 conversation_context = [
                     {'role': 'user' if msg.is_user else 'assistant', 'content': msg.content}
-                    for msg in chat_history.order_by('-created_at')[:10]  # Limiter aux 10 derniers messages
+                    for msg in chat_history.order_by('-created_at')[:10]
                 ]
-                conversation_context.reverse()  # Remettre dans l'ordre chronologique
+                conversation_context.reverse()
                 
                 # Préparer le prompt pour une réponse générale
                 system_prompt = """Tu es Alya, un assistant IA intelligent et serviable. 
@@ -949,13 +926,13 @@ class AIOrchestrator:
                 # Sauvegarder la réponse
                 self._save_assistant_message(chat.id, response)
                 return response
-        except Exception as e:
+            except Exception as e:
                 self.logger.error(f"Erreur lors de la génération de réponse libre: {str(e)}")
                 return "Je ne suis pas sûre de comprendre. Pouvez-vous reformuler votre question ?"
             
         except Exception as e:
             self.logger.error(f"Erreur lors du traitement du message: {str(e)}")
-            raise
+            return "Je suis désolée, une erreur s'est produite. Pouvez-vous réessayer ?"
 
     @RetryHandler(max_retries=3, base_delay=2, max_delay=15)
     def handle_hubspot_request(self, text):
@@ -1063,11 +1040,11 @@ class AIOrchestrator:
             
             for integration in hubspot_integrations:
                 try:
-            user_integration = UserIntegration.objects.get(
-                user=self.user,
+                    user_integration = UserIntegration.objects.get(
+                        user=self.user,
                         integration=integration,
-                enabled=True
-            )
+                        enabled=True
+                    )
                     if user_integration:
                         break
                 except UserIntegration.DoesNotExist:
@@ -1079,15 +1056,12 @@ class AIOrchestrator:
             
             # Récupérer le token HubSpot
             logger.info(f"Configuration de l'utilisateur pour HubSpot: {user_integration.config}")
-            # Vérifier si le token est dans le champ access_token ou dans le champ config
             access_token = user_integration.access_token or user_integration.config.get('access_token')
             
             if not access_token:
                 logger.error("Token d'accès HubSpot manquant")
                 return "Le token d'accès HubSpot est manquant. Veuillez vous connecter à HubSpot dans la section Intégrations de votre compte."
             
-            logger.info(f"Token d'accès HubSpot récupéré: {access_token[:10]}...")  # Log seulement les 10 premiers caractères
-
             # Préparer les données pour HubSpot
             properties = {
                 "email": contact_info['email'],
@@ -1095,14 +1069,6 @@ class AIOrchestrator:
                 "lastname": contact_info['lastname'],
                 "phone": contact_info['phone']
             }
-            
-            # Ajouter les champs spécifiques pour un contact professionnel
-            if self.conversation_state == 'waiting_for_pro_info':
-                properties.update({
-                    "company": contact_info['company'],
-                    "jobtitle": contact_info['jobtitle'],
-                    "website": contact_info['website']
-                })
             
             # Créer le contact dans HubSpot
             url = "https://api.hubapi.com/crm/v3/objects/contacts"
@@ -1114,25 +1080,12 @@ class AIOrchestrator:
                 "properties": properties
             }
             
-            logger.info(f"Envoi de la requête à HubSpot avec les données: {data}")
             response = requests.post(url, headers=headers, json=data)
-            
-            if response.status_code == 201:
-                logger.info(f"Contact créé avec succès dans HubSpot: {contact_info['email']}")
-                return True
-            else:
-                error_message = f"Erreur lors de la création du contact HubSpot: {response.text}"
-                logger.error(error_message)
-                return error_message
-            
-        except UserIntegration.DoesNotExist:
-            error_message = "L'intégration HubSpot n'est pas activée. Veuillez l'activer dans la section Intégrations de votre compte."
-            logger.error(error_message)
-            return error_message
+            response.raise_for_status()
+            return response.json()
         except Exception as e:
-            error_message = f"Erreur lors de la création du contact HubSpot: {str(e)}"
-            logger.error(error_message)
-            return error_message
+            logger.error(f"Erreur lors de la création du contact HubSpot: {str(e)}")
+            raise
 
     def parse_contact_info(self, message):
         try:
