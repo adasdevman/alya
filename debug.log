@@ -20338,3 +20338,5 @@ INFO 2025-03-19 17:06:56,100 autoreload 22696 19208 C:\Users\Nevada Man\CascadeP
 INFO 2025-03-19 17:06:57,968 autoreload 25708 1908 Watching for file changes with StatReloader
 INFO 2025-03-19 17:07:06,289 autoreload 25708 1908 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
 INFO 2025-03-19 17:07:07,700 autoreload 27608 27792 Watching for file changes with StatReloader
+INFO 2025-03-19 17:10:06,829 autoreload 27608 27792 C:\Users\Nevada Man\CascadeProjects\alya\alyaprojet\settings.py changed, reloading.
+INFO 2025-03-19 17:10:09,071 autoreload 9232 24708 Watching for file changes with StatReloader
