@@ -40,4 +40,6 @@ urlpatterns = [
     path('integration/slack/callback', views.slack_callback, name="slack_callback"),
     path('integration/gmail/oauth', views.gmail_oauth, name='gmail_oauth'),
     path('integration/gmail/callback', views.gmail_callback, name='gmail_callback'),
+    path('integration/gdrive/oauth', views.google_drive_oauth, name='google_drive_oauth'),
+    path('integration/gdrive/callback', views.google_drive_callback, name='google_drive_callback'),
 ] 

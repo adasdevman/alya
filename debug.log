@@ -21211,3 +21211,1222 @@ INFO 2025-03-18 21:20:52,993 basehttp 34429 6176305152 "GET /compte/ HTTP/1.1" 2
 INFO 2025-03-18 21:20:58,163 basehttp 34429 6176305152 "GET /get-chat-history/ HTTP/1.1" 200 34
 INFO 2025-03-18 21:20:58,775 views 34429 6209957888 Intégrations activées trouvées: [26]
 INFO 2025-03-18 21:20:58,777 basehttp 34429 6209957888 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 21:34:49,420 autoreload 34429 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 21:34:49,906 autoreload 34699 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:45:24,399 autoreload 34699 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 21:45:24,814 autoreload 34941 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 21:56:33,587 autoreload 35369 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:00:14,039 basehttp 35369 6158168064 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 22:00:14,927 basehttp 35369 6158168064 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-18 22:00:14,928 basehttp 35369 6174994432 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-18 22:00:15,119 basehttp 35369 6208647168 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-18 22:00:15,120 basehttp 35369 6191820800 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-18 22:00:15,568 basehttp 35369 6158168064 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-18 22:00:17,316 log 35369 6208647168 Not Found: /favicon.ico
+WARNING 2025-03-18 22:00:17,316 basehttp 35369 6208647168 "GET /favicon.ico HTTP/1.1" 404 13056
+INFO 2025-03-18 22:00:31,804 basehttp 35369 6208647168 "GET /login/ HTTP/1.1" 200 6036
+WARNING 2025-03-18 22:00:49,794 log 35369 6208647168 Forbidden (Origin checking failed - https://red-rabbits-sell.loca.lt does not match any trusted origins.): /login/
+WARNING 2025-03-18 22:00:49,795 basehttp 35369 6208647168 "POST /login/ HTTP/1.1" 403 2588
+INFO 2025-03-18 22:01:26,480 autoreload 35369 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 22:01:26,995 autoreload 35557 8517667840 Watching for file changes with StatReloader
+WARNING 2025-03-18 22:01:31,433 log 35557 6139883520 Forbidden (Origin checking failed - https://red-rabbits-sell.loca.lt does not match any trusted origins.): /login/
+WARNING 2025-03-18 22:01:31,433 basehttp 35557 6139883520 "POST /login/ HTTP/1.1" 403 2588
+INFO 2025-03-18 22:01:43,489 autoreload 35590 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:01:54,981 basehttp 35590 6261485568 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-18 22:02:00,522 basehttp 35590 6261485568 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:02:01,595 basehttp 35590 6295138304 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-18 22:02:02,665 basehttp 35590 6261485568 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-18 22:02:02,712 basehttp 35590 6227832832 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-18 22:02:06,039 views 35590 6261485568 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:02:06,039 basehttp 35590 6261485568 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:02:06,859 basehttp 35590 6278311936 "GET /get-chat-history/ HTTP/1.1" 200 34
+ERROR 2025-03-18 22:02:16,643 log 35590 6261485568 Internal Server Error: /integration/gdrive/oauth
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1203, in google_drive_oauth
+    "client_id": settings.GOOGLE_CLIENT_DRIVE_ID,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 83, in __getattr__
+    val = getattr(_wrapped, name)
+AttributeError: 'Settings' object has no attribute 'GOOGLE_CLIENT_DRIVE_ID'
+ERROR 2025-03-18 22:02:16,647 basehttp 35590 6261485568 "GET /integration/gdrive/oauth HTTP/1.1" 500 74215
+INFO 2025-03-18 22:03:45,756 autoreload 35590 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:03:46,231 autoreload 35660 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:09:03,976 autoreload 35766 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:10:41,504 autoreload 35766 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 22:10:41,925 autoreload 35852 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:11:46,664 basehttp 35852 6354448384 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 22:11:48,502 basehttp 35852 6354448384 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-18 22:11:49,918 basehttp 35852 6354448384 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-18 22:11:51,623 basehttp 35852 6354448384 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-18 22:11:53,947 basehttp 35852 6354448384 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-18 22:11:55,329 basehttp 35852 6354448384 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-18 22:11:57,303 log 35852 6354448384 Not Found: /favicon.ico
+WARNING 2025-03-18 22:11:57,305 basehttp 35852 6354448384 "GET /favicon.ico HTTP/1.1" 404 13055
+INFO 2025-03-18 22:12:22,096 basehttp 35852 6354448384 "GET /login/ HTTP/1.1" 200 6036
+INFO 2025-03-18 22:12:45,831 basehttp 35852 6354448384 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-18 22:12:53,828 basehttp 35852 6354448384 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:12:55,099 basehttp 35852 6354448384 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-18 22:12:55,163 basehttp 35852 6202437632 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-18 22:12:56,157 basehttp 35852 6354448384 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-18 22:12:59,451 views 35852 6354448384 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:12:59,454 basehttp 35852 6354448384 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:13:10,865 basehttp 35852 6219264000 "GET /get-chat-history/ HTTP/1.1" 200 34
+ERROR 2025-03-18 22:13:24,495 log 35852 6354448384 Internal Server Error: /integration/gdrive/oauth
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1200, in google_drive_oauth
+    flow = Flow.from_client_config(
+        {
+    ...<6 lines>...
+        SCOPES,
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 168, in from_client_config
+    ) = google_auth_oauthlib.helpers.session_from_client_config(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        client_config, scopes, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/helpers.py", line 66, in session_from_client_config
+    raise ValueError("Client secrets is not in the correct format.")
+ValueError: Client secrets is not in the correct format.
+ERROR 2025-03-18 22:13:24,498 basehttp 35852 6354448384 "GET /integration/gdrive/oauth HTTP/1.1" 500 79893
+INFO 2025-03-18 22:15:28,697 autoreload 35852 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:15:29,174 autoreload 35910 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:15:32,683 basehttp 35910 6243889152 "GET /integration/gdrive/oauth HTTP/1.1" 200 44
+INFO 2025-03-18 22:15:50,665 autoreload 35910 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:15:51,071 autoreload 35935 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:15:53,926 basehttp 35935 6159429632 "GET /integration/gdrive/oauth HTTP/1.1" 200 81
+INFO 2025-03-18 22:16:07,290 autoreload 35935 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:16:07,749 autoreload 35953 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 22:16:16,175 log 35953 6285258752 Internal Server Error: /integration/gdrive/oauth
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1200, in google_drive_oauth
+    flow = Flow.from_client_config(
+        {
+    ...<6 lines>...
+        SCOPES,
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 168, in from_client_config
+    ) = google_auth_oauthlib.helpers.session_from_client_config(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        client_config, scopes, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/helpers.py", line 66, in session_from_client_config
+    raise ValueError("Client secrets is not in the correct format.")
+ValueError: Client secrets is not in the correct format.
+ERROR 2025-03-18 22:16:16,177 basehttp 35953 6285258752 "GET /integration/gdrive/oauth HTTP/1.1" 500 80030
+INFO 2025-03-18 22:17:33,080 autoreload 35953 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:17:33,489 autoreload 36013 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:19:48,065 autoreload 36013 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:19:48,504 autoreload 36065 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 22:19:55,100 log 36065 6212677632 Internal Server Error: /integration/gdrive/oauth
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1209, in google_drive_oauth
+    flow = Flow.from_client_config(client_config, SCOPES)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 168, in from_client_config
+    ) = google_auth_oauthlib.helpers.session_from_client_config(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        client_config, scopes, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/helpers.py", line 66, in session_from_client_config
+    raise ValueError("Client secrets is not in the correct format.")
+ValueError: Client secrets is not in the correct format.
+ERROR 2025-03-18 22:19:55,103 basehttp 36065 6212677632 "GET /integration/gdrive/oauth HTTP/1.1" 500 80682
+INFO 2025-03-18 22:21:21,946 autoreload 36065 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:21:22,381 autoreload 36097 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-18 22:21:27,256 log 36097 6237335552 Internal Server Error: /integration/gdrive/oauth
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1209, in google_drive_oauth
+    flow = Flow.from_client_config(client_config, SCOPES)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 168, in from_client_config
+    ) = google_auth_oauthlib.helpers.session_from_client_config(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        client_config, scopes, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/helpers.py", line 66, in session_from_client_config
+    raise ValueError("Client secrets is not in the correct format.")
+ValueError: Client secrets is not in the correct format.
+ERROR 2025-03-18 22:21:27,258 basehttp 36097 6237335552 "GET /integration/gdrive/oauth HTTP/1.1" 500 80688
+INFO 2025-03-18 22:22:47,529 autoreload 36097 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:22:48,008 autoreload 36138 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:23:02,278 basehttp 36138 6285324288 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:23:06,289 views 36138 6285324288 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:23:06,291 basehttp 36138 6285324288 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:23:06,375 basehttp 36138 6268497920 "GET /get-chat-history/ HTTP/1.1" 200 34
+ERROR 2025-03-18 22:23:10,795 log 36138 6285324288 Internal Server Error: /integration/gdrive/oauth
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1209, in google_drive_oauth
+    flow = Flow.from_client_config(client_config, SCOPES)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 168, in from_client_config
+    ) = google_auth_oauthlib.helpers.session_from_client_config(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        client_config, scopes, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/helpers.py", line 66, in session_from_client_config
+    raise ValueError("Client secrets is not in the correct format.")
+ValueError: Client secrets is not in the correct format.
+ERROR 2025-03-18 22:23:10,798 basehttp 36138 6285324288 "GET /integration/gdrive/oauth HTTP/1.1" 500 80549
+INFO 2025-03-18 22:26:11,601 autoreload 36138 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:26:12,103 autoreload 36169 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:26:16,691 basehttp 36169 6346764288 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 22:28:29,764 autoreload 36169 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:28:30,210 autoreload 36195 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:29:15,254 basehttp 36195 6284947456 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:29:19,952 views 36195 6284947456 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:29:19,953 basehttp 36195 6251294720 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 22:29:19,954 basehttp 36195 6284947456 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:29:38,392 basehttp 36195 6284947456 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 22:30:39,661 autoreload 36195 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:30:40,145 autoreload 36348 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:30:56,444 autoreload 36348 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:30:56,824 autoreload 36370 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:31:59,181 autoreload 36370 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:31:59,623 autoreload 36385 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:32:03,515 autoreload 36385 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:32:03,829 autoreload 36393 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:32:12,803 basehttp 36393 6135115776 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:32:17,524 basehttp 36393 6135115776 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 22:32:17,571 views 36393 6168768512 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:32:17,572 basehttp 36393 6168768512 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:32:33,703 basehttp 36393 6135115776 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 22:34:38,214 basehttp 36393 6135115776 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:34:46,188 views 36393 6135115776 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:34:46,189 basehttp 36393 6185594880 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 22:34:46,189 basehttp 36393 6135115776 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:35:10,080 basehttp 36393 6135115776 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 22:36:41,913 basehttp 36393 6135115776 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:36:47,124 views 36393 13035925504 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:36:47,125 basehttp 36393 6135115776 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 22:36:47,126 basehttp 36393 13035925504 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:37:07,074 basehttp 36393 6135115776 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 22:37:22,929 basehttp 36393 6135115776 "GET /integration/gdrive/callback?state=GU1GHF7VE4yvQwq0frfUNapS6LuGny&code=4/0AQSTgQFmRwiTJF28Uz6D8bPYBQfLBkda1G1Z3kGt0iVtDWw1Viv2NkoG-mPMTz9a_ifeDg&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 302 0
+INFO 2025-03-18 22:49:15,417 autoreload 36393 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:49:15,990 autoreload 36863 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:49:33,387 autoreload 36863 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 22:49:33,814 autoreload 36927 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:50:28,993 basehttp 36927 6306639872 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 22:50:30,411 basehttp 36927 6306639872 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-18 22:50:30,474 basehttp 36927 6323466240 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-18 22:50:31,295 basehttp 36927 6256160768 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-18 22:50:31,295 basehttp 36927 6239334400 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-18 22:50:32,183 basehttp 36927 6306639872 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-18 22:50:35,041 log 36927 6256160768 Not Found: /favicon.ico
+WARNING 2025-03-18 22:50:35,041 basehttp 36927 6256160768 "GET /favicon.ico HTTP/1.1" 404 13055
+INFO 2025-03-18 22:50:50,845 basehttp 36927 6256160768 "GET /login/ HTTP/1.1" 200 6036
+INFO 2025-03-18 22:51:08,013 basehttp 36927 6256160768 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-18 22:51:13,044 basehttp 36927 6256160768 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:51:15,246 basehttp 36927 6256160768 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-18 22:51:15,262 basehttp 36927 6340292608 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-18 22:51:15,263 basehttp 36927 6357118976 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-18 22:51:19,129 basehttp 36927 6256160768 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 22:51:22,671 views 36927 6256160768 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:51:22,672 basehttp 36927 6256160768 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:51:33,985 basehttp 36927 6256160768 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 22:52:06,280 basehttp 36927 6256160768 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-18 22:52:56,348 basehttp 36927 6256160768 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:53:00,640 basehttp 36927 6256160768 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 22:53:02,494 views 36927 6306639872 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:53:02,495 basehttp 36927 6306639872 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:53:35,675 basehttp 36927 6256160768 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 22:54:38,065 autoreload 36927 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 22:54:38,548 autoreload 37003 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:54:44,171 autoreload 37022 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 22:54:59,854 basehttp 37022 6214004736 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:55:04,758 basehttp 37022 6214004736 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 22:55:05,522 views 37022 6230831104 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:55:05,523 basehttp 37022 6230831104 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:55:25,649 basehttp 37022 6214004736 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 22:58:27,150 basehttp 37022 6214004736 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:58:28,948 basehttp 37022 6179778560 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 22:58:33,373 views 37022 6214004736 Intégrations activées trouvées: [26]
+INFO 2025-03-18 22:58:33,374 basehttp 37022 6196604928 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 22:58:33,374 basehttp 37022 6214004736 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 22:58:40,413 basehttp 37022 6214004736 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 22:59:59,800 autoreload 37022 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 23:00:00,312 autoreload 37113 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 23:00:20,181 basehttp 37113 6214250496 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 23:00:24,445 views 37113 6197424128 Intégrations activées trouvées: [26]
+INFO 2025-03-18 23:00:24,447 basehttp 37113 6214250496 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 23:00:24,447 basehttp 37113 6197424128 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 23:02:32,247 basehttp 37113 6214250496 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 23:02:36,334 basehttp 37113 6214250496 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 23:02:36,348 views 37113 6163197952 Intégrations activées trouvées: [26]
+INFO 2025-03-18 23:02:36,348 basehttp 37113 6163197952 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 23:02:45,044 basehttp 37113 6214250496 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 23:03:45,340 basehttp 37113 6348861440 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 23:03:45,682 basehttp 37113 6348861440 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-18 23:03:45,802 basehttp 37113 6399340544 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-18 23:03:45,802 basehttp 37113 6365687808 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-18 23:03:45,803 basehttp 37113 6382514176 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-18 23:03:46,056 basehttp 37113 6399340544 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-18 23:03:47,380 log 37113 6399340544 Not Found: /favicon.ico
+WARNING 2025-03-18 23:03:47,380 basehttp 37113 6399340544 "GET /favicon.ico HTTP/1.1" 404 13075
+INFO 2025-03-18 23:04:10,340 autoreload 37113 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 23:04:10,901 autoreload 37254 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 23:04:32,657 basehttp 37254 6192492544 "GET /integration/gdrive/callback HTTP/1.1" 302 0
+INFO 2025-03-18 23:04:39,449 basehttp 37254 6192492544 "GET /login/ HTTP/1.1" 200 6036
+INFO 2025-03-18 23:05:10,252 basehttp 37254 6192492544 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-18 23:05:13,840 basehttp 37254 6192492544 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 23:05:14,183 basehttp 37254 6192492544 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-18 23:05:14,295 basehttp 37254 6209318912 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-18 23:05:14,628 basehttp 37254 6209318912 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-18 23:05:17,628 views 37254 6192492544 Intégrations activées trouvées: [26]
+INFO 2025-03-18 23:05:17,628 basehttp 37254 6209318912 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 23:05:17,630 basehttp 37254 6192492544 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 23:05:19,789 basehttp 37254 6192492544 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 23:06:11,401 autoreload 37254 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 23:06:11,889 autoreload 37319 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 23:06:24,660 basehttp 37319 6135443456 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 23:06:27,519 basehttp 37319 6135443456 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 23:06:27,786 views 37319 6152269824 Intégrations activées trouvées: [26]
+INFO 2025-03-18 23:06:27,787 basehttp 37319 6152269824 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 23:06:29,313 basehttp 37319 6152269824 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 23:06:57,329 basehttp 37319 6152269824 "GET /compte/ HTTP/1.1" 302 0
+INFO 2025-03-18 23:06:57,570 basehttp 37319 6152269824 "GET /login/?next=/compte/ HTTP/1.1" 200 6036
+INFO 2025-03-18 23:06:57,966 basehttp 37319 6135443456 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-18 23:06:57,967 basehttp 37319 6152269824 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-18 23:06:58,077 basehttp 37319 6169096192 "GET /static/css/modals.css HTTP/1.1" 200 7625
+WARNING 2025-03-18 23:06:59,107 log 37319 6152269824 Not Found: /favicon.ico
+WARNING 2025-03-18 23:06:59,107 basehttp 37319 6152269824 "GET /favicon.ico HTTP/1.1" 404 13075
+INFO 2025-03-18 23:07:10,979 basehttp 37319 6152269824 "POST /login/?next=/compte/ HTTP/1.1" 302 0
+INFO 2025-03-18 23:07:14,374 basehttp 37319 6152269824 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 23:07:14,664 basehttp 37319 6135443456 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-18 23:07:14,992 basehttp 37319 6185922560 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-18 23:07:15,181 basehttp 37319 6135443456 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-18 23:07:17,635 views 37319 6152269824 Intégrations activées trouvées: [26]
+INFO 2025-03-18 23:07:17,636 basehttp 37319 6135443456 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 23:07:17,637 basehttp 37319 6152269824 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 23:07:22,140 basehttp 37319 6152269824 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 23:08:05,099 autoreload 37319 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 23:08:05,592 autoreload 37384 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 23:09:01,963 autoreload 37384 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 23:09:02,405 autoreload 37412 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 23:53:11,677 basehttp 37412 6165458944 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 23:53:11,969 basehttp 37412 6165458944 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-18 23:53:12,071 basehttp 37412 6182285312 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-18 23:53:12,071 basehttp 37412 6199111680 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-18 23:53:12,071 basehttp 37412 6215938048 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-18 23:53:12,313 basehttp 37412 6199111680 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-18 23:53:12,802 log 37412 6199111680 Not Found: /favicon.ico
+WARNING 2025-03-18 23:53:12,802 basehttp 37412 6199111680 "GET /favicon.ico HTTP/1.1" 404 13075
+INFO 2025-03-18 23:53:32,645 basehttp 37412 6199111680 "GET /integration/gdrive/callback HTTP/1.1" 302 0
+INFO 2025-03-18 23:53:41,241 basehttp 37412 6199111680 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-18 23:53:45,618 basehttp 37412 6199111680 "GET /login/ HTTP/1.1" 200 6036
+WARNING 2025-03-18 23:53:49,188 log 37412 6199111680 Forbidden (Origin checking failed - https://474d41e359e66f6627cf4c018a1c23f6.serveo.net does not match any trusted origins.): /login/
+WARNING 2025-03-18 23:53:49,189 basehttp 37412 6199111680 "POST /login/ HTTP/1.1" 403 2607
+INFO 2025-03-18 23:54:00,992 autoreload 37412 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-18 23:54:01,514 autoreload 37717 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 23:54:10,976 basehttp 37717 6160773120 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-18 23:54:14,534 basehttp 37717 6160773120 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 23:54:14,864 basehttp 37717 6160773120 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-18 23:54:14,971 basehttp 37717 6325039104 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-18 23:54:15,322 basehttp 37717 6325039104 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-18 23:54:17,854 views 37717 6160773120 Intégrations activées trouvées: [26]
+INFO 2025-03-18 23:54:17,855 basehttp 37717 6160773120 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 23:54:17,972 basehttp 37717 6325039104 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 23:54:38,089 basehttp 37717 6325039104 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 23:55:23,852 autoreload 37717 8517667840 /Users/yveslenoir/project/alya/alyawebapp/urls.py changed, reloading.
+INFO 2025-03-18 23:55:24,314 autoreload 37767 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-18 23:55:46,601 basehttp 37767 6134525952 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-18 23:55:49,703 views 37767 6151352320 Intégrations activées trouvées: [26]
+INFO 2025-03-18 23:55:49,704 basehttp 37767 6134525952 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-18 23:55:49,704 basehttp 37767 6151352320 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-18 23:55:52,166 basehttp 37767 6151352320 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-18 23:59:11,764 autoreload 37767 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-18 23:59:12,212 autoreload 37840 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:00:00,064 basehttp 37840 6171586560 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:00:03,125 basehttp 37840 6171586560 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:00:03,210 views 37840 6188412928 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:00:03,211 basehttp 37840 6188412928 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:00:07,042 basehttp 37840 6188412928 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 00:00:52,872 basehttp 37840 6188412928 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:00:55,768 basehttp 37840 6188412928 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:00:55,861 views 37840 6171586560 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:00:55,861 basehttp 37840 6171586560 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:01:43,899 basehttp 37840 6171586560 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:01:46,737 views 37840 6188412928 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:01:46,738 basehttp 37840 6188412928 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:01:46,898 basehttp 37840 6171586560 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:01:50,555 basehttp 37840 6171586560 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 00:02:47,923 autoreload 37958 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:02:58,548 basehttp 37958 6191427584 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:03:01,385 basehttp 37958 6191427584 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:03:01,505 views 37958 6208253952 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:03:01,505 basehttp 37958 6208253952 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:03:02,740 basehttp 37958 6225080320 "POST /logout/ HTTP/1.1" 302 0
+INFO 2025-03-19 00:03:02,986 basehttp 37958 6208253952 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-19 00:03:06,425 basehttp 37958 6208253952 "GET /login/ HTTP/1.1" 200 6036
+INFO 2025-03-19 00:03:16,972 basehttp 37958 6208253952 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-19 00:03:20,564 basehttp 37958 6208253952 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:03:23,593 views 37958 6191427584 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:03:23,593 basehttp 37958 6208253952 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:03:23,594 basehttp 37958 6191427584 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:03:25,951 basehttp 37958 6208253952 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 00:04:52,398 autoreload 37958 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:04:52,906 autoreload 38095 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:04:59,891 autoreload 38095 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:05:00,214 autoreload 38117 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:05:32,760 basehttp 38117 6157152256 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:05:35,593 basehttp 38117 6157152256 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:05:35,680 views 38117 6173978624 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:05:35,680 basehttp 38117 6173978624 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:05:51,874 basehttp 38117 6173978624 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 00:05:56,274 basehttp 38117 6173978624 "GET /integration/slack/callback?code=1954618556998.8608508480967.d0cac615ef14f38edb651cca3dd3aafef60cdebc86d0ea9e7429f1408efb648f&state= HTTP/1.1" 200 88
+INFO 2025-03-19 00:06:10,388 basehttp 38117 6173978624 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:06:24,893 log 38117 6173978624 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1223, in google_drive_callback
+    flow = Flow.from_client_config(
+        {
+    ...<6 lines>...
+        SCOPES,
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 168, in from_client_config
+    ) = google_auth_oauthlib.helpers.session_from_client_config(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        client_config, scopes, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/helpers.py", line 66, in session_from_client_config
+    raise ValueError("Client secrets is not in the correct format.")
+ValueError: Client secrets is not in the correct format.
+ERROR 2025-03-19 00:06:24,898 basehttp 38117 6173978624 "GET /integration/gdrive/callback?state=4LvGu4WXBFuyuioVgCJcUNZmIsUrlL&code=4/0AQSTgQHE2M0rP_2uqcjK7xxGdvyk-3JHlukQbafDiSeuzzMYvHvo0Ef51fE89s-gQviyZA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 81767
+INFO 2025-03-19 00:07:44,492 autoreload 38117 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:07:44,915 autoreload 38178 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-19 00:08:09,137 log 38178 6193803264 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1223, in google_drive_callback
+    flow = Flow.from_client_config(
+        {
+    ...<6 lines>...
+        SCOPES,
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 168, in from_client_config
+    ) = google_auth_oauthlib.helpers.session_from_client_config(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        client_config, scopes, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/helpers.py", line 66, in session_from_client_config
+    raise ValueError("Client secrets is not in the correct format.")
+ValueError: Client secrets is not in the correct format.
+ERROR 2025-03-19 00:08:09,140 basehttp 38178 6193803264 "GET /integration/gdrive/callback?state=4LvGu4WXBFuyuioVgCJcUNZmIsUrlL&code=4/0AQSTgQHE2M0rP_2uqcjK7xxGdvyk-3JHlukQbafDiSeuzzMYvHvo0Ef51fE89s-gQviyZA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 81906
+INFO 2025-03-19 00:08:52,792 autoreload 38178 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:08:53,294 autoreload 38205 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:08:56,157 autoreload 38205 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:08:56,434 autoreload 38216 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-19 00:09:03,759 log 38216 6168653824 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1223, in google_drive_callback
+    flow = Flow.from_client_config(
+        {
+    ...<6 lines>...
+        SCOPES,
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 168, in from_client_config
+    ) = google_auth_oauthlib.helpers.session_from_client_config(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        client_config, scopes, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/helpers.py", line 66, in session_from_client_config
+    raise ValueError("Client secrets is not in the correct format.")
+ValueError: Client secrets is not in the correct format.
+ERROR 2025-03-19 00:09:03,761 basehttp 38216 6168653824 "GET /integration/gdrive/callback?state=4LvGu4WXBFuyuioVgCJcUNZmIsUrlL&code=4/0AQSTgQHE2M0rP_2uqcjK7xxGdvyk-3JHlukQbafDiSeuzzMYvHvo0Ef51fE89s-gQviyZA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 81858
+INFO 2025-03-19 00:09:20,202 basehttp 38216 6168653824 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:09:23,093 basehttp 38216 6168653824 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:09:23,187 views 38216 6185480192 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:09:23,188 basehttp 38216 6185480192 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:09:25,431 basehttp 38216 6185480192 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:09:34,231 log 38216 6185480192 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1223, in google_drive_callback
+    flow = Flow.from_client_config(
+        {
+    ...<6 lines>...
+        SCOPES,
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 168, in from_client_config
+    ) = google_auth_oauthlib.helpers.session_from_client_config(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        client_config, scopes, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/helpers.py", line 66, in session_from_client_config
+    raise ValueError("Client secrets is not in the correct format.")
+ValueError: Client secrets is not in the correct format.
+ERROR 2025-03-19 00:09:34,233 basehttp 38216 6185480192 "GET /integration/gdrive/callback?state=PwgB530dkkqQNMv9NPyoiVn7354yxg&code=4/0AQSTgQFEVz40EvY8G8C3eEc-2rcojErwEWTzij_oViJyyq7bVpCLUoqTJS4E80oucbiJFw&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 81721
+INFO 2025-03-19 00:10:15,435 autoreload 38216 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:10:15,897 autoreload 38257 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:10:21,764 autoreload 38257 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:10:22,226 autoreload 38268 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:10:45,528 autoreload 38268 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:10:45,957 autoreload 38282 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:15:00,749 autoreload 38282 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:15:01,214 autoreload 38358 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:15:07,132 autoreload 38358 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:15:07,465 autoreload 38373 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:21:49,870 autoreload 38373 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:21:50,414 autoreload 38519 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:22:00,639 autoreload 38519 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:22:01,042 autoreload 38539 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:22:05,909 basehttp 38539 6137720832 "GET /integration/gdrive/callback?state=PwgB530dkkqQNMv9NPyoiVn7354yxg&code=4/0AQSTgQFEVz40EvY8G8C3eEc-2rcojErwEWTzij_oViJyyq7bVpCLUoqTJS4E80oucbiJFw&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 200 257
+INFO 2025-03-19 00:22:33,650 autoreload 38539 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:22:34,072 autoreload 38558 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:23:02,603 autoreload 38558 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:23:03,002 autoreload 38572 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:23:35,477 autoreload 38572 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:23:35,915 autoreload 38586 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:23:49,984 autoreload 38586 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:23:50,414 autoreload 38601 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-19 00:24:00,757 log 38601 6161559552 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidGrantError: (invalid_grant) Bad Request
+ERROR 2025-03-19 00:24:00,761 basehttp 38601 6161559552 "GET /integration/gdrive/callback?state=PwgB530dkkqQNMv9NPyoiVn7354yxg&code=4/0AQSTgQFEVz40EvY8G8C3eEc-2rcojErwEWTzij_oViJyyq7bVpCLUoqTJS4E80oucbiJFw&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102139
+INFO 2025-03-19 00:24:38,926 views 38601 6161559552 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:24:38,928 basehttp 38601 6161559552 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:24:41,596 basehttp 38601 6178385920 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:24:44,487 views 38601 6178385920 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:24:44,489 basehttp 38601 6178385920 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:24:44,627 basehttp 38601 6161559552 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:24:47,853 basehttp 38601 6161559552 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:24:57,792 log 38601 6161559552 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidClientIdError: (invalid_request) Missing parameter: redirect_uri
+ERROR 2025-03-19 00:24:57,795 basehttp 38601 6161559552 "GET /integration/gdrive/callback?state=TgTTEo4AkHnaelPkXXHxlheNIqQHKv&code=4/0AQSTgQEpu5RzoiTd5jGP9T-6HBOQbvidjXCC4WDQocvRjJAGZwJKchiZzPqNS_AlKvLUUA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102337
+INFO 2025-03-19 00:25:46,586 autoreload 38601 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:25:47,039 autoreload 38656 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-19 00:25:57,802 log 38656 6191050752 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidGrantError: (invalid_grant) Bad Request
+ERROR 2025-03-19 00:25:57,805 basehttp 38656 6191050752 "GET /integration/gdrive/callback?state=TgTTEo4AkHnaelPkXXHxlheNIqQHKv&code=4/0AQSTgQEpu5RzoiTd5jGP9T-6HBOQbvidjXCC4WDQocvRjJAGZwJKchiZzPqNS_AlKvLUUA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102139
+INFO 2025-03-19 00:26:38,402 autoreload 38656 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:26:38,859 autoreload 38682 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-19 00:26:46,027 log 38682 6200766464 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url, redirect_uri=os.getenv('GOOGLE_REDIRECT_DRIVE_URI'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 318, in fetch_token
+    body = self._client.prepare_request_body(
+        code=code,
+    ...<3 lines>...
+        **kwargs
+    )
+TypeError: oauthlib.oauth2.rfc6749.clients.web_application.WebApplicationClient.prepare_request_body() got multiple values for keyword argument 'redirect_uri'
+ERROR 2025-03-19 00:26:46,029 basehttp 38682 6200766464 "GET /integration/gdrive/callback?state=TgTTEo4AkHnaelPkXXHxlheNIqQHKv&code=4/0AQSTgQEpu5RzoiTd5jGP9T-6HBOQbvidjXCC4WDQocvRjJAGZwJKchiZzPqNS_AlKvLUUA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 84840
+INFO 2025-03-19 00:28:29,776 autoreload 38682 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:28:30,249 autoreload 38706 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-19 00:28:38,774 log 38706 6166081536 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidGrantError: (invalid_grant) Bad Request
+ERROR 2025-03-19 00:28:38,778 basehttp 38706 6166081536 "GET /integration/gdrive/callback?state=TgTTEo4AkHnaelPkXXHxlheNIqQHKv&code=4/0AQSTgQEpu5RzoiTd5jGP9T-6HBOQbvidjXCC4WDQocvRjJAGZwJKchiZzPqNS_AlKvLUUA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102139
+INFO 2025-03-19 00:28:57,292 basehttp 38706 6166081536 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 00:29:12,560 basehttp 38706 6166081536 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:29:15,510 basehttp 38706 6166081536 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:29:15,590 views 38706 6182907904 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:29:15,591 basehttp 38706 6182907904 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:29:17,594 basehttp 38706 6182907904 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:29:28,026 log 38706 6182907904 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidClientIdError: (invalid_request) Missing parameter: redirect_uri
+ERROR 2025-03-19 00:29:28,029 basehttp 38706 6182907904 "GET /integration/gdrive/callback?state=X3qtqWQYw6EOAsxems1LjInQfnLt0A&code=4/0AQSTgQG66YZmuPlIKwK0KoL-ZoizN4JFrirTIQbwTFsKPlW-K581BKD8lCy9x9Nna4zAfA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102337
+INFO 2025-03-19 00:34:06,475 autoreload 38706 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:34:06,956 autoreload 38806 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:34:22,376 basehttp 38806 6170128384 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 00:34:33,343 basehttp 38806 6170128384 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:34:36,195 basehttp 38806 6170128384 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:34:36,300 views 38806 6186954752 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:34:36,301 basehttp 38806 6186954752 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:34:39,515 basehttp 38806 6186954752 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:34:52,275 log 38806 6186954752 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url, redirect_uri=os.getenv('GOOGLE_REDIRECT_DRIVE_URI'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 318, in fetch_token
+    body = self._client.prepare_request_body(
+        code=code,
+    ...<3 lines>...
+        **kwargs
+    )
+TypeError: oauthlib.oauth2.rfc6749.clients.web_application.WebApplicationClient.prepare_request_body() got multiple values for keyword argument 'redirect_uri'
+ERROR 2025-03-19 00:34:52,279 basehttp 38806 6186954752 "GET /integration/gdrive/callback?state=Ll1pFzXDc5n3SxM4tA8hvuZCDCJfd6&code=4/0AQSTgQEAuGGCO8roL914Dpg2s359q3Jwgdv15I9RwxsmMdciwlf51u0t-hI10M-YSfLSmw&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 84703
+INFO 2025-03-19 00:35:12,245 basehttp 38806 6186954752 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 00:35:25,050 autoreload 38806 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:35:25,480 autoreload 38876 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:37:03,704 basehttp 38876 6166687744 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 00:39:45,356 basehttp 38876 6166687744 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:39:48,175 basehttp 38876 6166687744 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:39:48,289 views 38876 6325039104 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:39:48,291 basehttp 38876 6325039104 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:39:53,603 ai_orchestrator 38876 6325039104 Changement d'état pour user 9: None -> None
+INFO 2025-03-19 00:39:53,604 ai_orchestrator 38876 6325039104 Initialisation d'AIOrchestrator pour user_id: 9
+INFO 2025-03-19 00:39:53,860 ai_orchestrator 38876 6325039104 Chat actif: 266
+INFO 2025-03-19 00:39:56,459 ai_orchestrator 38876 6325039104 Intention détectée: {'integration': None, 'action': None, 'is_continuation': False, 'confidence': 0}
+ERROR 2025-03-19 00:39:56,459 ai_orchestrator 38876 6325039104 Erreur dans _handle_intent: 'NoneType' object has no attribute 'lower'
+ERROR 2025-03-19 00:39:56,459 ai_orchestrator 38876 6325039104 Contexte: {'intent': {'integration': None, 'action': None, 'is_continuation': False, 'confidence': 0, 'context_type': 'new_request'}, 'message': test}
+INFO 2025-03-19 00:39:56,714 basehttp 38876 6325039104 "POST /chat/ HTTP/1.1" 200 121
+INFO 2025-03-19 00:39:59,019 basehttp 38876 6325039104 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:42:35,624 autoreload 38876 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:42:36,127 autoreload 39216 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:42:43,379 basehttp 39216 6132969472 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:42:53,994 log 39216 6132969472 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidClientIdError: (invalid_request) Missing parameter: redirect_uri
+ERROR 2025-03-19 00:42:53,998 basehttp 39216 6132969472 "GET /integration/gdrive/callback?state=DOJFrIpG2dPU7iua4H5GjTk4dKhaEQ&code=4/0AQSTgQHrH599d8pYhrZcLwTHzOFFokdrKpTnSBgFXaK68uOKvLLa7-TGJJZJqJnf7NTHfQ&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102337
+INFO 2025-03-19 00:46:23,553 autoreload 39216 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:46:23,983 autoreload 39268 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:46:44,513 basehttp 39268 6158479360 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 00:46:51,988 basehttp 39268 6158479360 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:46:54,936 basehttp 39268 6158479360 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:46:55,089 views 39268 6175305728 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:46:55,089 basehttp 39268 6175305728 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:47:21,562 basehttp 39268 6175305728 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:47:31,952 log 39268 6175305728 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidClientIdError: (invalid_request) Missing parameter: redirect_uri
+ERROR 2025-03-19 00:47:31,958 basehttp 39268 6175305728 "GET /integration/gdrive/callback?state=F29AXrege7mToQhc9jWOdJ6OtduS5j&code=4/0AQSTgQGdlxrQrInNTzbYZXwb8tEX4I0c2OS-IFzRDsE9Vf9yLF-H9PyRRycmZc3ZI9660Q&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102577
+INFO 2025-03-19 00:49:56,719 autoreload 39268 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:49:57,216 autoreload 39338 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:50:08,241 basehttp 39338 6164377600 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 00:50:18,546 basehttp 39338 6164377600 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:50:21,398 basehttp 39338 6164377600 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:50:21,534 views 39338 6181203968 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:50:21,535 basehttp 39338 6181203968 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:50:24,415 basehttp 39338 6181203968 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:50:34,625 log 39338 6181203968 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1242, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'),redirect_uri=os.getenv('GOOGLE_REDIRECT_DRIVE_URI'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 318, in fetch_token
+    body = self._client.prepare_request_body(
+        code=code,
+    ...<3 lines>...
+        **kwargs
+    )
+TypeError: oauthlib.oauth2.rfc6749.clients.web_application.WebApplicationClient.prepare_request_body() got multiple values for keyword argument 'redirect_uri'
+ERROR 2025-03-19 00:50:34,627 basehttp 39338 6181203968 "GET /integration/gdrive/callback?state=yAtTHVrV9bcuCB57ecoG9dB6h2tmOH&code=4/0AQSTgQFTMgxFBWgyxYjoKz6EXbpkTFVosq9Pz2ghvEq1yRJ5v4ZA9OBSCamGMrw-Lz2hkA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 84939
+INFO 2025-03-19 00:51:07,137 autoreload 39338 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:51:07,597 autoreload 39384 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-19 00:51:15,694 log 39384 6200946688 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1242, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidClientIdError: (invalid_request) Missing parameter: redirect_uri
+ERROR 2025-03-19 00:51:15,697 basehttp 39384 6200946688 "GET /integration/gdrive/callback?state=yAtTHVrV9bcuCB57ecoG9dB6h2tmOH&code=4/0AQSTgQFTMgxFBWgyxYjoKz6EXbpkTFVosq9Pz2ghvEq1yRJ5v4ZA9OBSCamGMrw-Lz2hkA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102714
+INFO 2025-03-19 00:52:03,053 autoreload 39384 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:52:03,529 autoreload 39410 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-19 00:52:15,498 log 39410 6170914816 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidGrantError: (invalid_grant) Bad Request
+ERROR 2025-03-19 00:52:15,501 basehttp 39410 6170914816 "GET /integration/gdrive/callback?state=yAtTHVrV9bcuCB57ecoG9dB6h2tmOH&code=4/0AQSTgQFTMgxFBWgyxYjoKz6EXbpkTFVosq9Pz2ghvEq1yRJ5v4ZA9OBSCamGMrw-Lz2hkA&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102379
+INFO 2025-03-19 00:52:25,496 basehttp 39410 6170914816 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 00:52:32,248 basehttp 39410 6170914816 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:52:35,342 views 39410 6325039104 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:52:35,343 basehttp 39410 6170914816 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:52:35,344 basehttp 39410 6325039104 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:52:42,634 basehttp 39410 6170914816 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:52:53,485 log 39410 6170914816 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidClientIdError: (invalid_request) Missing parameter: redirect_uri
+ERROR 2025-03-19 00:52:53,488 basehttp 39410 6170914816 "GET /integration/gdrive/callback?state=SlPd1e6xRDCTn0yLzhfSYzLmkH0dal&code=4/0AQSTgQEgo_iqt2yF2vXq0xv22vfo25qfST544UH4GB4AmoQDs_wd_HKq21i1Crz0EblWcw&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102577
+INFO 2025-03-19 00:56:08,334 autoreload 39410 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:56:08,825 autoreload 39482 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:56:14,787 autoreload 39482 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:56:15,096 autoreload 39496 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:56:23,300 autoreload 39516 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:56:36,913 basehttp 39516 6138146816 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 00:56:46,549 basehttp 39516 6138146816 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:56:49,559 basehttp 39516 6154973184 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:56:49,688 views 39516 6138146816 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:56:49,689 basehttp 39516 6138146816 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:56:50,972 basehttp 39516 6138146816 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:57:01,502 log 39516 6138146816 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1242, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'),redirect_uri='http://474d41e359e66f6627cf4c018a1c23f6.serveo.net/integration/gdrive/callback')
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 318, in fetch_token
+    body = self._client.prepare_request_body(
+        code=code,
+    ...<3 lines>...
+        **kwargs
+    )
+TypeError: oauthlib.oauth2.rfc6749.clients.web_application.WebApplicationClient.prepare_request_body() got multiple values for keyword argument 'redirect_uri'
+ERROR 2025-03-19 00:57:01,506 basehttp 39516 6138146816 "GET /integration/gdrive/callback?state=XZCpOL1L0nv3MdmOeLFTgW1tODzHRM&code=4/0AQSTgQF6LbAJnUkapRAX38FFSx04WQDcPSiUgkY68o-NTyOOG4DnUBuMkNu_8l_XXmGchQ&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 85105
+INFO 2025-03-19 00:58:18,252 autoreload 39516 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:58:18,725 autoreload 39558 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:58:43,289 autoreload 39558 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 00:58:43,688 autoreload 39575 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 00:58:56,896 basehttp 39575 6132756480 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 00:59:05,297 basehttp 39575 6132756480 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 00:59:08,149 basehttp 39575 6132756480 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 00:59:08,276 views 39575 6149582848 Intégrations activées trouvées: [26]
+INFO 2025-03-19 00:59:08,276 basehttp 39575 6149582848 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 00:59:09,955 basehttp 39575 6149582848 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 00:59:20,949 log 39575 6149582848 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1243, in google_drive_callback
+    token = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidClientIdError: (invalid_request) Missing parameter: redirect_uri
+ERROR 2025-03-19 00:59:20,954 basehttp 39575 6149582848 "GET /integration/gdrive/callback?state=kVRKxu5NJOOrOrbAOYspXVNLn1Epyx&code=4/0AQSTgQF348t065E2KM0zLh02glFQebnQP4UO7gey7UE5MBbMBk9dkSQmPr5CN0yuD2i0Qw&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 102577
+INFO 2025-03-19 01:02:08,226 autoreload 39575 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 01:02:08,694 autoreload 39629 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 01:02:34,184 autoreload 39629 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 01:02:34,622 autoreload 39656 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 01:08:23,927 autoreload 40053 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 01:09:17,234 autoreload 40053 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-19 01:09:17,639 autoreload 40119 8517667840 Watching for file changes with StatReloader
+WARNING 2025-03-19 01:09:47,118 log 40119 6138048512 Bad Request: /integration/gdrive/callback
+WARNING 2025-03-19 01:09:47,118 basehttp 40119 6138048512 "GET /integration/gdrive/callback HTTP/1.1" 400 34
+INFO 2025-03-19 01:09:50,013 basehttp 40119 6138048512 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-19 01:09:50,285 basehttp 40119 6138048512 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-19 01:09:50,396 basehttp 40119 6171701248 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-19 01:09:50,396 basehttp 40119 6188527616 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-19 01:09:50,397 basehttp 40119 6154874880 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-19 01:09:50,398 basehttp 40119 6205353984 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-19 01:09:50,923 log 40119 6171701248 Not Found: /favicon.ico
+WARNING 2025-03-19 01:09:50,923 basehttp 40119 6171701248 "GET /favicon.ico HTTP/1.1" 404 13075
+INFO 2025-03-19 01:09:54,650 basehttp 40119 6171701248 "GET /login/ HTTP/1.1" 200 6036
+INFO 2025-03-19 01:10:03,316 basehttp 40119 6171701248 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-19 01:10:06,865 basehttp 40119 6171701248 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 01:10:07,147 basehttp 40119 6138048512 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-19 01:10:07,268 basehttp 40119 6154874880 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-19 01:10:07,628 basehttp 40119 6138048512 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-19 01:10:10,131 basehttp 40119 6138048512 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 01:10:10,217 views 40119 6154874880 Intégrations activées trouvées: [26]
+INFO 2025-03-19 01:10:10,217 basehttp 40119 6154874880 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 01:10:14,029 basehttp 40119 6154874880 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 01:10:51,507 autoreload 40200 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 01:11:02,987 basehttp 40200 6125318144 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 01:11:12,191 basehttp 40200 6125318144 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 01:11:15,055 basehttp 40200 6125318144 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 01:11:15,117 views 40200 6142144512 Intégrations activées trouvées: [26]
+INFO 2025-03-19 01:11:15,118 basehttp 40200 6142144512 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 01:11:18,404 basehttp 40200 6142144512 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 01:16:18,548 basehttp 40200 6142144512 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 10:19:55,734 autoreload 40200 8517667840 /Users/yveslenoir/project/alya/alyaprojet/settings.py changed, reloading.
+INFO 2025-03-19 10:19:56,318 autoreload 42035 8517667840 Watching for file changes with StatReloader
+WARNING 2025-03-19 10:21:16,923 log 42035 6201176064 Bad Request: /integration/gdrive/callback
+WARNING 2025-03-19 10:21:16,924 basehttp 42035 6201176064 "GET /integration/gdrive/callback HTTP/1.1" 400 34
+ERROR 2025-03-19 10:21:58,396 log 42035 6201176064 Internal Server Error: /integration/gmail/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1161, in gmail_callback
+    state = request.session['state']
+            ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ~~~~~~~~~~~~~^^^^^
+KeyError: 'state'
+ERROR 2025-03-19 10:21:58,399 basehttp 42035 6201176064 "GET /integration/gmail/callback HTTP/1.1" 500 72596
+INFO 2025-03-19 10:21:59,984 basehttp 42035 6201176064 "GET / HTTP/1.1" 200 11415
+INFO 2025-03-19 10:22:00,256 basehttp 42035 6201176064 "GET /static/css/base.css HTTP/1.1" 200 2942
+INFO 2025-03-19 10:22:00,377 basehttp 42035 6251655168 "GET /static/css/modals.css HTTP/1.1" 200 7625
+INFO 2025-03-19 10:22:00,377 basehttp 42035 6268481536 "GET /static/css/home.css HTTP/1.1" 200 3451
+INFO 2025-03-19 10:22:00,377 basehttp 42035 6234828800 "GET /static/css/compte.css HTTP/1.1" 200 5299
+INFO 2025-03-19 10:22:00,378 basehttp 42035 6218002432 "GET /static/images/ALYA.png HTTP/1.1" 200 142775
+WARNING 2025-03-19 10:22:00,876 log 42035 6251655168 Not Found: /favicon.ico
+WARNING 2025-03-19 10:22:00,876 basehttp 42035 6251655168 "GET /favicon.ico HTTP/1.1" 404 13075
+INFO 2025-03-19 10:22:05,347 basehttp 42035 6251655168 "GET /login/ HTTP/1.1" 200 6036
+INFO 2025-03-19 10:24:07,354 basehttp 42035 6251655168 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-03-19 10:24:10,953 basehttp 42035 6251655168 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 10:24:11,247 basehttp 42035 6201176064 "GET /static/css/chat.css HTTP/1.1" 200 6430
+INFO 2025-03-19 10:24:11,354 basehttp 42035 6251655168 "GET /static/css/components/info-tag.css HTTP/1.1" 200 361
+INFO 2025-03-19 10:24:11,719 basehttp 42035 6201176064 "GET /static/js/compte/integrations.js HTTP/1.1" 200 23920
+INFO 2025-03-19 10:24:14,184 basehttp 42035 6201176064 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 10:24:14,255 views 42035 6218002432 Intégrations activées trouvées: [26]
+INFO 2025-03-19 10:24:14,256 basehttp 42035 6218002432 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 10:24:20,482 basehttp 42035 6218002432 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 10:25:41,420 basehttp 42035 6218002432 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 10:25:44,499 views 42035 6201176064 Intégrations activées trouvées: [26]
+INFO 2025-03-19 10:25:44,500 basehttp 42035 6201176064 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 10:25:44,865 basehttp 42035 6218002432 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 10:25:55,358 basehttp 42035 6218002432 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 10:29:09,009 basehttp 42035 6218002432 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 10:29:25,690 basehttp 42035 6218002432 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 10:29:28,792 views 42035 6201176064 Intégrations activées trouvées: [26]
+INFO 2025-03-19 10:29:28,793 basehttp 42035 6218002432 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 10:29:28,794 basehttp 42035 6201176064 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 10:30:35,352 basehttp 42035 6218002432 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 10:31:15,636 autoreload 42305 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:31:54,409 basehttp 42305 6138376192 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 10:32:01,171 basehttp 42305 6138376192 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 10:32:04,300 basehttp 42305 6138376192 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 10:32:04,388 views 42305 6155202560 Intégrations activées trouvées: [26]
+INFO 2025-03-19 10:32:04,389 basehttp 42305 6155202560 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 10:32:09,455 basehttp 42305 6155202560 "GET /integration/slack/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 10:32:14,889 basehttp 42305 6155202560 "GET /integration/slack/callback?code=1954618556998.8623760834565.5bd530a0006d1764a127d2692e87489f25bd490cc4ad44b93cf8fba332695362&state= HTTP/1.1" 200 88
+INFO 2025-03-19 10:34:29,088 basehttp 42305 6155202560 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 10:36:52,874 basehttp 42305 6155202560 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 10:36:56,913 basehttp 42305 6155202560 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 10:36:56,914 views 42305 6138376192 Intégrations activées trouvées: [26]
+INFO 2025-03-19 10:36:56,915 basehttp 42305 6138376192 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 10:37:02,183 basehttp 42305 6155202560 "GET /integration/gmail/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 10:37:05,741 basehttp 42305 6155202560 "GET /integration/gmail/callback?state=j9eyUqJUgfJ9ZfuutKoahBUYU4Z43K&code=4%2F0AQSTgQHilGROxXM2Nq7VcZrRyjrS9SLe-l63PHtel0P6VPztnEtggWlDEs7biMXe7iXIUw&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.1" 200 255
+INFO 2025-03-19 10:37:15,597 basehttp 42305 6155202560 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 10:37:28,111 log 42305 6155202560 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1246, in google_drive_callback
+    credentials = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidClientIdError: (invalid_request) Missing parameter: redirect_uri
+ERROR 2025-03-19 10:37:28,116 basehttp 42305 6155202560 "GET /integration/gdrive/callback?state=jFQXld97rWuC7CLBf8PO4wBZpgZPgR&code=4/0AQSTgQFazKzbV-b4Sn6plorTbj_4u_yY84AeNy9-jSUvPNBlC8SYDL2VxR2BoxM3-F-Wzw&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 103714
+INFO 2025-03-19 10:43:05,640 autoreload 42305 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 10:43:06,179 autoreload 42544 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:43:57,440 autoreload 42544 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 10:43:58,090 autoreload 42592 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:44:31,894 autoreload 42592 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 10:44:32,451 autoreload 42662 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:45:47,468 autoreload 42662 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 10:45:47,961 autoreload 42687 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:46:11,453 autoreload 42687 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 10:46:11,937 autoreload 42713 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:47:07,337 autoreload 42713 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 10:47:07,875 autoreload 42742 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:47:23,174 autoreload 42742 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 10:47:23,610 autoreload 42756 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:47:33,584 autoreload 42756 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 10:47:33,998 autoreload 42776 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:48:08,670 basehttp 42776 6126923776 "GET / HTTP/1.1" 200 12879
+INFO 2025-03-19 10:49:14,674 basehttp 42776 6126923776 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 10:49:18,851 views 42776 6126923776 Intégrations activées trouvées: [26]
+INFO 2025-03-19 10:49:18,852 basehttp 42776 6126923776 "GET /get-user-integrations-state/ HTTP/1.1" 200 51
+INFO 2025-03-19 10:49:18,852 basehttp 42776 6143750144 "GET /get-chat-history/ HTTP/1.1" 200 34
+ERROR 2025-03-19 10:49:46,109 log 42776 6126923776 Internal Server Error: /integration/gdrive/oauth
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1211, in google_drive_oauth
+    flow = Flow.from_client_config(client_config, SCOPES, edirect_uri = os.getenv('GOOGLE_REDIRECT_DRIVE_URI'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 168, in from_client_config
+    ) = google_auth_oauthlib.helpers.session_from_client_config(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        client_config, scopes, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/helpers.py", line 68, in session_from_client_config
+    session = requests_oauthlib.OAuth2Session(
+        client_id=config["client_id"], scope=scopes, **kwargs
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 77, in __init__
+    super(OAuth2Session, self).__init__(**kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+TypeError: Session.__init__() got an unexpected keyword argument 'edirect_uri'
+ERROR 2025-03-19 10:49:46,113 basehttp 42776 6126923776 "GET /integration/gdrive/oauth HTTP/1.1" 500 88549
+INFO 2025-03-19 10:50:02,083 autoreload 42776 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 10:50:02,564 autoreload 42851 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:50:11,076 basehttp 42851 6125940736 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+ERROR 2025-03-19 10:50:21,949 log 42851 6125940736 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1247, in google_drive_callback
+    credentials = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidClientIdError: (invalid_request) Missing parameter: redirect_uri
+ERROR 2025-03-19 10:50:21,953 basehttp 42851 6125940736 "GET /integration/gdrive/callback?state=lTbmiAiGsaiIh5LcGktZMLyLMxOpLY&code=4/0AQSTgQFi4cn2VlKoqP408WqIYgzpXMiL3zg5TsY--AFA5jT2UWnnpjcZ0POnb9BRo9mpEQ&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 103909
+INFO 2025-03-19 10:51:04,359 autoreload 42851 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
+INFO 2025-03-19 10:51:04,939 autoreload 42912 8517667840 Watching for file changes with StatReloader
+ERROR 2025-03-19 10:51:19,944 log 42912 6165786624 Internal Server Error: /integration/gdrive/callback
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/yveslenoir/project/alya/alyawebapp/views.py", line 1248, in google_drive_callback
+    credentials = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/google_auth_oauthlib/flow.py", line 285, in fetch_token
+    return self.oauth2session.fetch_token(self.client_config["token_uri"], **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/requests_oauthlib/oauth2_session.py", line 366, in fetch_token
+    self._client.parse_request_body_response(r.text, scope=self.scope)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/clients/base.py", line 427, in parse_request_body_response
+    self.token = parse_token_response(body, scope=scope)
+                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 441, in parse_token_response
+    validate_token_parameters(params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/parameters.py", line 448, in validate_token_parameters
+    raise_from_error(params.get('error'), params)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/oauthlib/oauth2/rfc6749/errors.py", line 399, in raise_from_error
+    raise cls(**kwargs)
+oauthlib.oauth2.rfc6749.errors.InvalidGrantError: (invalid_grant) Bad Request
+ERROR 2025-03-19 10:51:19,948 basehttp 42912 6165786624 "GET /integration/gdrive/callback?state=lTbmiAiGsaiIh5LcGktZMLyLMxOpLY&code=4/0AQSTgQFi4cn2VlKoqP408WqIYgzpXMiL3zg5TsY--AFA5jT2UWnnpjcZ0POnb9BRo9mpEQ&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 500 103949
+INFO 2025-03-19 10:51:32,310 basehttp 42912 6165786624 "GET /compte/ HTTP/1.1" 200 225535
+INFO 2025-03-19 10:51:38,571 autoreload 42965 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-19 10:51:58,828 basehttp 42965 6195589120 "GET /integration/gdrive/oauth HTTP/1.1" 302 0
+INFO 2025-03-19 10:52:10,041 basehttp 42965 6195589120 "GET /integration/gdrive/callback?state=zbaRuvJKKOWJs6FLYUJjYIFWonaGg6&code=4/0AQSTgQFBtdYA15MN7h6SL_u6oGwoZ9jMw4uvBv_2qwlFEELwd_qwGUswpQLL021QJQckSw&scope=https://www.googleapis.com/auth/drive.file HTTP/1.1" 200 548

@@ -25,7 +25,8 @@ DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 ALLOWED_HOSTS = ['https://alya-166a.onrender.com/', 'localhost', '127.0.0.1','alya-166a.onrender.com','*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://orange-icons-tan.loca.lt',
+    os.getenv('SSL_LINK'),
+    'https://42ff3d39b4b88ca93e8225d0ab01f7e5.serveo.net'
 ]
 
 

@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from datetime import timedelta
 import json
@@ -48,6 +48,8 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.safestring import mark_safe
 from .integrations.trello.handler import TrelloHandler
 from google_auth_oauthlib.flow import Flow
+import pickle
+from googleapiclient.discovery import build
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -1075,7 +1077,7 @@ def slack_oauth(request):
     slack_auth_url = "https://slack.com/oauth/v2/authorize"
     ssl_link = os.getenv('SSL_LINK')
 
-    redirect_uri = ssl_link + "/integration/gmail/callback"
+    redirect_uri = ssl_link + "/integration/slack/callback"
     params = {
         "client_id": os.getenv("SLACK_CLIENT_ID"),
         "scope": "users:read",  # Ajustez en fonction de vos besoins
@@ -1087,7 +1089,7 @@ def slack_callback(request):
     code = request.GET.get('code')
     ssl_link = os.getenv('SSL_LINK')
 
-    redirect_uri = ssl_link + "/integration/gmail/callback"
+    redirect_uri = ssl_link + "/integration/slack/callback"
     if not code:
         return redirect('slack_login')
 
@@ -1189,3 +1191,63 @@ def gmail_callback(request):
     # Stocker l'access_token pour une utilisation ultérieure
     request.session['access_token'] = access_token
     return JsonResponse({'success': True, 'access' : access_token})
+
+# INTEGRATION GOOGLE DRIVE
+SCOPES = ['https://www.googleapis.com/auth/drive.file']
+
+def google_drive_oauth(request):
+    # Reconstituer les informations d'identification à partir des variables d'environnement
+    client_config = {
+        "web": {  # Utilisation de 'web' au lieu de 'installed' si vous configurez une application web
+            "client_id": os.getenv('GOOGLE_CLIENT_DRIVE_ID'),
+            "client_secret": os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'),
+            "redirect_uris": [os.getenv('GOOGLE_REDIRECT_DRIVE_URI')],
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token"
+        }
+    }
+
+    # Créer le flux d'authentification
+    flow = Flow.from_client_config(client_config, SCOPES, redirect_uri = os.getenv('GOOGLE_REDIRECT_DRIVE_URI'))
+
+    # Définir explicitement l'URI de redirection dans le flux
+    # flow.redirect_uri = os.getenv('GOOGLE_REDIRECT_DRIVE_URI')
+    
+    # Générer l'URL d'autorisation et rediriger l'utilisateur
+    auth_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
+    request.session['state'] = state
+    return redirect(auth_url)
+
+def google_drive_callback(request):
+    code = request.GET.get('code')
+    state = request.session['state']
+
+    if not code:
+        return HttpResponse("Error: Missing authorization code.", status=400)
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": os.getenv('GOOGLE_CLIENT_DRIVE_ID'),
+                "client_secret": os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'),
+                "redirect_uris": [os.getenv('GOOGLE_REDIRECT_DRIVE_URI')],
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+            }
+        },
+        SCOPES,
+        state=state,
+        redirect_uri = os.getenv('GOOGLE_REDIRECT_DRIVE_URI')
+    )
+
+    url = request.build_absolute_uri()
+    if not url.startswith("https://"):
+        url = url.replace("http://", "https://")
+
+    
+    # Récupérer le token d'authentification
+    credentials = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'))
+    
+    return JsonResponse({'files': credentials})
+   
+
+   # ssh -R yourcustomsubdomain:80:localhost:8000 serveo.net
