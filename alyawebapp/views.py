@@ -1130,9 +1130,9 @@ def gmail_oauth(request):
     # Lire les informations du client depuis le .env
     client_id = os.getenv('GOOGLE_CLIENT_ID')
     client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
-    ssl_link = os.getenv('SSL_LINK')
+    # ssl_link = os.getenv('SSL_LINK')
 
-    redirect_uri = ssl_link + "/integration/gmail/callback"
+    redirect_uri = os.getenv('GOOGLE_REDIRECT_URI')
 
     flow = Flow.from_client_config({
         "web": {
@@ -1161,9 +1161,9 @@ def gmail_callback(request):
 
     client_id = os.getenv('GOOGLE_CLIENT_ID')
     client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
-    ssl_link = os.getenv('SSL_LINK')
+    # ssl_link = os.getenv('SSL_LINK')
 
-    redirect_uri = ssl_link + "/integration/gmail/callback"
+    redirect_uri = os.getenv('GOOGLE_REDIRECT_URI')
 
     flow = Flow.from_client_config({
         "web": {
