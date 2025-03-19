@@ -20373,3 +20373,12 @@ INFO 2025-03-19 17:24:25,643 basehttp 49112 29688 "GET /compte/ HTTP/1.1" 200 22
 INFO 2025-03-19 17:24:28,421 basehttp 49112 29688 "GET /get-chat-history/ HTTP/1.1" 200 34
 INFO 2025-03-19 17:24:28,421 views 49112 38536 Intégrations activées trouvées: [8, 26]
 INFO 2025-03-19 17:24:28,421 basehttp 49112 38536 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-19 17:44:51,457 ai_orchestrator 49112 35588 Changement d'état pour user 2: None -> None
+INFO 2025-03-19 17:44:51,457 ai_orchestrator 49112 35588 Initialisation d'AIOrchestrator pour user_id: 2
+INFO 2025-03-19 17:44:51,757 ai_orchestrator 49112 35588 Intégrations actives pour l'utilisateur 2: ['HubSpot CRM', 'Trello']
+INFO 2025-03-19 17:44:52,892 basehttp 49112 35588 "POST /chat/ HTTP/1.1" 200 245
+INFO 2025-03-19 17:44:55,187 basehttp 49112 35588 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-19 17:52:37,330 autoreload 49112 44540 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 17:52:40,518 autoreload 33704 44384 Watching for file changes with StatReloader
+INFO 2025-03-19 17:53:42,898 autoreload 33704 44384 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-19 17:53:45,564 autoreload 48168 28068 Watching for file changes with StatReloader
