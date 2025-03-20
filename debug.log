@@ -22801,3 +22801,13 @@ INFO 2025-03-20 09:25:20,017 autoreload 41908 38128 C:\Users\Nevada Man\CascadeP
 INFO 2025-03-20 09:25:21,484 autoreload 39192 40780 Watching for file changes with StatReloader
 INFO 2025-03-20 09:25:28,423 autoreload 39192 40780 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
 INFO 2025-03-20 09:25:29,873 autoreload 48080 47348 Watching for file changes with StatReloader
+INFO 2025-03-20 09:53:44,167 autoreload 48080 47348 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 09:53:45,903 autoreload 44872 38700 Watching for file changes with StatReloader
+INFO 2025-03-20 09:53:54,167 autoreload 44872 38700 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 09:53:55,845 autoreload 32592 14648 Watching for file changes with StatReloader
+INFO 2025-03-20 09:54:08,260 autoreload 32592 14648 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 09:54:10,341 autoreload 42376 18268 Watching for file changes with StatReloader
+INFO 2025-03-20 09:54:20,692 autoreload 42376 18268 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 09:54:22,259 autoreload 36500 21344 Watching for file changes with StatReloader
+INFO 2025-03-20 10:01:04,533 autoreload 36500 21344 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 10:01:06,291 autoreload 41664 46712 Watching for file changes with StatReloader
