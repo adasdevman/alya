@@ -49,6 +49,7 @@ from django.utils.safestring import mark_safe
 from .integrations.trello.handler import TrelloHandler
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
+from requests_oauthlib import OAuth2Session
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -1326,3 +1327,33 @@ def mailchimp_callback(request):
         return JsonResponse({'account_data': account_data, 'access_token': access_token})
     else:
         return JsonResponse({'error': 'Failed to obtain access token'})
+
+
+# INTEGRATION QUICKBOOK
+
+def get_oauth_session(state=None, token=None):
+    return OAuth2Session(
+        client_id= os.getenv('QB_CLIENT_ID'),
+        redirect_uri= os.getenv('QB_REDIRECT_URI'),
+        state=state,
+        token=token,
+        scope=['com.intuit.quickbooks.accounting']
+    )
+
+def quickbooks_oauth(request):
+    """ Initiate OAuth authorization with QuickBooks """
+    oauth = get_oauth_session()
+    authorization_url, state = oauth.authorization_url(os.getenv('QB_AUTH_URL'))
+    request.session['oauth_state'] = state
+    return redirect(authorization_url)
+
+def quickbooks_callback(request):
+    """ Callback endpoint to exchange code for tokens """
+    oauth = get_oauth_session(state=request.session.get('oauth_state'))
+    token = oauth.fetch_token(
+         os.getenv('QB_TOKEN_URL'),
+        client_secret= os.getenv('QB_CLIENT_SECRET'),
+        authorization_response=request.build_absolute_uri(),
+    )
+    request.session['oauth_token'] = token
+    return redirect('quickbooks_profile')
