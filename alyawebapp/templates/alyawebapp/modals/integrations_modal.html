@@ -24,8 +24,17 @@
                                 <i class="fab fa-mailchimp fa-lg"></i>
                                 <h6 class="card-title text-center my-1">Mailchimp</h6>
                                 <p class="card-text small text-muted text-center mb-1">Email marketing et automation</p>
-                                <a href="{% url 'mailchimp_oauth' %}" class="btn btn-sm btn-outline-dark">
-                                    <i class="fas fa-plug me-1"></i>Configurer
+                                <a href="{% url 'mailchimp_oauth' %}" 
+                                   data-integration="mailchimp"
+                                   class="btn btn-sm {% if configured_integrations.mailchimp %}btn-success disabled{% else %}btn-outline-dark{% endif %}">
+                                    <i class="fas {% if configured_integrations.mailchimp %}fa-check{% else %}fa-plug{% endif %} me-1"></i>
+                                    <span>
+                                    {% if configured_integrations.mailchimp %}
+                                        Déjà configuré
+                                    {% else %}
+                                        Configurer
+                                    {% endif %}
+                                    </span>
                                 </a>
                             </div>
                         </div>
@@ -38,8 +47,17 @@
                                 <i class="fab fa-slack fa-lg"></i>
                                 <h6 class="card-title text-center my-1">Slack</h6>
                                 <p class="card-text small text-muted text-center mb-1">Communication d'équipe</p>
-                                <a href="{% url 'slack_oauth' %}" class="btn btn-sm btn-outline-dark">
-                                    <i class="fas fa-plug me-1"></i>Configurer
+                                <a href="{% url 'slack_oauth' %}" 
+                                   class="btn btn-sm {% if configured_integrations.slack %}btn-success disabled{% else %}btn-outline-dark{% endif %}"
+                                   data-integration="slack">
+                                    <i class="fas {% if configured_integrations.slack %}fa-check{% else %}fa-plug{% endif %} me-1"></i>
+                                    <span>
+                                    {% if configured_integrations.slack %}
+                                        Déjà configuré
+                                    {% else %}
+                                        Configurer
+                                    {% endif %}
+                                    </span>
                                 </a>
                             </div>
                         </div>
@@ -52,8 +70,17 @@
                                 <i class="fa fa-envelope fa-lg"></i>
                                 <h6 class="card-title text-center my-1">Gmail</h6>
                                 <p class="card-text small text-muted text-center mb-1">Email professionnel</p>
-                                <a href="{% url 'gmail_oauth' %}" class="btn btn-sm btn-outline-dark">
-                                    <i class="fas fa-plug me-1"></i>Configurer
+                                <a href="{% url 'gmail_oauth' %}" 
+                                   class="btn btn-sm {% if configured_integrations.gmail %}btn-success disabled{% else %}btn-outline-dark{% endif %}"
+                                   data-integration="gmail">
+                                    <i class="fas {% if configured_integrations.gmail %}fa-check{% else %}fa-plug{% endif %} me-1"></i>
+                                    <span>
+                                    {% if configured_integrations.gmail %}
+                                        Déjà configuré
+                                    {% else %}
+                                        Configurer
+                                    {% endif %}
+                                    </span>
                                 </a>
                             </div>
                         </div>
@@ -66,8 +93,17 @@
                                 <i class="fab fa-google-drive fa-lg"></i>
                                 <h6 class="card-title text-center my-1">Google Drive</h6>
                                 <p class="card-text small text-muted text-center mb-1">Stockage de fichiers</p>
-                                <a href="{% url 'google_drive_oauth' %}" class="btn btn-sm btn-outline-dark">
-                                    <i class="fas fa-plug me-1"></i>Configurer
+                                <a href="{% url 'google_drive_oauth' %}" 
+                                   class="btn btn-sm {% if configured_integrations.google_drive %}btn-success disabled{% else %}btn-outline-dark{% endif %}"
+                                   data-integration="google_drive">
+                                    <i class="fas {% if configured_integrations.google_drive %}fa-check{% else %}fa-plug{% endif %} me-1"></i>
+                                    <span>
+                                    {% if configured_integrations.google_drive %}
+                                        Déjà configuré
+                                    {% else %}
+                                        Configurer
+                                    {% endif %}
+                                    </span>
                                 </a>
                             </div>
                         </div>
@@ -80,8 +116,17 @@
                                 <i class="fab fa-hubspot fa-lg"></i>
                                 <h6 class="card-title text-center my-1">HubSpot</h6>
                                 <p class="card-text small text-muted text-center mb-1">CRM et Marketing</p>
-                                <a href="{% url 'hubspot_oauth' %}" class="btn btn-sm btn-outline-dark">
-                                    <i class="fas fa-plug me-1"></i>Configurer
+                                <a href="{% url 'hubspot_oauth' %}" 
+                                   class="btn btn-sm {% if configured_integrations.hubspot %}btn-success disabled{% else %}btn-outline-dark{% endif %}"
+                                   data-integration="hubspot">
+                                    <i class="fas {% if configured_integrations.hubspot %}fa-check{% else %}fa-plug{% endif %} me-1"></i>
+                                    <span>
+                                    {% if configured_integrations.hubspot %}
+                                        Déjà configuré
+                                    {% else %}
+                                        Configurer
+                                    {% endif %}
+                                    </span>
                                 </a>
                             </div>
                         </div>
@@ -129,12 +174,43 @@
 </style>
 
 <script>
-document.getElementById('searchIntegrations').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    document.querySelectorAll('.integration-card').forEach(card => {
-        const title = card.querySelector('.card-title').textContent.toLowerCase();
-        const description = card.querySelector('.card-text').textContent.toLowerCase();
-        card.style.display = (title.includes(searchTerm) || description.includes(searchTerm)) ? '' : 'none';
+// Fonction pour mettre à jour l'état d'un bouton d'intégration
+function updateIntegrationButton(integrationKey, isConfigured) {
+    const button = document.querySelector(`[data-integration="${integrationKey}"]`);
+    if (button) {
+        if (isConfigured) {
+            button.classList.remove('btn-outline-dark');
+            button.classList.add('btn-success', 'disabled');
+            button.querySelector('i').classList.remove('fa-plug');
+            button.querySelector('i').classList.add('fa-check');
+            button.querySelector('span').textContent = 'Déjà configuré';
+        } else {
+            button.classList.remove('btn-success', 'disabled');
+            button.classList.add('btn-outline-dark');
+            button.querySelector('i').classList.remove('fa-check');
+            button.querySelector('i').classList.add('fa-plug');
+            button.querySelector('span').textContent = 'Configurer';
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // État initial des intégrations
+    const configuredIntegrations = JSON.parse('{{ configured_integrations|escapejs|default:"{}" }}');
+    
+    // Mettre à jour l'état de chaque bouton
+    Object.entries(configuredIntegrations).forEach(([key, value]) => {
+        updateIntegrationButton(key, value);
+    });
+    
+    // Code existant pour la recherche
+    document.getElementById('searchIntegrations').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        document.querySelectorAll('.integration-card').forEach(card => {
+            const title = card.querySelector('.card-title').textContent.toLowerCase();
+            const description = card.querySelector('.card-text').textContent.toLowerCase();
+            card.style.display = (title.includes(searchTerm) || description.includes(searchTerm)) ? '' : 'none';
+        });
     });
 });
 </script>

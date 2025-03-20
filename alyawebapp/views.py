@@ -515,24 +515,62 @@ def compte_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     
-    company_sizes = [
-        {'value': '1-10', 'label': '1-10 employés'},
-        {'value': '11-50', 'label': '11-50 employés'},
-        {'value': '51-200', 'label': '51-200 employés'},
-        {'value': '201-500', 'label': '201-500 employés'},
-        {'value': '501+', 'label': '501+ employés'}
-    ]
-    
-    context = {
-        'user_domains': request.user.domains.all(),
-        'all_domains': Domain.objects.all(),
-        'user_objectifs': request.user.objectifs.all(),
-        'all_objectifs': BusinessObjective.objects.all(),
-        'company_sizes': company_sizes,
-        'user': request.user
-    }
-    
-    return render(request, 'alyawebapp/compte.html', context)
+    try:
+        # Définir les tailles d'entreprise disponibles
+        company_sizes = [
+            {'value': '1-10', 'label': '1-10 employés'},
+            {'value': '11-50', 'label': '11-50 employés'},
+            {'value': '51-200', 'label': '51-200 employés'},
+            {'value': '201-500', 'label': '201-500 employés'},
+            {'value': '501+', 'label': '501+ employés'}
+        ]
+        
+        # Récupérer toutes les intégrations de l'utilisateur
+        user_integrations = UserIntegration.objects.filter(
+            user=request.user,
+            enabled=True
+        ).select_related('integration')
+        
+        # Debug: afficher les intégrations trouvées
+        logger.info("Intégrations actives trouvées:")
+        for ui in user_integrations:
+            logger.info(f"- {ui.integration.name}")
+        
+        # Créer un dictionnaire des intégrations configurées
+        configured_integrations = {}
+        
+        # Mapper les noms d'intégration aux clés du template
+        integration_mapping = {
+            'HubSpot CRM': 'hubspot',
+            'Slack': 'slack',
+            'Gmail': 'gmail',
+            'Google Drive': 'google_drive',
+            'Mailchimp': 'mailchimp'
+        }
+        
+        # Remplir le dictionnaire des intégrations configurées
+        for ui in user_integrations:
+            for db_name, template_key in integration_mapping.items():
+                if ui.integration.name == db_name:
+                    configured_integrations[template_key] = True
+                    break
+        
+        logger.info(f"État des intégrations: {configured_integrations}")
+        
+        context = {
+            'user_domains': request.user.domains.all(),
+            'all_domains': Domain.objects.all(),
+            'user_objectifs': request.user.objectifs.all(),
+            'all_objectifs': BusinessObjective.objects.all(),
+            'company_sizes': company_sizes,
+            'user': request.user,
+            'configured_integrations': json.dumps(configured_integrations),
+        }
+        
+        return render(request, 'alyawebapp/compte.html', context)
+    except Exception as e:
+        logger.error(f"FATAL COMPTE ERROR: {str(e)}")
+        return redirect('home')
 
 @login_required
 def get_integrations(request, domain_name):
@@ -795,7 +833,7 @@ def save_integration_config(request):
             return JsonResponse({
                 'status': 'error',
                 'message': 'Intégration non trouvée'
-        }, status=404)
+            }, status=404)
             
         except Exception as e:
             logger.error(f"Error saving integration config: {str(e)}")
@@ -953,12 +991,9 @@ def clear_chat_history(request):
 
 @login_required
 def integration_success(request):
-    # Récupérer le type d'intégration depuis la session ou l'URL
-    integration_type = request.GET.get('type', 'hubspot')  # Par défaut HubSpot
-    
-    return render(request, 'alyawebapp/integration_success.html', {
-        'integration_type': integration_type
-    })
+    """Page de succès après configuration d'une intégration"""
+    messages.success(request, "L'intégration a été configurée avec succès!")
+    return redirect('compte')
 
 def handle_chat_request(request):
     if request.method == 'POST':
@@ -1107,10 +1142,13 @@ def slack_callback(request):
                 'team_name': data.get('team', {}).get('name')
             }
             user_integration.save()
+            return redirect('integration_success', integration_name='Slack')
         except Exception as e:
             logger.error(f"Erreur lors de la sauvegarde du token Slack: {str(e)}")
-        
-        return JsonResponse({'success': True})
+            return render(request, 'alyawebapp/integration_error.html', {
+                'integration_name': 'Slack',
+                'error_message': str(e)
+            })
     else:
         return JsonResponse({'error': data.get('error', 'Unknown error')})
 
@@ -1178,7 +1216,22 @@ def gmail_callback(request):
 
     # Stocker l'access_token pour une utilisation ultérieure
     request.session['access_token'] = access_token
-    return JsonResponse({'success': True, 'access' : access_token})
+
+    integration = Integration.objects.get(name__icontains='gmail')
+    user_integration, created = UserIntegration.objects.get_or_create(
+        user=request.user,
+        integration=integration,
+        defaults={'enabled': True}
+    )
+    user_integration.access_token = access_token
+    user_integration.config = {
+        'refresh_token': credentials.refresh_token,
+        'expiry': credentials.expiry.isoformat() if hasattr(credentials, 'expiry') else None
+    }
+    user_integration.save()
+
+    messages.success(request, "Gmail a été configuré avec succès!")
+    return redirect('compte')
 
 # INTEGRATION GOOGLE DRIVE
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
@@ -1250,10 +1303,13 @@ def google_drive_callback(request):
             'expiry': credentials.expiry.isoformat() if credentials.expiry else None
         }
         user_integration.save()
+        return redirect('integration_success', integration_name='Google Drive')
     except Exception as e:
         logger.error(f"Erreur lors de la sauvegarde des credentials Google Drive: {str(e)}")
-    
-    return JsonResponse({'success': True})
+        return render(request, 'alyawebapp/integration_error.html', {
+            'integration_name': 'Google Drive',
+            'error_message': str(e)
+        })
    
 # ssh -R yourcustomsubdomain:80:localhost:8000 serveo.net
 # INTEGRATION MAILCHIMP
@@ -1320,9 +1376,22 @@ def mailchimp_callback(request):
             )
             user_integration.access_token = access_token
             user_integration.save()
+            
+            # Ajoutons un log pour confirmer la sauvegarde
+            logger.info(f"Integration {integration.name} configurée pour l'utilisateur {request.user.username}")
+            
+            return redirect('integration_success', integration_name='Mailchimp')
         except Exception as e:
             logger.error(f"Erreur lors de la sauvegarde du token Mailchimp: {str(e)}")
-
-        return JsonResponse({'account_data': account_data, 'access_token': access_token})
+            return render(request, 'alyawebapp/integration_error.html', {
+                'integration_name': 'Mailchimp',
+                'error_message': str(e)
+            })
     else:
         return JsonResponse({'error': 'Failed to obtain access token'})
+
+def integration_success_view(request, integration_name):
+    """Page de succès après configuration d'une intégration"""
+    return render(request, 'alyawebapp/integration_success.html', {
+        'integration_name': integration_name
+    })
