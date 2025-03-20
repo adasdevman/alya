@@ -1204,53 +1204,73 @@ def gmail_oauth(request):
 
 @login_required
 def gmail_callback(request):
-    state = request.session['state']
+    try:
+        # Récupérer l'intégration Gmail
+        integration = Integration.objects.get(name__iexact='Gmail')
+        
+        state = request.session['state']
+        code = request.GET.get('code')
 
-    client_id = os.getenv('GOOGLE_CLIENT_ID')
-    client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
+        if not code:
+            logger.error("No authorization code received from Gmail")
+            messages.error(request, "Erreur lors de l'authentification Gmail")
+            return redirect('compte')
 
-    redirect_uri = os.getenv('GOOGLE_REDIRECT_URI')
+        client_id = os.getenv('GOOGLE_CLIENT_ID')
+        client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
+        redirect_uri = os.getenv('GOOGLE_REDIRECT_URI')
 
-    flow = Flow.from_client_config({
-        "web": {
-            "client_id": client_id,
-            "client_secret": client_secret,
-            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            "token_uri": "https://oauth2.googleapis.com/token",
-            "redirect_uris": [redirect_uri]
+        flow = Flow.from_client_config({
+            "web": {
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "redirect_uris": [redirect_uri]
+            }
+        }, scopes=['https://www.googleapis.com/auth/gmail.readonly'], state=state)
+
+        flow.redirect_uri = redirect_uri
+
+        # Construire l'URL complète avec HTTPS
+        url = request.build_absolute_uri()
+        if not url.startswith("https://"):
+            url = url.replace("http://", "https://")
+
+        # Échanger le code d'autorisation contre des jetons
+        flow.fetch_token(authorization_response=url)
+        credentials = flow.credentials
+
+        # Créer ou mettre à jour l'intégration utilisateur
+        user_integration, created = UserIntegration.objects.get_or_create(
+            user=request.user,
+            integration=integration,
+            defaults={'enabled': True}
+        )
+
+        # Mettre à jour les tokens
+        user_integration.access_token = credentials.token
+        user_integration.config = {
+            'refresh_token': credentials.refresh_token,
+            'token_uri': credentials.token_uri,
+            'client_id': credentials.client_id,
+            'client_secret': credentials.client_secret,
+            'scopes': credentials.scopes
         }
-    }, scopes=['https://www.googleapis.com/auth/gmail.readonly'], state=state)
+        user_integration.enabled = True
+        user_integration.save()
 
-    flow.redirect_uri = redirect_uri
+        messages.success(request, "Gmail a été configuré avec succès!")
+        return redirect('compte')
 
-    url = request.build_absolute_uri()
-    if not url.startswith("https://"):
-        url = url.replace("http://", "https://")
-
-    # Échanger le code d'autorisation contre des jetons
-    flow.fetch_token(authorization_response=url)
-
-    credentials = flow.credentials
-    access_token = credentials.token
-
-    # Stocker l'access_token pour une utilisation ultérieure
-    request.session['access_token'] = access_token
-
-    integration = Integration.objects.get(name__icontains='gmail')
-    user_integration, created = UserIntegration.objects.get_or_create(
-        user=request.user,
-        integration=integration,
-        defaults={'enabled': True}
-    )
-    user_integration.access_token = access_token
-    user_integration.config = {
-        'refresh_token': credentials.refresh_token,
-        'expiry': credentials.expiry.isoformat() if hasattr(credentials, 'expiry') else None
-    }
-    user_integration.save()
-
-    messages.success(request, "Gmail a été configuré avec succès!")
-    return redirect('compte')
+    except Integration.DoesNotExist:
+        logger.error("Gmail integration not found in database")
+        messages.error(request, "Configuration Gmail non trouvée")
+        return redirect('compte')
+    except Exception as e:
+        logger.error(f"Error in Gmail callback: {str(e)}")
+        messages.error(request, f"Erreur lors de la configuration de Gmail: {str(e)}")
+        return redirect('compte')
 
 # INTEGRATION GOOGLE DRIVE
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
