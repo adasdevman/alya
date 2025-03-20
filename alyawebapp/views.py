@@ -751,7 +751,8 @@ def get_user_integrations_state(request):
             'slack': False,
             'gmail': False,
             'google_drive': False,
-            'hubspot': False
+            'hubspot': False,
+            'trello': False
         }
 
         # Mettre à jour les états en fonction des intégrations trouvées
@@ -766,6 +767,12 @@ def get_user_integrations_state(request):
                 integration_states['google_drive'] = True
             elif 'hubspot' in ui.integration.name.lower():
                 integration_states['hubspot'] = True
+            elif 'trello' in ui.integration.name.lower() or 'gestion de projet' in ui.integration.name.lower():
+                integration_states['trello'] = True
+
+        # Ajout d'un log pour déboguer
+        logger.info(f"États des intégrations: {integration_states}")
+        logger.info(f"Intégrations trouvées: {[ui.integration.name for ui in user_integrations]}")
 
         return JsonResponse(integration_states)
     except Exception as e:
