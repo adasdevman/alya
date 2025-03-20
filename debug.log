@@ -22691,3 +22691,4 @@ INFO 2025-03-19 20:00:40,717 autoreload 54448 8517667840 /Users/yveslenoir/proje
 INFO 2025-03-19 20:00:41,194 autoreload 54460 8517667840 Watching for file changes with StatReloader
 INFO 2025-03-19 20:00:46,026 autoreload 54460 8517667840 /Users/yveslenoir/project/alya/alyawebapp/views.py changed, reloading.
 INFO 2025-03-19 20:00:46,405 autoreload 54468 8517667840 Watching for file changes with StatReloader
+INFO 2025-03-20 10:08:03,305 autoreload 68971 8517667840 Watching for file changes with StatReloader
