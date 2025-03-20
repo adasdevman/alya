@@ -22773,3 +22773,31 @@ INFO 2025-03-20 08:43:02,686 autoreload 44648 49496 C:\Users\Nevada Man\CascadeP
 INFO 2025-03-20 08:43:04,493 autoreload 37712 12536 Watching for file changes with StatReloader
 INFO 2025-03-20 08:43:11,443 autoreload 37712 12536 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
 INFO 2025-03-20 08:43:12,983 autoreload 6232 24108 Watching for file changes with StatReloader
+INFO 2025-03-20 08:43:22,686 basehttp 6232 18620 "GET /compte/ HTTP/1.1" 200 227144
+INFO 2025-03-20 08:43:25,479 views 6232 42080 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-20 08:43:25,480 basehttp 6232 18620 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-20 08:43:25,480 basehttp 6232 42080 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-20 09:01:37,409 basehttp 6232 49600 "GET /compte/ HTTP/1.1" 200 187490
+INFO 2025-03-20 09:01:40,025 basehttp 6232 49600 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-20 09:01:40,101 views 6232 20528 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-20 09:01:40,102 basehttp 6232 20528 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-20 09:04:54,917 basehttp 6232 20528 "GET /compte/ HTTP/1.1" 200 188361
+INFO 2025-03-20 09:04:57,632 views 6232 49600 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-20 09:04:57,632 basehttp 6232 20528 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-20 09:04:57,632 basehttp 6232 49600 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-20 09:05:12,585 models 6232 49600 Sauvegarde de UserIntegration - User: adasfranck, Integration: HubSpot CRM, Config: {'timezone': 'UTC', 'portal_id': 'unknown', 'account_type': 'unknown'}
+INFO 2025-03-20 09:05:12,986 basehttp 6232 49600 "GET /integrations/hubspot/oauth/ HTTP/1.1" 302 0
+INFO 2025-03-20 09:22:31,566 autoreload 6232 24108 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 09:22:33,567 autoreload 22912 45848 Watching for file changes with StatReloader
+INFO 2025-03-20 09:22:59,587 autoreload 22912 45848 C:\Users\Nevada Man\CascadeProjects\alya\alyaprojet\settings.py changed, reloading.
+INFO 2025-03-20 09:23:01,002 autoreload 15640 7756 Watching for file changes with StatReloader
+INFO 2025-03-20 09:23:11,434 autoreload 15640 7756 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 09:23:13,313 autoreload 43048 4492 Watching for file changes with StatReloader
+INFO 2025-03-20 09:23:20,286 autoreload 43048 4492 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 09:23:21,639 autoreload 31724 35792 Watching for file changes with StatReloader
+INFO 2025-03-20 09:24:22,004 autoreload 31724 35792 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 09:24:23,559 autoreload 41908 38128 Watching for file changes with StatReloader
+INFO 2025-03-20 09:25:20,017 autoreload 41908 38128 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 09:25:21,484 autoreload 39192 40780 Watching for file changes with StatReloader
+INFO 2025-03-20 09:25:28,423 autoreload 39192 40780 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 09:25:29,873 autoreload 48080 47348 Watching for file changes with StatReloader

@@ -1275,12 +1275,12 @@ def mailchimp_callback(request):
     # Exchange authorization code for access token
     token_data = {
         'grant_type': 'authorization_code',
-        'client_id': os.getenv('MAILCHIMP_CLIENT_ID'),
-        'client_secret': os.getenv('MAILCHIMP_CLIENT_SECRET'),
-        'redirect_uri': os.getenv('MAILCHIMP_REDIRECT_URI'),
+        'client_id': settings.MAILCHIMP_CLIENT_ID,
+        'client_secret': settings.MAILCHIMP_CLIENT_SECRET,
+        'redirect_uri': settings.MAILCHIMP_REDIRECT_URI,
         'code': code,
     }
-    response = requests.post(os.getenv('MAILCHIMP_TOKEN_URL'), data=token_data)
+    response = requests.post(settings.MAILCHIMP_TOKEN_URL, data=token_data)
     token_json = response.json()
 
     if 'access_token' in token_json:
@@ -1296,6 +1296,19 @@ def mailchimp_callback(request):
         account_response = requests.get(account_url, headers=headers)
         account_data = account_response.json()
 
-        return JsonResponse({'account_data': account_data, 'access_token' : access_token})
+        # Sauvegarder le token dans UserIntegration
+        try:
+            integration = Integration.objects.get(name__icontains='mailchimp')
+            user_integration, created = UserIntegration.objects.get_or_create(
+                user=request.user,
+                integration=integration,
+                defaults={'enabled': True}
+            )
+            user_integration.access_token = access_token
+            user_integration.save()
+        except Exception as e:
+            logger.error(f"Erreur lors de la sauvegarde du token Mailchimp: {str(e)}")
+
+        return JsonResponse({'account_data': account_data, 'access_token': access_token})
     else:
         return JsonResponse({'error': 'Failed to obtain access token'})
