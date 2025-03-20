@@ -1120,7 +1120,6 @@ def gmail_oauth(request):
     # Lire les informations du client depuis le .env
     client_id = os.getenv('GOOGLE_CLIENT_ID')
     client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
-    # ssl_link = os.getenv('SSL_LINK')
 
     redirect_uri = os.getenv('GOOGLE_REDIRECT_URI')
 
@@ -1148,42 +1147,38 @@ def gmail_oauth(request):
 
 @login_required
 def gmail_callback(request):
-    code = request.GET.get('code')
-    if not code:
-        return JsonResponse({'error': 'Code manquant'})
+    state = request.session['state']
 
-    # Échanger le code contre un token
-    response = requests.post('https://oauth2.googleapis.com/token', data={
-        'client_id': os.getenv('GOOGLE_CLIENT_ID'),
-        'client_secret': os.getenv('GOOGLE_CLIENT_SECRET'),
-        'code': code,
-        'grant_type': 'authorization_code',
-        'redirect_uri': os.getenv('GMAIL_REDIRECT_URI')
-    })
-    
-    data = response.json()
-    
-    if 'access_token' in data:
-        try:
-            integration = Integration.objects.get(name__icontains='gmail')
-            user_integration, created = UserIntegration.objects.get_or_create(
-                user=request.user,
-                integration=integration,
-                defaults={'enabled': True}
-            )
-            user_integration.access_token = data['access_token']
-            user_integration.config = {
-                'refresh_token': data.get('refresh_token'),
-                'token_type': data.get('token_type'),
-                'expiry': data.get('expires_in')
-            }
-            user_integration.save()
-        except Exception as e:
-            logger.error(f"Erreur lors de la sauvegarde du token Gmail: {str(e)}")
-        
-        return JsonResponse({'success': True})
-    else:
-        return JsonResponse({'error': data.get('error', 'Unknown error')})
+    client_id = os.getenv('GOOGLE_CLIENT_ID')
+    client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
+
+    redirect_uri = os.getenv('GOOGLE_REDIRECT_URI')
+
+    flow = Flow.from_client_config({
+        "web": {
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "redirect_uris": [redirect_uri]
+        }
+    }, scopes=['https://www.googleapis.com/auth/gmail.readonly'], state=state)
+
+    flow.redirect_uri = redirect_uri
+
+    url = request.build_absolute_uri()
+    if not url.startswith("https://"):
+        url = url.replace("http://", "https://")
+
+    # Échanger le code d'autorisation contre des jetons
+    flow.fetch_token(authorization_response=url)
+
+    credentials = flow.credentials
+    access_token = credentials.token
+
+    # Stocker l'access_token pour une utilisation ultérieure
+    request.session['access_token'] = access_token
+    return JsonResponse({'success': True, 'access' : access_token})
 
 # INTEGRATION GOOGLE DRIVE
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
