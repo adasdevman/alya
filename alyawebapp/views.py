@@ -1077,45 +1077,42 @@ def slack_oauth(request):
     }
     return redirect(f"{slack_auth_url}?{urlencode(params)}")
 
+@login_required
 def slack_callback(request):
     code = request.GET.get('code')
-    # ssl_link = os.getenv('SSL_LINK')
-
-    redirect_uri = os.getenv('SLACK_REDIRECT_URI')
     if not code:
-        return redirect('slack_login')
+        return JsonResponse({'error': 'Code manquant'})
 
-    # Échanger le code d'autorisation contre un token
-    token_url = "https://slack.com/api/oauth.v2.access"
-    response = requests.post(token_url, data={
-        "client_id": os.getenv("SLACK_CLIENT_ID"),
-        "client_secret": os.getenv("SLACK_CLIENT_SECRET"),
-        "code": code,
-        "redirect_uri": redirect_uri,
+    # Échanger le code contre un token
+    response = requests.post('https://slack.com/api/oauth.v2.access', data={
+        'client_id': os.getenv('SLACK_CLIENT_ID'),
+        'client_secret': os.getenv('SLACK_CLIENT_SECRET'),
+        'code': code,
+        'redirect_uri': os.getenv('SLACK_REDIRECT_URI')
     })
-
+    
     data = response.json()
-
+    
     if data.get('ok'):
-        # Vous avez maintenant le token d'accès et les informations de l'utilisateur
-        # user_info = data['authed_user']
-        # access_token = user_info['access_token']
-
-        # integration = Integration.objects.get_or_create(name='slack')
-        # user_integration, created = UserIntegration.objects.get_or_create(
-           # user=request.user,
-            #integration=integration
-        #)
-
-        #user_integration.access_token = data.get('access_token')
-        #user_integration.enabled = True
-        #user_integration.save()
-
-        return JsonResponse({'success': True, 'access' : data.get('access_token')})
+        try:
+            integration = Integration.objects.get(name__icontains='slack')
+            user_integration, created = UserIntegration.objects.get_or_create(
+                user=request.user,
+                integration=integration,
+                defaults={'enabled': True}
+            )
+            user_integration.access_token = data['access_token']
+            user_integration.config = {
+                'team_id': data.get('team', {}).get('id'),
+                'team_name': data.get('team', {}).get('name')
+            }
+            user_integration.save()
+        except Exception as e:
+            logger.error(f"Erreur lors de la sauvegarde du token Slack: {str(e)}")
+        
+        return JsonResponse({'success': True})
     else:
-        # Gestion des erreurs
-        return JsonResponse({'success': False, 'error': data.get('error'), 'secret' : os.getenv("SLACK_CLIENT_SECRET"), 'data' :  data})
-        # return render(request, 'slack_oauth_error.html', {'error': data.get('error')})
+        return JsonResponse({'error': data.get('error', 'Unknown error')})
 
 
 # INTEGRATION GMAIL
@@ -1149,40 +1146,44 @@ def gmail_oauth(request):
 
     return redirect(authorization_url)
 
+@login_required
 def gmail_callback(request):
-    state = request.session['state']
+    code = request.GET.get('code')
+    if not code:
+        return JsonResponse({'error': 'Code manquant'})
 
-    client_id = os.getenv('GOOGLE_CLIENT_ID')
-    client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
-    # ssl_link = os.getenv('SSL_LINK')
-
-    redirect_uri = os.getenv('GOOGLE_REDIRECT_URI')
-
-    flow = Flow.from_client_config({
-        "web": {
-            "client_id": client_id,
-            "client_secret": client_secret,
-            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            "token_uri": "https://oauth2.googleapis.com/token",
-            "redirect_uris": [redirect_uri]
-        }
-    }, scopes=['https://www.googleapis.com/auth/gmail.readonly'], state=state)
-
-    flow.redirect_uri = redirect_uri
-
-    url = request.build_absolute_uri()
-    if not url.startswith("https://"):
-        url = url.replace("http://", "https://")
-
-    # Échanger le code d'autorisation contre des jetons
-    flow.fetch_token(authorization_response=url)
-
-    credentials = flow.credentials
-    access_token = credentials.token
-
-    # Stocker l'access_token pour une utilisation ultérieure
-    request.session['access_token'] = access_token
-    return JsonResponse({'success': True, 'access' : access_token})
+    # Échanger le code contre un token
+    response = requests.post('https://oauth2.googleapis.com/token', data={
+        'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+        'client_secret': os.getenv('GOOGLE_CLIENT_SECRET'),
+        'code': code,
+        'grant_type': 'authorization_code',
+        'redirect_uri': os.getenv('GMAIL_REDIRECT_URI')
+    })
+    
+    data = response.json()
+    
+    if 'access_token' in data:
+        try:
+            integration = Integration.objects.get(name__icontains='gmail')
+            user_integration, created = UserIntegration.objects.get_or_create(
+                user=request.user,
+                integration=integration,
+                defaults={'enabled': True}
+            )
+            user_integration.access_token = data['access_token']
+            user_integration.config = {
+                'refresh_token': data.get('refresh_token'),
+                'token_type': data.get('token_type'),
+                'expiry': data.get('expires_in')
+            }
+            user_integration.save()
+        except Exception as e:
+            logger.error(f"Erreur lors de la sauvegarde du token Gmail: {str(e)}")
+        
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'error': data.get('error', 'Unknown error')})
 
 # INTEGRATION GOOGLE DRIVE
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
@@ -1210,6 +1211,7 @@ def google_drive_oauth(request):
     request.session['state'] = state
     return redirect(auth_url)
 
+@login_required
 def google_drive_callback(request):
     code = request.GET.get('code')
     state = request.session['state']
@@ -1239,7 +1241,24 @@ def google_drive_callback(request):
     # Récupérer le token d'authentification
     credentials = flow.fetch_token(authorization_response=url, client_secret=os.getenv('GOOGLE_CLIENT_DRIVE_SECRET'))
     
-    return JsonResponse({'files': credentials})
+    try:
+        integration = Integration.objects.get(name__icontains='google drive')
+        user_integration, created = UserIntegration.objects.get_or_create(
+            user=request.user,
+            integration=integration,
+            defaults={'enabled': True}
+        )
+        user_integration.access_token = credentials.token
+        user_integration.config = {
+            'refresh_token': credentials.refresh_token,
+            'token_uri': credentials.token_uri,
+            'expiry': credentials.expiry.isoformat() if credentials.expiry else None
+        }
+        user_integration.save()
+    except Exception as e:
+        logger.error(f"Erreur lors de la sauvegarde des credentials Google Drive: {str(e)}")
+    
+    return JsonResponse({'success': True})
    
 # ssh -R yourcustomsubdomain:80:localhost:8000 serveo.net
 # INTEGRATION MAILCHIMP
