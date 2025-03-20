@@ -139,14 +139,18 @@ INTEGRATION_CONFIGS = {
         'name': 'Mailchimp',
         'description': 'Email marketing',
         'icon': 'fa-envelope',
-        'fields': [
-            {
-                'name': 'api_key',
-                'label': 'Clé API',
-                'type': 'password',
-                'required': True
-            }
-        ],
+        'auth_type': 'oauth2',
+        'oauth_config': {
+            'authorize_url': 'https://login.mailchimp.com/oauth2/authorize',
+            'token_url': 'https://login.mailchimp.com/oauth2/token',
+            'scope': ['']
+        },
+        'button_config': {
+            'text': 'Configurer',
+            'class': 'btn btn-outline-dark btn-sm',
+            'action': 'configure'
+        },
+        'auth_provider': 'oauth2',
         'category': 'marketing'
     },
 

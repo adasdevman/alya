@@ -25,11 +25,14 @@ DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 ALLOWED_HOSTS = ['https://alya-166a.onrender.com/', 'localhost', '127.0.0.1','alya-166a.onrender.com','*']
 
 CSRF_TRUSTED_ORIGINS = [
-    os.getenv('SSL_LINK'),
-    'https://ed648020a54caf7b9c434a9a0243a8a4.serveo.net'
+    'https://alya-166a.onrender.com',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000'
 ]
 
-
+# Ajouter SSL_LINK aux origines de confiance s'il est défini
+if os.getenv('SSL_LINK'):
+    CSRF_TRUSTED_ORIGINS.append(os.getenv('SSL_LINK'))
 
 # Application definition
 
@@ -197,3 +200,16 @@ TRELLO_API_KEY = os.getenv('TRELLO_API_KEY')
 TRELLO_API_SECRET = os.getenv('TRELLO_API_SECRET')
 TRELLO_REDIRECT_URI = os.getenv('TRELLO_REDIRECT_URI', default='http://localhost:8000/trello/callback/')
 TRELLO_API_URL = 'https://api.trello.com/1'
+
+# Mailchimp Configuration
+MAILCHIMP_CLIENT_ID = os.getenv('MAILCHIMP_CLIENT_ID')
+MAILCHIMP_CLIENT_SECRET = os.getenv('MAILCHIMP_CLIENT_SECRET')
+MAILCHIMP_REDIRECT_URI = os.getenv('MAILCHIMP_REDIRECT_URI')
+MAILCHIMP_AUTHORIZATION_URL = os.getenv('MAILCHIMP_AUTHORIZATION_URL')
+MAILCHIMP_TOKEN_URL = os.getenv('MAILCHIMP_TOKEN_URL')
+
+# Vérification de la configuration Mailchimp
+if not all([MAILCHIMP_CLIENT_ID, MAILCHIMP_CLIENT_SECRET, MAILCHIMP_REDIRECT_URI]):
+    logger.warning("⚠️ Configuration Mailchimp incomplète!")
+    logger.debug(f"MAILCHIMP_CLIENT_ID: {MAILCHIMP_CLIENT_ID}")
+    logger.debug(f"MAILCHIMP_REDIRECT_URI: {MAILCHIMP_REDIRECT_URI}")

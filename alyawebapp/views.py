@@ -1250,13 +1250,27 @@ def google_drive_callback(request):
    
 # ssh -R yourcustomsubdomain:80:localhost:8000 serveo.net
 # INTEGRATION MAILCHIMP
-def mailchimp_oauth(request): 
+def mailchimp_oauth(request):
+    """Redirige vers l'authentification Mailchimp"""
+    logger.info(f"MAILCHIMP_CLIENT_ID: {settings.MAILCHIMP_CLIENT_ID}")
+    logger.info(f"MAILCHIMP_REDIRECT_URI: {settings.MAILCHIMP_REDIRECT_URI}")
+    
+    if not settings.MAILCHIMP_CLIENT_ID or not settings.MAILCHIMP_REDIRECT_URI:
+        logger.error("Configuration Mailchimp manquante!")
+        return JsonResponse({
+            'error': 'Configuration Mailchimp incomplète',
+            'client_id': settings.MAILCHIMP_CLIENT_ID,
+            'redirect_uri': settings.MAILCHIMP_REDIRECT_URI
+        })
+
     query_params = {
         "response_type": "code",
-        "client_id": os.getenv('MAILCHIMP_CLIENT_ID'),
-        "redirect_uri": os.getenv('MAILCHIMP_REDIRECT_URI'),
+        "client_id": settings.MAILCHIMP_CLIENT_ID,
+        "redirect_uri": settings.MAILCHIMP_REDIRECT_URI,
     }
-    auth_url = f"{os.getenv('MAILCHIMP_AUTHORIZATION_URL')}?{urlencode(query_params)}"
+    
+    auth_url = f"{settings.MAILCHIMP_AUTHORIZATION_URL}?{urlencode(query_params)}"
+    logger.info(f"URL d'authentification Mailchimp: {auth_url}")
     return redirect(auth_url)
 
 # Step 2: Handle callback and exchange code for token

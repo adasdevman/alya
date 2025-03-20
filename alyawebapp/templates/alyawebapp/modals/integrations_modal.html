@@ -17,6 +17,25 @@
 
                 <!-- Liste des intégrations -->
                 <div class="row row-cols-2 row-cols-md-3 g-2">
+                    <!-- Mailchimp -->
+                    <div class="col integration-card">
+                        <div class="card" style="margin: 0 auto; height: 120px;">
+                            <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
+                                <i class="fab fa-mailchimp fa-lg"></i>
+                                <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">Mailchimp</h6>
+                                <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
+                                    Email marketing et automation
+                                </p>
+                                <a href="{% url 'mailchimp_oauth' %}"
+                                   class="btn btn-sm btn-outline-dark"
+                                   style="font-size: 0.75rem; padding: 0.15rem 0.5rem; text-decoration: none; z-index: 1000;">
+                                    <i class="fas fa-plug me-1"></i>
+                                    Configurer
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Slack -->
                     <div class="col integration-card">
                         <div class="card" style="margin: 0 auto; height: 120px;">
@@ -141,6 +160,19 @@
 </div>
 
 <style>
+.integration-card .card-body {
+    position: relative;
+}
+
+.integration-card button {
+    position: relative;
+    z-index: 10;
+}
+
+.integration-card .card:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
 @media (max-width: 768px) {
     .integration-card .card {
         height: 110px !important;
