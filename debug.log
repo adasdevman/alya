@@ -22727,3 +22727,21 @@ INFO 2025-03-20 08:01:26,747 autoreload 27408 49488 C:\Users\Nevada Man\CascadeP
 INFO 2025-03-20 08:01:30,965 autoreload 39604 8912 Watching for file changes with StatReloader
 INFO 2025-03-20 08:03:35,737 autoreload 39604 8912 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
 INFO 2025-03-20 08:03:40,574 autoreload 35992 15224 Watching for file changes with StatReloader
+INFO 2025-03-20 08:04:22,925 basehttp 35992 25928 "GET /compte/ HTTP/1.1" 200 226974
+INFO 2025-03-20 08:04:27,279 views 35992 28360 MAILCHIMP_CLIENT_ID: 543377890576
+INFO 2025-03-20 08:04:27,279 views 35992 28360 MAILCHIMP_REDIRECT_URI: https://b83463fb9648c970ed235be9f80d5607.serveo.net/integration/mailchimp/callback
+INFO 2025-03-20 08:04:27,279 views 35992 28360 URL d'authentification Mailchimp: https://login.mailchimp.com/oauth2/authorize?response_type=code&client_id=543377890576&redirect_uri=https%3A%2F%2Fb83463fb9648c970ed235be9f80d5607.serveo.net%2Fintegration%2Fmailchimp%2Fcallback
+INFO 2025-03-20 08:04:27,279 basehttp 35992 28360 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-20 08:04:42,066 views 35992 45044 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-20 08:04:42,066 basehttp 35992 25928 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-20 08:04:42,068 basehttp 35992 45044 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-20 08:13:05,736 autoreload 35992 15224 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 08:13:07,619 autoreload 24800 24252 Watching for file changes with StatReloader
+INFO 2025-03-20 08:13:14,152 autoreload 24800 24252 C:\Users\Nevada Man\CascadeProjects\alya\alyaprojet\settings.py changed, reloading.
+INFO 2025-03-20 08:13:18,323 autoreload 31088 32216 Watching for file changes with StatReloader
+INFO 2025-03-20 08:14:16,276 autoreload 31088 32216 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 08:14:19,775 autoreload 49872 44688 Watching for file changes with StatReloader
+INFO 2025-03-20 08:16:39,159 autoreload 49872 44688 C:\Users\Nevada Man\CascadeProjects\alya\alyaprojet\settings.py changed, reloading.
+INFO 2025-03-20 08:16:40,548 autoreload 26460 47784 Watching for file changes with StatReloader
+INFO 2025-03-20 08:17:10,268 autoreload 26460 47784 C:\Users\Nevada Man\CascadeProjects\alya\alyaprojet\settings.py changed, reloading.
+INFO 2025-03-20 08:17:11,722 autoreload 33016 32244 Watching for file changes with StatReloader

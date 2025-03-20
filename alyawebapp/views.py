@@ -1269,7 +1269,7 @@ def mailchimp_oauth(request):
         "redirect_uri": settings.MAILCHIMP_REDIRECT_URI,
     }
     
-    auth_url = f"{settings.MAILCHIMP_AUTHORIZATION_URL}?{urlencode(query_params)}"
+    auth_url = settings.MAILCHIMP_AUTHORIZATION_URL + "?" + urlencode(query_params)
     logger.info(f"URL d'authentification Mailchimp: {auth_url}")
     return redirect(auth_url)
 

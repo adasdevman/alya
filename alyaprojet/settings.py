@@ -205,8 +205,8 @@ TRELLO_API_URL = 'https://api.trello.com/1'
 MAILCHIMP_CLIENT_ID = os.getenv('MAILCHIMP_CLIENT_ID')
 MAILCHIMP_CLIENT_SECRET = os.getenv('MAILCHIMP_CLIENT_SECRET')
 MAILCHIMP_REDIRECT_URI = os.getenv('MAILCHIMP_REDIRECT_URI')
-MAILCHIMP_AUTHORIZATION_URL = os.getenv('MAILCHIMP_AUTHORIZATION_URL')
-MAILCHIMP_TOKEN_URL = os.getenv('MAILCHIMP_TOKEN_URL')
+MAILCHIMP_AUTHORIZATION_URL = 'https://login.mailchimp.com/oauth2/authorize'  # URL fixe
+MAILCHIMP_TOKEN_URL = 'https://login.mailchimp.com/oauth2/token'  # URL fixe
 
 # Vérification de la configuration Mailchimp
 if not all([MAILCHIMP_CLIENT_ID, MAILCHIMP_CLIENT_SECRET, MAILCHIMP_REDIRECT_URI]):
