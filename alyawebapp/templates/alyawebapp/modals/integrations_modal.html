@@ -195,12 +195,12 @@ function updateIntegrationButton(integrationKey, isConfigured) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // État initial des intégrations
-    const configuredIntegrations = JSON.parse('{{ configured_integrations|escapejs|default:"{}" }}');
-    
-    // Mettre à jour l'état de chaque bouton
-    Object.entries(configuredIntegrations).forEach(([key, value]) => {
-        updateIntegrationButton(key, value);
+    // Écouter l'événement de chargement des intégrations
+    document.addEventListener('integrationsLoaded', function(e) {
+        const integrationStates = e.detail;
+        Object.entries(integrationStates).forEach(([key, value]) => {
+            updateIntegrationButton(key, value);
+        });
     });
     
     // Code existant pour la recherche

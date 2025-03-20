@@ -737,28 +737,40 @@ def get_integration_config(request, integration_id):
 
 @login_required
 def get_user_integrations_state(request):
+    """Récupère l'état des intégrations de l'utilisateur"""
     try:
-        # Récupérer toutes les intégrations activées de l'utilisateur
+        # Récupérer les intégrations actives de l'utilisateur
         user_integrations = UserIntegration.objects.filter(
             user=request.user,
             enabled=True
-        ).values_list('integration_id', flat=True)
+        ).select_related('integration')
 
-        # Convertir en liste pour la sérialisation JSON
-        enabled_integrations = list(user_integrations)
+        # Créer un dictionnaire des états
+        integration_states = {
+            'mailchimp': False,
+            'slack': False,
+            'gmail': False,
+            'google_drive': False,
+            'hubspot': False
+        }
 
-        logger.info(f"Intégrations activées trouvées: {enabled_integrations}")
-        
-        return JsonResponse({
-            'status': 'success',
-            'enabled_integrations': enabled_integrations
-        })
+        # Mettre à jour les états en fonction des intégrations trouvées
+        for ui in user_integrations:
+            if 'mailchimp' in ui.integration.name.lower():
+                integration_states['mailchimp'] = True
+            elif 'slack' in ui.integration.name.lower():
+                integration_states['slack'] = True
+            elif 'gmail' in ui.integration.name.lower():
+                integration_states['gmail'] = True
+            elif 'google drive' in ui.integration.name.lower():
+                integration_states['google_drive'] = True
+            elif 'hubspot' in ui.integration.name.lower():
+                integration_states['hubspot'] = True
+
+        return JsonResponse(integration_states)
     except Exception as e:
-        logger.error(f"Erreur lors de la récupération des intégrations: {str(e)}")
-        return JsonResponse({
-            'status': 'error',
-            'message': 'Erreur lors de la récupération des intégrations'
-        }, status=500)
+        logger.error(f"Erreur lors de la récupération des états des intégrations: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 @require_http_methods(["POST"])
