@@ -22745,3 +22745,31 @@ INFO 2025-03-20 08:16:39,159 autoreload 49872 44688 C:\Users\Nevada Man\CascadeP
 INFO 2025-03-20 08:16:40,548 autoreload 26460 47784 Watching for file changes with StatReloader
 INFO 2025-03-20 08:17:10,268 autoreload 26460 47784 C:\Users\Nevada Man\CascadeProjects\alya\alyaprojet\settings.py changed, reloading.
 INFO 2025-03-20 08:17:11,722 autoreload 33016 32244 Watching for file changes with StatReloader
+INFO 2025-03-20 08:35:49,918 basehttp 33016 49252 "GET /compte/ HTTP/1.1" 200 226974
+INFO 2025-03-20 08:35:52,875 views 33016 33400 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-20 08:35:52,875 basehttp 33016 49252 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-20 08:35:52,875 basehttp 33016 33400 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-20 08:36:36,114 autoreload 33016 32244 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-20 08:36:37,926 autoreload 30468 47816 Watching for file changes with StatReloader
+INFO 2025-03-20 08:38:31,591 autoreload 30468 47816 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-20 08:38:32,945 autoreload 47856 20528 Watching for file changes with StatReloader
+INFO 2025-03-20 08:39:31,385 autoreload 47856 20528 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-20 08:39:32,715 autoreload 40860 42024 Watching for file changes with StatReloader
+INFO 2025-03-20 08:39:36,989 autoreload 40860 42024 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\services\ai_orchestrator.py changed, reloading.
+INFO 2025-03-20 08:39:38,304 autoreload 44648 49496 Watching for file changes with StatReloader
+INFO 2025-03-20 08:39:47,425 basehttp 44648 26864 "GET /compte/ HTTP/1.1" 200 227144
+INFO 2025-03-20 08:39:50,119 views 44648 27024 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-20 08:39:50,120 basehttp 44648 27024 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-20 08:39:50,141 basehttp 44648 26864 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-20 08:39:55,038 views 44648 26864 MAILCHIMP_CLIENT_ID: 543377890576
+INFO 2025-03-20 08:39:55,038 views 44648 26864 MAILCHIMP_REDIRECT_URI: https://alya-166a.onrender.com/integration/mailchimp/callback
+INFO 2025-03-20 08:39:55,038 views 44648 26864 URL d'authentification Mailchimp: https://login.mailchimp.com/oauth2/authorize?response_type=code&client_id=543377890576&redirect_uri=https%3A%2F%2Falya-166a.onrender.com%2Fintegration%2Fmailchimp%2Fcallback
+INFO 2025-03-20 08:39:55,038 basehttp 44648 26864 "GET /integration/mailchimp/oauth HTTP/1.1" 302 0
+INFO 2025-03-20 08:42:01,330 basehttp 44648 26864 "GET /compte/ HTTP/1.1" 200 227144
+INFO 2025-03-20 08:42:03,941 views 44648 27024 Intégrations activées trouvées: [8, 26]
+INFO 2025-03-20 08:42:03,941 basehttp 44648 27024 "GET /get-user-integrations-state/ HTTP/1.1" 200 54
+INFO 2025-03-20 08:42:04,022 basehttp 44648 26864 "GET /get-chat-history/ HTTP/1.1" 200 34
+INFO 2025-03-20 08:43:02,686 autoreload 44648 49496 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 08:43:04,493 autoreload 37712 12536 Watching for file changes with StatReloader
+INFO 2025-03-20 08:43:11,443 autoreload 37712 12536 C:\Users\Nevada Man\CascadeProjects\alya\alyawebapp\views.py changed, reloading.
+INFO 2025-03-20 08:43:12,983 autoreload 6232 24108 Watching for file changes with StatReloader
