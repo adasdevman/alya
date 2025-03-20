@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Ajout du champ de recherche -->
+                <!-- Barre de recherche -->
                 <div class="input-group mb-3">
                     <span class="input-group-text bg-transparent">
                         <i class="fas fa-search"></i>
@@ -22,15 +22,10 @@
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
                                 <i class="fab fa-mailchimp fa-lg"></i>
-                                <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">Mailchimp</h6>
-                                <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
-                                    Email marketing et automation
-                                </p>
-                                <a href="{% url 'mailchimp_oauth' %}"
-                                   class="btn btn-sm btn-outline-dark"
-                                   style="font-size: 0.75rem; padding: 0.15rem 0.5rem; text-decoration: none; z-index: 1000;">
-                                    <i class="fas fa-plug me-1"></i>
-                                    Configurer
+                                <h6 class="card-title text-center my-1">Mailchimp</h6>
+                                <p class="card-text small text-muted text-center mb-1">Email marketing et automation</p>
+                                <a href="{% url 'mailchimp_oauth' %}" class="btn btn-sm btn-outline-dark">
+                                    <i class="fas fa-plug me-1"></i>Configurer
                                 </a>
                             </div>
                         </div>
@@ -41,16 +36,10 @@
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
                                 <i class="fab fa-slack fa-lg"></i>
-                                <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">Slack</h6>
-                                <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
-                                    Communication interne avec Slack dd
-                                </p>
-                                <a href="{% url 'slack_oauth' %}" class="btn btn-sm btn-outline-dark"
-                                        data-integration-id="slack"
-                                        data-auth-provider="auth0"
-                                        style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
-                                    <i class="fas fa-plug me-1"></i>
-                                    Configurer
+                                <h6 class="card-title text-center my-1">Slack</h6>
+                                <p class="card-text small text-muted text-center mb-1">Communication d'équipe</p>
+                                <a href="{% url 'slack_oauth' %}" class="btn btn-sm btn-outline-dark">
+                                    <i class="fas fa-plug me-1"></i>Configurer
                                 </a>
                             </div>
                         </div>
@@ -61,16 +50,10 @@
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
                                 <i class="fa fa-envelope fa-lg"></i>
-                                <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">Gmail</h6>
-                                <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
-                                    Service de messagerie électronique
-                                </p>
-                                <a  href="{% url 'gmail_oauth' %}" class="btn btn-sm btn-outline-dark"
-                                        data-integration-id="gmail"
-                                        data-auth-provider="auth0"
-                                        style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
-                                    <i class="fas fa-plug me-1"></i>
-                                    Configurer
+                                <h6 class="card-title text-center my-1">Gmail</h6>
+                                <p class="card-text small text-muted text-center mb-1">Email professionnel</p>
+                                <a href="{% url 'gmail_oauth' %}" class="btn btn-sm btn-outline-dark">
+                                    <i class="fas fa-plug me-1"></i>Configurer
                                 </a>
                             </div>
                         </div>
@@ -81,78 +64,43 @@
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
                                 <i class="fab fa-google-drive fa-lg"></i>
-                                <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">Google Drive</h6>
-                                <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
-                                    Gestion et partage de documents
-                                </p>
-                                <a  href="{% url 'google_drive_oauth' %}" class="btn btn-sm btn-outline-dark"
-                                        data-integration-id="google_drive"
-                                        data-auth-provider="auth0"
-                                        style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
-                                    <i class="fas fa-plug me-1"></i>
-                                    Configurer
+                                <h6 class="card-title text-center my-1">Google Drive</h6>
+                                <p class="card-text small text-muted text-center mb-1">Stockage de fichiers</p>
+                                <a href="{% url 'google_drive_oauth' %}" class="btn btn-sm btn-outline-dark">
+                                    <i class="fas fa-plug me-1"></i>Configurer
                                 </a>
                             </div>
                         </div>
                     </div>
 
-                    {% for integration in integrations %}
+                    <!-- HubSpot -->
                     <div class="col integration-card">
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
-                                {% if integration.name == 'Trello' %}
-                                    <i class="fab fa-trello fa-lg"></i>
-                                    <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">Trello</h6>
-                                    <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
-                                        Gérez vos projets et tâches d'équipe
-                                    </p>
-                                    <button class="btn btn-sm {% if integration.id in user_integrations %}btn-success disabled{% else %}btn-dark trello-auth{% endif %}"
-                                            onclick="window.location.href='https://trello.com/1/authorize?expiration=never&name=Alya&scope=read,write&response_type=token&key={{ trello_api_key }}&return_url={{ trello_redirect_uri }}'"
-                                            style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
-                                        <i class="fas fa-plug me-1"></i>
-                                        {% if integration.id in user_integrations %}
-                                            Déjà configuré
-                                        {% else %}
-                                            Connecter
-                                        {% endif %}
-                                    </button>
-                                {% elif integration.name == 'Mailchimp'%}
-                                <i class="{{ integration.icon_class }} fa-lg"></i>
-                                    <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">{{ integration.name }}</h6>
-                                    <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
-                                        {{ integration.description|truncatechars:30 }}
-                                    </p>
-                                    <a href="{% url 'mailchimp_oauth' %}" class="btn btn-sm {% if integration.id in user_integrations %}btn-success disabled{% else %}btn-outline-dark{% endif %} config-integration"
-                                        data-integration-id="{{ integration.id }}"
-                                            style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
-                                        <i class="fas {% if integration.id in user_integrations %}fa-check{% else %}fa-cog{% endif %}"></i>
-                                        {% if integration.id in user_integrations %}
-                                            Déjà configuré
-                                        {% else %}
-                                            Configurer
-                                        {% endif %}
-                                    </a>
-                                {% else %}
-                                    <i class="{{ integration.icon_class }} fa-lg"></i>
-                                    <h6 class="card-title text-center my-1" style="font-size: 0.85rem;">{{ integration.name }}</h6>
-                                    <p class="card-text small text-muted text-center mb-1" style="font-size: 0.75rem; line-height: 1.2;">
-                                        {{ integration.description|truncatechars:30 }}
-                                    </p>
-                                    <button class="btn btn-sm {% if integration.id in user_integrations %}btn-success disabled{% else %}btn-outline-dark{% endif %} config-integration"
-                                        data-integration-id="{{ integration.id }}"
-                                            style="font-size: 0.75rem; padding: 0.15rem 0.5rem;">
-                                        <i class="fas {% if integration.id in user_integrations %}fa-check{% else %}fa-cog{% endif %}"></i>
-                                        {% if integration.id in user_integrations %}
-                                            Déjà configuré
-                                        {% else %}
-                                    Configurer
-                                        {% endif %}
-                                    </button>
-                                {% endif %}
+                                <i class="fab fa-hubspot fa-lg"></i>
+                                <h6 class="card-title text-center my-1">HubSpot</h6>
+                                <p class="card-text small text-muted text-center mb-1">CRM et Marketing</p>
+                                <a href="{% url 'hubspot_oauth' %}" class="btn btn-sm btn-outline-dark">
+                                    <i class="fas fa-plug me-1"></i>Configurer
+                                </a>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
+
+                    <!-- Trello -->
+                    <div class="col integration-card">
+                        <div class="card" style="margin: 0 auto; height: 120px;">
+                            <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
+                                <i class="fab fa-trello fa-lg"></i>
+                                <h6 class="card-title text-center my-1">Trello</h6>
+                                <p class="card-text small text-muted text-center mb-1">Gestion de projet</p>
+                                <button class="btn btn-sm btn-outline-dark trello-auth"
+                                        onclick="window.location.href='https://trello.com/1/authorize?expiration=never&name=Alya&scope=read,write&response_type=token&key={{ trello_api_key }}&return_url={{ trello_redirect_uri }}'">
+                                    <i class="fas fa-plug me-1"></i>Configurer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,9 +112,9 @@
     position: relative;
 }
 
-.integration-card button {
-    position: relative;
-    z-index: 10;
+.integration-card .btn {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
 }
 
 .integration-card .card:hover {
@@ -176,15 +124,6 @@
 @media (max-width: 768px) {
     .integration-card .card {
         height: 110px !important;
-    }
-    .integration-card .card-body {
-        padding: 0.5rem !important;
-    }
-    .integration-card .fa-lg {
-        font-size: 1em;
-    }
-    .integration-card .card-text {
-        margin-bottom: 0.25rem !important;
     }
 }
 </style>
@@ -198,42 +137,4 @@ document.getElementById('searchIntegrations').addEventListener('input', function
         card.style.display = (title.includes(searchTerm) || description.includes(searchTerm)) ? '' : 'none';
     });
 });
-
-function initTrelloAuth() {
-    const authUrl = 'https://trello.com/1/authorize?' + new URLSearchParams({
-        expiration: 'never',
-        name: 'Alya',
-        scope: 'read,write',
-        response_type: 'token',
-        key: '{{ trello_api_key }}',
-        return_url: '{{ trello_redirect_uri }}'
-    });
-
-    // Ouvrir la fenêtre d'autorisation
-    const authWindow = window.open(authUrl, '_blank');
-
-    // Écouter le retour avec le token
-    window.addEventListener('message', function(event) {
-        if (event.origin === window.location.origin) {
-            const token = event.data.token;
-            if (token) {
-                // Envoyer le token au backend
-                fetch('/integrations/trello/save-token/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                    },
-                    body: JSON.stringify({ token: token })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-        }
-    });
-}
 </script>

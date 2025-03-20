@@ -536,44 +536,37 @@ def compte_view(request):
 
 @login_required
 def get_integrations(request, domain_name):
-    logger.info(f"Appel de get_integrations pour le domaine: {domain_name}")
+    """Récupère les intégrations disponibles pour un domaine"""
     try:
-        domain = Domain.objects.get(name=domain_name)
-        logger.info(f"Domaine trouvé: {domain.id}")
+        # Filtrer les intégrations par domaine
+        integrations = Integration.objects.filter(domain__name=domain_name)
+        # Exclure Mailchimp car il est déjà affiché en haut du modal
+        integrations = integrations.exclude(name__icontains='mailchimp')
         
-        integrations = Integration.objects.filter(domain=domain)
-        logger.info(f"Nombre d'intégrations trouvées: {integrations.count()}")
-        
+        # Récupérer les intégrations actives de l'utilisateur
         user_integrations = UserIntegration.objects.filter(
             user=request.user,
-            integration__domain=domain
-        )
-        logger.info(f"Nombre d'intégrations utilisateur trouvées: {user_integrations.count()}")
-        
-        integrations_data = {}
-        for integration in integrations:
-            user_integration = user_integrations.filter(integration=integration).first()
-            integrations_data[str(integration.id)] = {
-                'name': integration.name,
-                'icon': integration.icon_class,
-                'description': integration.description,
-                'config': user_integration.config if user_integration else None
-            }
-        
-        logger.info(f"Données préparées: {len(integrations_data)} intégrations")
-        logger.debug(f"Données envoyées: {integrations_data}")
-        
-        return JsonResponse({
-            'status': 'success',
-            'integrations': integrations_data
-        })
-        
+            integration__in=integrations,
+            enabled=True
+        ).values_list('integration_id', flat=True)
+
+        # Formater les données
+        data = {
+            'integrations': [
+                {
+                    'id': integration.id,
+                    'name': integration.name,
+                    'description': integration.description,
+                    'icon_class': integration.icon_class,
+                    'is_active': integration.id in user_integrations
+                }
+                for integration in integrations
+            ]
+        }
+        return JsonResponse(data)
     except Exception as e:
-        logger.error(f"Erreur dans get_integrations: {str(e)}", exc_info=True)
-        return JsonResponse({
-            'status': 'error',
-            'message': str(e)
-        }, status=500)
+        logger.error(f"Erreur lors de la récupération des intégrations: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 def update_integration_config(request):
@@ -1282,12 +1275,12 @@ def mailchimp_callback(request):
     # Exchange authorization code for access token
     token_data = {
         'grant_type': 'authorization_code',
-        'client_id': os.getenv('MAILCHIMP_CLIENT_ID'),
-        'client_secret': os.getenv('MAILCHIMP_CLIENT_SECRET'),
-        'redirect_uri': os.getenv('MAILCHIMP_REDIRECT_URI'),
+        'client_id': settings.MAILCHIMP_CLIENT_ID,
+        'client_secret': settings.MAILCHIMP_CLIENT_SECRET,
+        'redirect_uri': settings.MAILCHIMP_REDIRECT_URI,
         'code': code,
     }
-    response = requests.post(os.getenv('MAILCHIMP_TOKEN_URL'), data=token_data)
+    response = requests.post(settings.MAILCHIMP_TOKEN_URL, data=token_data)
     token_json = response.json()
 
     if 'access_token' in token_json:
@@ -1303,6 +1296,19 @@ def mailchimp_callback(request):
         account_response = requests.get(account_url, headers=headers)
         account_data = account_response.json()
 
-        return JsonResponse({'account_data': account_data, 'access_token' : access_token})
+        # Sauvegarder le token dans UserIntegration
+        try:
+            integration = Integration.objects.get(name__icontains='mailchimp')
+            user_integration, created = UserIntegration.objects.get_or_create(
+                user=request.user,
+                integration=integration,
+                defaults={'enabled': True}
+            )
+            user_integration.access_token = access_token
+            user_integration.save()
+        except Exception as e:
+            logger.error(f"Erreur lors de la sauvegarde du token Mailchimp: {str(e)}")
+
+        return JsonResponse({'account_data': account_data, 'access_token': access_token})
     else:
         return JsonResponse({'error': 'Failed to obtain access token'})

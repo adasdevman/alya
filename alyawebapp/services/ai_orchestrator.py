@@ -642,7 +642,7 @@ class AIOrchestrator:
             response = self.openai_client.chat.completions.create(
                 model=RESPONSE_MODEL,
                 messages=[
-                    {"role": "system", "content": system_message},
+                {"role": "system", "content": system_message},
                     {"role": "user", "content": message_content}
                 ],
                 temperature=0.8
@@ -847,76 +847,27 @@ class AIOrchestrator:
         return None
 
     def process_message(self, chat_id, message_content):
-        """Traite un message utilisateur et génère une réponse"""
+        """Traite un message et génère une réponse appropriée"""
         try:
-            # Débogage: vérifier les intégrations actives
-            active_integrations = self._get_active_integrations()
-            self.logger.info(f"Intégrations actives pour l'utilisateur {self.user.id}: {active_integrations}")
-            
-            # Vérifier d'abord si c'est une question générale
-            general_response = self._detect_general_query(message_content)
-            if general_response:
-                self._save_user_message(chat_id, message_content)
-                self._save_assistant_message(chat_id, general_response)
-                return general_response
-            
-            # Détecter l'intention (création de contact, tâche, etc.)
-            intent = self._detect_intent(message_content, self.conversation_history)
-            
-            if intent and 'action' in intent:
-                action = intent['action']
-                suggestion = self._suggest_integrations_for_action(action)
-                
-                if suggestion:
-                    if 'message' in suggestion:
-                        # Aucune intégration configurée
-                        response = f"{suggestion['message']}"
-                    else:
-                        # Proposer les intégrations disponibles
-                        integrations_list = ", ".join(suggestion['integrations'])
-                        response = f"Je peux {suggestion['action'].lower()} dans les intégrations suivantes : {integrations_list}. Quelle intégration souhaitez-vous utiliser ?"
-                    
-                    self._save_user_message(chat_id, message_content)
-                    self._save_assistant_message(chat_id, response)
-                    return response
-            
             # Si ce n'est pas une question générale ni une action d'intégration reconnue,
             # générer une réponse libre avec GPT-4
-            try:
-                # Récupérer le chat actif
-                chat = Chat.objects.get(id=chat_id) if chat_id else self._get_or_create_active_chat()
-                
-                # Sauvegarder le message utilisateur
-                self._save_user_message(chat.id, message_content)
-                
-                # Récupérer l'historique de conversation pour le contexte
-                chat_history = ChatHistory.objects.filter(chat=chat).order_by('created_at')
-                conversation_context = [
-                    {'role': 'user' if msg.is_user else 'assistant', 'content': msg.content}
-                    for msg in chat_history.order_by('-created_at')[:10]
-                ]
-                conversation_context.reverse()
-                
-                # Préparer le prompt pour une réponse générale
-                system_prompt = """Tu es Alya, un assistant IA intelligent et serviable. 
-                Tu peux répondre à des questions générales sur n'importe quel sujet.
-                Tu es amical, poli et tu fournis des informations précises et utiles.
-                Si tu ne connais pas la réponse à une question, tu le dis honnêtement.
-                Tu peux aussi aider avec des intégrations comme Trello, HubSpot, Gmail, etc."""
-                
-                # Appeler l'API OpenAI pour une réponse générale
-                response = self._get_ai_response(system_prompt + "\n" + "\n".join([f"{msg['role']}: {msg['content']}" for msg in conversation_context]))
-                
-                # Sauvegarder la réponse
-                self._save_assistant_message(chat.id, response)
-                return response
-            except Exception as e:
-                self.logger.error(f"Erreur lors de la génération de réponse libre: {str(e)}")
-                return "Je ne suis pas sûre de comprendre. Pouvez-vous reformuler votre question ?"
+            # Préparer le prompt pour une réponse générale
+            system_prompt = """Tu es Alya, un assistant IA intelligent et serviable. 
+            Tu peux répondre à des questions générales sur n'importe quel sujet.
+            Tu es amical, poli et tu fournis des informations précises et utiles.
+            Si tu ne connais pas la réponse à une question, tu le dis honnêtement.
+            Tu peux aussi aider avec des intégrations comme Trello, HubSpot, Gmail, etc."""
             
+            # Appeler l'API OpenAI pour une réponse générale
+            response = self._get_ai_response(system_prompt + "\n" + "\n".join([f"{msg['role']}: {msg['content']}" for msg in self.conversation_history[-10:]]))
+            
+            # Sauvegarder la réponse
+            self._save_assistant_message(chat_id, response)
+            return response
+
         except Exception as e:
-            self.logger.error(f"Erreur lors du traitement du message: {str(e)}")
-            return "Je suis désolée, une erreur s'est produite. Pouvez-vous réessayer ?"
+            self.logger.error(f"Erreur lors de la génération de réponse libre: {str(e)}")
+            return "Je ne suis pas sûre de comprendre. Pouvez-vous reformuler votre question ?"
 
     @RetryHandler(max_retries=3, base_delay=2, max_delay=15)
     def handle_hubspot_request(self, text):
@@ -1045,7 +996,7 @@ class AIOrchestrator:
             if not access_token:
                 logger.error("Token d'accès HubSpot manquant")
                 return "Le token d'accès HubSpot est manquant. Veuillez vous connecter à HubSpot dans la section Intégrations de votre compte."
-            
+
             # Préparer les données pour HubSpot
             properties = {
                 "email": contact_info['email'],
