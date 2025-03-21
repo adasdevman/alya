@@ -44,6 +44,5 @@ urlpatterns = [
     path('integration/gdrive/callback', views.google_drive_callback, name='google_drive_callback'),
     path('integration/mailchimp/oauth', views.mailchimp_oauth, name='mailchimp_oauth'),
     path('integration/mailchimp/callback', views.mailchimp_callback, name='mailchimp_callback'),
-    path('integration/quickbooks/oauth', views.quickbooks_oauth, name='quickbooks_oauth'),
-    path('integration/quickbooks/callback', views.quickbooks_callback, name='quickbooks_callback'),
+    path('integration/success/<str:integration_name>/', views.integration_success_view, name='integration_success'),
 ] 

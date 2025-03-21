@@ -2199,6 +2199,20 @@
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#integrationsModal">
     <i class="fas fa-plug"></i> Voir les intégrations
 </button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Charger l'état des intégrations
+    fetch('/get-user-integrations-state/')
+        .then(response => response.json())
+        .then(data => {
+            // Émettre un événement personnalisé avec les données
+            const event = new CustomEvent('integrationsLoaded', { detail: data });
+            document.dispatchEvent(event);
+        })
+        .catch(error => console.error('Erreur:', error));
+});
+</script>
 {% endblock %}
 
 {% block extra_scripts %}

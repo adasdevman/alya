@@ -27,7 +27,8 @@ ALLOWED_HOSTS = ['https://alya-166a.onrender.com/', 'localhost', '127.0.0.1','al
 CSRF_TRUSTED_ORIGINS = [
     'https://alya-166a.onrender.com',
     'http://localhost:8000',
-    'http://127.0.0.1:8000'
+    'http://127.0.0.1:8000',
+    'https://a7ff4d52e32f1d21c6a6be8c51a213ae.serveo.net'
 ]
 
 # Ajouter SSL_LINK aux origines de confiance s'il est défini

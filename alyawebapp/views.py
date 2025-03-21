@@ -516,24 +516,62 @@ def compte_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     
-    company_sizes = [
-        {'value': '1-10', 'label': '1-10 employés'},
-        {'value': '11-50', 'label': '11-50 employés'},
-        {'value': '51-200', 'label': '51-200 employés'},
-        {'value': '201-500', 'label': '201-500 employés'},
-        {'value': '501+', 'label': '501+ employés'}
-    ]
-    
-    context = {
-        'user_domains': request.user.domains.all(),
-        'all_domains': Domain.objects.all(),
-        'user_objectifs': request.user.objectifs.all(),
-        'all_objectifs': BusinessObjective.objects.all(),
-        'company_sizes': company_sizes,
-        'user': request.user
-    }
-    
-    return render(request, 'alyawebapp/compte.html', context)
+    try:
+        # Définir les tailles d'entreprise disponibles
+        company_sizes = [
+            {'value': '1-10', 'label': '1-10 employés'},
+            {'value': '11-50', 'label': '11-50 employés'},
+            {'value': '51-200', 'label': '51-200 employés'},
+            {'value': '201-500', 'label': '201-500 employés'},
+            {'value': '501+', 'label': '501+ employés'}
+        ]
+        
+        # Récupérer toutes les intégrations de l'utilisateur
+        user_integrations = UserIntegration.objects.filter(
+            user=request.user,
+            enabled=True
+        ).select_related('integration')
+        
+        # Debug: afficher les intégrations trouvées
+        logger.info("Intégrations actives trouvées:")
+        for ui in user_integrations:
+            logger.info(f"- {ui.integration.name}")
+        
+        # Créer un dictionnaire des intégrations configurées
+        configured_integrations = {}
+        
+        # Mapper les noms d'intégration aux clés du template
+        integration_mapping = {
+            'HubSpot CRM': 'hubspot',
+            'Slack': 'slack',
+            'Gmail': 'gmail',
+            'Google Drive': 'google_drive',
+            'Mailchimp': 'mailchimp'
+        }
+        
+        # Remplir le dictionnaire des intégrations configurées
+        for ui in user_integrations:
+            for db_name, template_key in integration_mapping.items():
+                if ui.integration.name == db_name:
+                    configured_integrations[template_key] = True
+                    break
+        
+        logger.info(f"État des intégrations: {configured_integrations}")
+        
+        context = {
+            'user_domains': request.user.domains.all(),
+            'all_domains': Domain.objects.all(),
+            'user_objectifs': request.user.objectifs.all(),
+            'all_objectifs': BusinessObjective.objects.all(),
+            'company_sizes': company_sizes,
+            'user': request.user,
+            'configured_integrations': json.dumps(configured_integrations),
+        }
+        
+        return render(request, 'alyawebapp/compte.html', context)
+    except Exception as e:
+        logger.error(f"FATAL COMPTE ERROR: {str(e)}")
+        return redirect('home')
 
 @login_required
 def get_integrations(request, domain_name):
@@ -700,28 +738,47 @@ def get_integration_config(request, integration_id):
 
 @login_required
 def get_user_integrations_state(request):
+    """Récupère l'état des intégrations de l'utilisateur"""
     try:
-        # Récupérer toutes les intégrations activées de l'utilisateur
+        # Récupérer les intégrations actives de l'utilisateur
         user_integrations = UserIntegration.objects.filter(
             user=request.user,
             enabled=True
-        ).values_list('integration_id', flat=True)
+        ).select_related('integration')
 
-        # Convertir en liste pour la sérialisation JSON
-        enabled_integrations = list(user_integrations)
+        # Créer un dictionnaire des états
+        integration_states = {
+            'mailchimp': False,
+            'slack': False,
+            'gmail': False,
+            'google_drive': False,
+            'hubspot': False,
+            'trello': False
+        }
 
-        logger.info(f"Intégrations activées trouvées: {enabled_integrations}")
-        
-        return JsonResponse({
-            'status': 'success',
-            'enabled_integrations': enabled_integrations
-        })
+        # Mettre à jour les états en fonction des intégrations trouvées
+        for ui in user_integrations:
+            if 'mailchimp' in ui.integration.name.lower():
+                integration_states['mailchimp'] = True
+            elif 'slack' in ui.integration.name.lower():
+                integration_states['slack'] = True
+            elif 'gmail' in ui.integration.name.lower():
+                integration_states['gmail'] = True
+            elif 'google drive' in ui.integration.name.lower():
+                integration_states['google_drive'] = True
+            elif 'hubspot' in ui.integration.name.lower():
+                integration_states['hubspot'] = True
+            elif 'trello' in ui.integration.name.lower() or 'gestion de projet' in ui.integration.name.lower():
+                integration_states['trello'] = True
+
+        # Ajout d'un log pour déboguer
+        logger.info(f"États des intégrations: {integration_states}")
+        logger.info(f"Intégrations trouvées: {[ui.integration.name for ui in user_integrations]}")
+
+        return JsonResponse(integration_states)
     except Exception as e:
-        logger.error(f"Erreur lors de la récupération des intégrations: {str(e)}")
-        return JsonResponse({
-            'status': 'error',
-            'message': 'Erreur lors de la récupération des intégrations'
-        }, status=500)
+        logger.error(f"Erreur lors de la récupération des états des intégrations: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 @require_http_methods(["POST"])
@@ -796,7 +853,7 @@ def save_integration_config(request):
             return JsonResponse({
                 'status': 'error',
                 'message': 'Intégration non trouvée'
-        }, status=404)
+            }, status=404)
             
         except Exception as e:
             logger.error(f"Error saving integration config: {str(e)}")
@@ -954,12 +1011,9 @@ def clear_chat_history(request):
 
 @login_required
 def integration_success(request):
-    # Récupérer le type d'intégration depuis la session ou l'URL
-    integration_type = request.GET.get('type', 'hubspot')  # Par défaut HubSpot
-    
-    return render(request, 'alyawebapp/integration_success.html', {
-        'integration_type': integration_type
-    })
+    """Page de succès après configuration d'une intégration"""
+    messages.success(request, "L'intégration a été configurée avec succès!")
+    return redirect('compte')
 
 def handle_chat_request(request):
     if request.method == 'POST':
@@ -1108,10 +1162,13 @@ def slack_callback(request):
                 'team_name': data.get('team', {}).get('name')
             }
             user_integration.save()
+            return redirect('integration_success', integration_name='Slack')
         except Exception as e:
             logger.error(f"Erreur lors de la sauvegarde du token Slack: {str(e)}")
-        
-        return JsonResponse({'success': True})
+            return render(request, 'alyawebapp/integration_error.html', {
+                'integration_name': 'Slack',
+                'error_message': str(e)
+            })
     else:
         return JsonResponse({'error': data.get('error', 'Unknown error')})
 
@@ -1148,38 +1205,73 @@ def gmail_oauth(request):
 
 @login_required
 def gmail_callback(request):
-    state = request.session['state']
+    try:
+        # Récupérer l'intégration Gmail
+        integration = Integration.objects.get(name__iexact='Gmail')
+        
+        state = request.session['state']
+        code = request.GET.get('code')
 
-    client_id = os.getenv('GOOGLE_CLIENT_ID')
-    client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
+        if not code:
+            logger.error("No authorization code received from Gmail")
+            messages.error(request, "Erreur lors de l'authentification Gmail")
+            return redirect('compte')
 
-    redirect_uri = os.getenv('GOOGLE_REDIRECT_URI')
+        client_id = os.getenv('GOOGLE_CLIENT_ID')
+        client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
+        redirect_uri = os.getenv('GOOGLE_REDIRECT_URI')
 
-    flow = Flow.from_client_config({
-        "web": {
-            "client_id": client_id,
-            "client_secret": client_secret,
-            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            "token_uri": "https://oauth2.googleapis.com/token",
-            "redirect_uris": [redirect_uri]
+        flow = Flow.from_client_config({
+            "web": {
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "redirect_uris": [redirect_uri]
+            }
+        }, scopes=['https://www.googleapis.com/auth/gmail.readonly'], state=state)
+
+        flow.redirect_uri = redirect_uri
+
+        # Construire l'URL complète avec HTTPS
+        url = request.build_absolute_uri()
+        if not url.startswith("https://"):
+            url = url.replace("http://", "https://")
+
+        # Échanger le code d'autorisation contre des jetons
+        flow.fetch_token(authorization_response=url)
+        credentials = flow.credentials
+
+        # Créer ou mettre à jour l'intégration utilisateur
+        user_integration, created = UserIntegration.objects.get_or_create(
+            user=request.user,
+            integration=integration,
+            defaults={'enabled': True}
+        )
+
+        # Mettre à jour les tokens
+        user_integration.access_token = credentials.token
+        user_integration.config = {
+            'refresh_token': credentials.refresh_token,
+            'token_uri': credentials.token_uri,
+            'client_id': credentials.client_id,
+            'client_secret': credentials.client_secret,
+            'scopes': credentials.scopes
         }
-    }, scopes=['https://www.googleapis.com/auth/gmail.readonly'], state=state)
+        user_integration.enabled = True
+        user_integration.save()
 
-    flow.redirect_uri = redirect_uri
+        messages.success(request, "Gmail a été configuré avec succès!")
+        return redirect('compte')
 
-    url = request.build_absolute_uri()
-    if not url.startswith("https://"):
-        url = url.replace("http://", "https://")
-
-    # Échanger le code d'autorisation contre des jetons
-    flow.fetch_token(authorization_response=url)
-
-    credentials = flow.credentials
-    access_token = credentials.token
-
-    # Stocker l'access_token pour une utilisation ultérieure
-    request.session['access_token'] = access_token
-    return JsonResponse({'success': True, 'access' : access_token})
+    except Integration.DoesNotExist:
+        logger.error("Gmail integration not found in database")
+        messages.error(request, "Configuration Gmail non trouvée")
+        return redirect('compte')
+    except Exception as e:
+        logger.error(f"Error in Gmail callback: {str(e)}")
+        messages.error(request, f"Erreur lors de la configuration de Gmail: {str(e)}")
+        return redirect('compte')
 
 # INTEGRATION GOOGLE DRIVE
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
@@ -1251,10 +1343,13 @@ def google_drive_callback(request):
             'expiry': credentials.expiry.isoformat() if credentials.expiry else None
         }
         user_integration.save()
+        return redirect('integration_success', integration_name='Google Drive')
     except Exception as e:
         logger.error(f"Erreur lors de la sauvegarde des credentials Google Drive: {str(e)}")
-    
-    return JsonResponse({'success': True})
+        return render(request, 'alyawebapp/integration_error.html', {
+            'integration_name': 'Google Drive',
+            'error_message': str(e)
+        })
    
 # ssh -R yourcustomsubdomain:80:localhost:8000 serveo.net
 # INTEGRATION MAILCHIMP
@@ -1321,39 +1416,22 @@ def mailchimp_callback(request):
             )
             user_integration.access_token = access_token
             user_integration.save()
+            
+            # Ajoutons un log pour confirmer la sauvegarde
+            logger.info(f"Integration {integration.name} configurée pour l'utilisateur {request.user.username}")
+            
+            return redirect('integration_success', integration_name='Mailchimp')
         except Exception as e:
             logger.error(f"Erreur lors de la sauvegarde du token Mailchimp: {str(e)}")
-
-        return JsonResponse({'account_data': account_data, 'access_token': access_token})
+            return render(request, 'alyawebapp/integration_error.html', {
+                'integration_name': 'Mailchimp',
+                'error_message': str(e)
+            })
     else:
         return JsonResponse({'error': 'Failed to obtain access token'})
 
-
-# INTEGRATION QUICKBOOK
-
-def get_oauth_session(state=None, token=None):
-    return OAuth2Session(
-        client_id= os.getenv('QB_CLIENT_ID'),
-        redirect_uri= os.getenv('QB_REDIRECT_URI'),
-        state=state,
-        token=token,
-        scope=['com.intuit.quickbooks.accounting']
-    )
-
-def quickbooks_oauth(request):
-    """ Initiate OAuth authorization with QuickBooks """
-    oauth = get_oauth_session()
-    authorization_url, state = oauth.authorization_url(os.getenv('QB_AUTH_URL'))
-    request.session['oauth_state'] = state
-    return redirect(authorization_url)
-
-def quickbooks_callback(request):
-    """ Callback endpoint to exchange code for tokens """
-    oauth = get_oauth_session(state=request.session.get('oauth_state'))
-    token = oauth.fetch_token(
-         os.getenv('QB_TOKEN_URL'),
-        client_secret= os.getenv('QB_CLIENT_SECRET'),
-        authorization_response=request.build_absolute_uri(),
-    )
-    request.session['oauth_token'] = token
-    return redirect('quickbooks_profile')
+def integration_success_view(request, integration_name):
+    """Page de succès après configuration d'une intégration"""
+    return render(request, 'alyawebapp/integration_success.html', {
+        'integration_name': integration_name
+    })

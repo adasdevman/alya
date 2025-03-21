@@ -324,6 +324,61 @@ class HubSpotHandler(BaseIntegration):
             logger.error(f"Error refreshing token silently: {e}")
             return None
 
+    def add_contact_with_details(self, contact_info: dict) -> dict:
+        """Ajoute un nouveau contact avec tous les détails"""
+        properties = {
+            'firstname': contact_info.get('firstname'),
+            'lastname': contact_info.get('lastname'),
+            'email': contact_info.get('email'),
+            'phone': contact_info.get('phone'),
+            'company': contact_info.get('company'),
+            'jobtitle': contact_info.get('jobtitle')
+        }
+        return self.create_contact(properties)
+
+    def schedule_follow_up(self, contact_id: str, date: str, note: str) -> dict:
+        """Programme un suivi pour un contact"""
+        url = f"{self.API_BASE_URL}/crm/v3/objects/tasks"
+        data = {
+            'properties': {
+                'hs_task_subject': 'Suivi planifié',
+                'hs_task_body': note,
+                'hs_task_due_date': date,
+                'hs_task_status': 'NOT_STARTED',
+                'hs_task_priority': 'HIGH'
+            },
+            'associations': [{
+                'to': {'id': contact_id},
+                'types': [{'category': 'TASK_CONTACT', 'typeId': 1}]
+            }]
+        }
+        response = requests.post(url, headers=self.headers, json=data)
+        response.raise_for_status()
+        return response.json()
+
+    def add_note_to_contact(self, contact_id: str, note: str) -> dict:
+        """Ajoute une note à un contact"""
+        url = f"{self.API_BASE_URL}/crm/v3/objects/notes"
+        data = {
+            'properties': {
+                'hs_note_body': note
+            },
+            'associations': [{
+                'to': {'id': contact_id},
+                'types': [{'category': 'NOTE_CONTACT', 'typeId': 1}]
+            }]
+        }
+        response = requests.post(url, headers=self.headers, json=data)
+        response.raise_for_status()
+        return response.json()
+
+    def get_contact_activities(self, contact_id: str) -> List[dict]:
+        """Récupère les dernières activités d'un contact"""
+        url = f"{self.API_BASE_URL}/crm/v3/objects/contacts/{contact_id}/associations/notes"
+        response = requests.get(url, headers=self.headers)
+        response.raise_for_status()
+        return response.json().get('results', [])
+
 def hubspot_callback(request):
     code = request.GET.get('code')
     state = request.GET.get('state')

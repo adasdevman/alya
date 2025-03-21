@@ -101,6 +101,20 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Trello -->
+                    <div class="col integration-card">
+                        <div class="card" style="margin: 0 auto; height: 120px;">
+                            <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
+                                <i class="fab fa-trello fa-lg"></i>
+                                <h6 class="card-title text-center my-1">Trello</h6>
+                                <p class="card-text small text-muted text-center mb-1">Gestion de projet</p>
+                                <button class="btn btn-sm btn-outline-dark trello-auth"
+                                        onclick="window.location.href='https://trello.com/1/authorize?expiration=never&name=Alya&scope=read,write&response_type=token&key={{ trello_api_key }}&return_url={{ trello_redirect_uri }}'">
+                                    <i class="fas fa-plug me-1"></i>Configurer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
