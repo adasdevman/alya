@@ -847,55 +847,431 @@ class AIOrchestrator:
         return None
 
     def process_message(self, chat_id: str, message: str) -> str:
-        # 1. Analyse du message pour déterminer l'intention
-        intent = self.analyze_intent(message)
+        """
+        Traite un message utilisateur et retourne une réponse appropriée.
         
-        # 2. Extraction des paramètres nécessaires
-        params = self.extract_parameters(message, intent)
-        
-        # 3. Validation des paramètres requis
-        if not self.validate_parameters(intent, params):
-            return self.request_missing_parameters(intent, params)
-        
-        # 4. Exécution de l'action demandée
+        Args:
+            chat_id (str): L'ID de la conversation
+            message (str): Le message de l'utilisateur
+            
+        Returns:
+            str: La réponse générée
+        """
         try:
-            result = self.execute_action(intent, params)
-            return self.format_success_response(result)
+            # Sauvegarder le message de l'utilisateur
+            self._save_user_message(chat_id, message)
+
+            # Liste des mots-clés d'intégration
+            integration_keywords = [
+                'email', 'mail', 'envoyer', 'slack', 'trello', 'tâche',
+                'contact', 'hubspot', 'créer', 'modifier', 'supprimer',
+                'ajouter', 'rechercher', 'drive', 'fichier', 'partager'
+            ]
+
+            # Si le message ne contient aucun mot-clé d'intégration, traiter comme une conversation simple
+            message_lower = message.lower()
+            if not any(keyword in message_lower for keyword in integration_keywords):
+                # Générer une réponse conversationnelle avec OpenAI
+                response = self._get_ai_response(message)
+                self._save_assistant_message(chat_id, response)
+                return response
+
+            # Si des mots-clés d'intégration sont détectés, continuer avec l'analyse d'intention
+            intent = self.analyze_intent(message)
+            
+            # 2. Gérer les différents cas selon l'intention détectée
+            
+            # Cas 1: Conversation simple
+            if intent.get('intent') == 'conversation':
+                response = intent.get('raw_response', "Je suis désolé, je n'ai pas compris votre message.")
+                self._save_assistant_message(chat_id, response)
+                return response
+            
+            # Cas 2: Ambiguïté entre plusieurs intégrations
+            if intent.get('intent') == 'ambiguous':
+                possible_integrations = intent.get('possible_integrations', [])
+                detected_actions = intent.get('detected_actions', {})
+                
+                # Construire un message de clarification
+                response = "Votre demande pourrait être traitée par plusieurs services. Lequel souhaitez-vous utiliser ?\n\n"
+                
+                for integration in possible_integrations:
+                    actions = detected_actions.get(integration, [])
+                    if actions:
+                        response += f"📎 {integration.capitalize()} - Actions possibles : {', '.join(actions)}\n"
+                    else:
+                        response += f"📎 {integration.capitalize()}\n"
+                
+                response += "\nVeuillez préciser quel service vous souhaitez utiliser."
+                self._save_assistant_message(chat_id, response)
+                return response
+            
+            # Cas 3: Intégration unique mais action ambiguë
+            if intent.get('possible_integrations') and not intent.get('action'):
+                integration = intent['possible_integrations'][0]
+                possible_actions = intent.get('possible_actions', [])
+                
+                if possible_actions:
+                    response = f"Que souhaitez-vous faire avec {integration.capitalize()} ?\n\n"
+                    for action in possible_actions:
+                        response += f"▫️ {action}\n"
+                else:
+                    response = f"Que souhaitez-vous faire avec {integration.capitalize()} ?"
+                
+                self._save_assistant_message(chat_id, response)
+                return response
+            
+            # Cas 4: Intégration et action identifiées
+            if intent.get('intent') and intent.get('action'):
+                # Extraire et valider les paramètres
+                required_fields = self.get_required_fields(intent)
+                params = self.extract_parameters(message, required_fields)
+                
+                if not self.validate_parameters(intent, params):
+                    response = self.request_missing_parameters(intent, params)
+                    self._save_assistant_message(chat_id, response)
+                    return response
+                
+                # Exécuter l'action
+                result = self.execute_action(intent, params)
+                response = self.format_success_response(result)
+                self._save_assistant_message(chat_id, response)
+                return response
+            
+            # Cas par défaut : message non compris
+            response = "Je ne suis pas sûr de comprendre votre demande. Pouvez-vous la reformuler en précisant :\n" + \
+                      "1. Le service que vous souhaitez utiliser (Gmail, Slack, Trello, etc.)\n" + \
+                      "2. L'action que vous voulez effectuer (envoyer, créer, modifier, etc.)"
+            self._save_assistant_message(chat_id, response)
+            return response
+            
         except Exception as e:
-            return self.handle_error(e)
-    
+            self.logger.error(f"Erreur dans process_message: {str(e)}")
+            error_response = self.handle_error(e)
+            self._save_assistant_message(chat_id, error_response)
+            return error_response
+
+    def get_required_fields(self, intent: dict) -> list:
+        """
+        Détermine les champs requis en fonction de l'intention détectée.
+        
+        Args:
+            intent (dict): L'intention détectée
+            
+        Returns:
+            list: Liste des champs requis
+        """
+        # Définir les champs requis par défaut pour chaque type d'intégration et d'action
+        required_fields_map = {
+            'gmail': {
+                'send': ['recipient', 'subject', 'body'],
+                'draft': ['recipient', 'subject', 'body'],
+                'search': ['query']
+            },
+            'slack': {
+                'send': ['channel', 'message'],
+                'notify': ['channel', 'message'],
+                'update': ['channel', 'message_ts', 'new_message']
+            },
+            'hubspot': {
+                'create': ['firstname', 'lastname', 'email'],
+                'update': ['contact_id', 'field', 'value'],
+                'search': ['query']
+            },
+            'google_drive': {
+                'upload': ['filename', 'content'],
+                'share': ['file_id', 'email', 'permission'],
+                'create': ['name', 'type']
+            },
+            'trello': {
+                'create': ['title', 'description', 'list'],
+                'move': ['card_id', 'list_id'],
+                'update': ['card_id', 'field', 'value']
+            }
+        }
+        
+        # Récupérer les champs requis pour l'intégration et l'action spécifiques
+        integration = intent.get('intent', 'conversation')
+        action = intent.get('action')
+        
+        if integration in required_fields_map and action in required_fields_map[integration]:
+            return required_fields_map[integration][action]
+        
+        return []
+
     def analyze_intent(self, message: str) -> dict:
         """
-        Analyse l'intention de l'utilisateur via OpenAI
-        Retourne un dictionnaire contenant:
-        - integration: le service à utiliser
-        - action: l'action à effectuer
-        - parameters: les paramètres identifiés
+        Analyse l'intention de l'utilisateur dans le message.
+        
+        Args:
+            message (str): Le message de l'utilisateur
+            
+        Returns:
+            dict: Un dictionnaire contenant l'intention détectée et les informations associées
         """
-        response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": get_system_prompt()},
-                {"role": "user", "content": message}
-            ]
-        )
-        print(response)
-        return self.parse_openai_response(response)
-    
+        # Liste des mots-clés indiquant une conversation simple
+        conversation_keywords = [
+            'bonjour', 'salut', 'hello', 'hi', 'hey',
+            'merci', 'thanks', 'thank you',
+            'au revoir', 'bye', 'goodbye',
+            'comment vas-tu', 'ça va', 'comment allez-vous',
+            'bien', 'mal', 'bof', 'super',
+            'oui', 'non', 'ok', 'd\'accord'
+        ]
+        
+        # Vérifier si le message contient des mots-clés de conversation
+        message_lower = message.lower()
+        for keyword in conversation_keywords:
+            if keyword in message_lower:
+                # Utiliser OpenAI pour générer une réponse conversationnelle
+                response = self._get_ai_response(message)
+                return {
+                    'intent': 'conversation',
+                    'raw_response': response
+                }
+
+        # Si aucun mot-clé de conversation n'est trouvé, continuer avec l'analyse des intégrations
+        active_integrations = self._get_active_integrations()
+        
+        # Dictionnaire des mots-clés par intégration
+        integration_patterns = {
+            'gmail': {
+                'keywords': ['email', 'mail', 'envoyer', 'message'],
+                'actions': ['envoyer', 'composer', 'rédiger']
+            },
+            'slack': {
+                'keywords': ['slack', 'chat', 'message', 'équipe'],
+                'actions': ['envoyer', 'poster', 'partager']
+            },
+            'hubspot': {
+                'keywords': ['contact', 'client', 'prospect', 'crm'],
+                'actions': ['créer', 'ajouter', 'modifier']
+            },
+            'trello': {
+                'keywords': ['tâche', 'carte', 'projet', 'board'],
+                'actions': ['créer', 'ajouter', 'déplacer']
+            }
+        }
+
+        # Détecter les intégrations possibles
+        possible_integrations = []
+        detected_actions = {}
+        
+        # Vérifier les intégrations actives
+        for integration, patterns in integration_patterns.items():
+            # Vérifier si l'intégration est active
+            if not any(integration.lower() in ai.lower() for ai in active_integrations):
+                continue
+                
+            # Détecter les mots-clés de l'intégration
+            if any(keyword in message_lower for keyword in patterns['keywords']):
+                possible_integrations.append(integration)
+                
+                # Détecter les actions possibles pour cette intégration
+                for action, action_keywords in patterns['actions'].items():
+                    if any(keyword in message_lower for keyword in action_keywords):
+                        if integration not in detected_actions:
+                            detected_actions[integration] = []
+                        detected_actions[integration].append(action)
+
+        # Cas 1: Aucune intégration détectée
+        if not possible_integrations:
+            # Utiliser OpenAI pour une analyse plus approfondie
+            response = self.openai_client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": get_system_prompt()},
+                    {"role": "user", "content": message}
+                ]
+            )
+            return self.parse_openai_response(response)
+
+        # Cas 2: Une seule intégration détectée
+        if len(possible_integrations) == 1:
+            integration = possible_integrations[0]
+            actions = detected_actions.get(integration, [])
+            
+            # Si une seule action est détectée
+            if len(actions) == 1:
+                return {
+                    'intent': integration,
+                    'action': actions[0],
+                    'parameters': {},
+                    'raw_response': None,
+                    'possible_integrations': [integration]
+                }
+            # Si plusieurs actions sont possibles ou aucune action détectée
+            else:
+                return {
+                    'intent': integration,
+                    'action': None,
+                    'parameters': {},
+                    'raw_response': "Quelle action souhaitez-vous effectuer ?",
+                    'possible_integrations': [integration],
+                    'possible_actions': actions
+                }
+
+        # Cas 3: Plusieurs intégrations possibles
+        return {
+            'intent': 'ambiguous',
+            'action': None,
+            'parameters': {},
+            'raw_response': "Votre demande pourrait correspondre à plusieurs services. Lequel souhaitez-vous utiliser ?",
+            'possible_integrations': possible_integrations,
+            'detected_actions': detected_actions
+        }
+
+    def parse_openai_response(self, response) -> dict:
+        """
+        Parse la réponse d'OpenAI pour extraire les informations pertinentes.
+        
+        Args:
+            response: La réponse de l'API OpenAI
+            
+        Returns:
+            dict: Un dictionnaire contenant l'intention, l'action et les paramètres
+        """
+        try:
+            # Initialiser le dictionnaire de retour
+            intent_data = {
+                'intent': 'conversation',  # Intent par défaut
+                'action': None,
+                'parameters': {},
+                'raw_response': ''
+            }
+            
+            # Extraire le contenu de la réponse
+            if hasattr(response, 'choices') and response.choices:
+                content = response.choices[0].message.content
+                intent_data['raw_response'] = content
+            else:
+                raise ValueError("Format de réponse OpenAI invalide")
+
+            # Rechercher les intégrations connues dans la réponse
+            known_integrations = {
+                'gmail': ['email', 'mail', 'gmail', 'message'],
+                'slack': ['slack', 'channel', 'chat'],
+                'hubspot': ['crm', 'contact', 'lead', 'hubspot'],
+                'google_drive': ['drive', 'document', 'file', 'folder'],
+                'trello': ['task', 'card', 'board', 'trello']
+            }
+
+            # Détecter l'intégration
+            for integration, keywords in known_integrations.items():
+                if any(keyword.lower() in content.lower() for keyword in keywords):
+                    intent_data['intent'] = integration
+                    break
+
+            # Si une intégration est détectée, chercher l'action correspondante
+            if intent_data['intent'] != 'conversation':
+                # Définir les actions possibles pour chaque intégration
+                integration_actions = {
+                    'gmail': ['send', 'read', 'draft', 'search'],
+                    'slack': ['send', 'notify', 'update'],
+                    'hubspot': ['create', 'update', 'search', 'delete'],
+                    'google_drive': ['upload', 'share', 'create', 'list'],
+                    'trello': ['create', 'move', 'update', 'delete']
+                }
+
+                # Chercher l'action dans le contenu
+                actions = integration_actions.get(intent_data['intent'], [])
+                for action in actions:
+                    if action.lower() in content.lower():
+                        intent_data['action'] = action
+                        # Extraire les paramètres potentiels
+                        # Exemple: recherche d'emails, destinataires, sujets, etc.
+                        if 'to:' in content:
+                            intent_data['parameters']['recipient'] = content.split('to:')[1].split()[0]
+                        if 'subject:' in content:
+                            intent_data['parameters']['subject'] = content.split('subject:')[1].split('\n')[0]
+                        if 'body:' in content:
+                            intent_data['parameters']['body'] = content.split('body:')[1].split('\n')[0]
+                        break
+
+            return intent_data
+
+        except Exception as e:
+            self.logger.error(f"Erreur lors du parsing de la réponse OpenAI: {str(e)}")
+            return {
+                'intent': 'error',
+                'action': None,
+                'parameters': {},
+                'error': str(e)
+            }
+
     def execute_action(self, intent: dict, params: dict) -> dict:
-        # 1. Identifier le service à utiliser
-        integration_name = intent['integration']
-        action_name = intent['action']
+        """
+        Exécute l'action demandée en fonction de l'intention détectée.
         
-        # 2. Récupérer le handler approprié
-        handler = self.get_integration_handler(integration_name)
-        
-        # 3. Vérifier les autorisations utilisateur
-        if not self.check_permissions(integration_name, action_name):
-            raise PermissionError("Action non autorisée")
-        
-        # 4. Exécuter l'action demandée
-        return handler.execute_action(action_name, params)
+        Args:
+            intent (dict): L'intention détectée
+            params (dict): Les paramètres de l'action
+            
+        Returns:
+            dict: Le résultat de l'action
+        """
+        try:
+            # Si c'est une conversation simple
+            if intent.get('intent') == 'conversation':
+                return {
+                    'status': 'success',
+                    'action_type': 'conversation',
+                    'response': intent.get('raw_response', "Je suis désolé, je n'ai pas compris votre message.")
+                }
+
+            # Pour les actions d'intégration
+            integration_name = intent.get('intent')
+            action_name = intent.get('action')
+
+            if not integration_name or not action_name:
+                return {
+                    'status': 'error',
+                    'action_type': 'unknown',
+                    'error': 'Action non reconnue'
+                }
+
+            # Vérifier si l'intégration est active
+            active_integrations = self._get_active_integrations()
+            if not any(integration_name.lower() in ai.lower() for ai in active_integrations):
+                # Message personnalisé selon l'intégration
+                messages = {
+                    'gmail': "L'intégration Gmail n'est pas activée. Pour envoyer des emails, vous devez d'abord configurer votre compte Gmail. Voulez-vous que je vous aide à le configurer ?",
+                    'hubspot': "L'intégration HubSpot n'est pas activée. Pour gérer vos contacts, vous devez d'abord configurer votre compte HubSpot. Voulez-vous que je vous aide à le configurer ?",
+                    'slack': "L'intégration Slack n'est pas activée. Voulez-vous que je vous aide à la configurer ?",
+                    'google_drive': "L'intégration Google Drive n'est pas activée. Voulez-vous que je vous aide à la configurer ?",
+                    'trello': "L'intégration Trello n'est pas activée. Voulez-vous que je vous aide à la configurer ?"
+                }
+                return {
+                    'status': 'error',
+                    'action_type': 'integration_inactive',
+                    'error': messages.get(integration_name.lower(), f"L'intégration {integration_name} n'est pas activée. Voulez-vous la configurer ?")
+                }
+
+            # Exécuter l'action appropriée selon l'intégration
+            if integration_name == 'gmail':
+                return self._execute_gmail_action(action_name, params)
+            elif integration_name == 'slack':
+                return self._execute_slack_action(action_name, params)
+            elif integration_name == 'hubspot':
+                return self._execute_hubspot_action(action_name, params)
+            elif integration_name == 'google_drive':
+                return self._execute_gdrive_action(action_name, params)
+            elif integration_name == 'trello':
+                return self._execute_trello_action(action_name, params)
+            else:
+                return {
+                    'status': 'error',
+                    'action_type': 'unsupported',
+                    'error': f"L'intégration {integration_name} n'est pas supportée"
+                }
+
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'exécution de l'action: {str(e)}")
+            return {
+                'status': 'error',
+                'action_type': 'execution_error',
+                'error': str(e)
+            }
 
     @RetryHandler(max_retries=3, base_delay=2, max_delay=15)
     def handle_hubspot_request(self, text):
@@ -1425,6 +1801,204 @@ class AIOrchestrator:
         except Exception as e:
             self.logger.error(f"Erreur lors de la récupération des intégrations actives: {str(e)}")
             return []
+
+    def extract_parameters(self, content: str, required_fields: list) -> dict:
+        """
+        Extrait les paramètres d'un message en fonction des champs requis.
+        
+        Args:
+            content (str): Le contenu du message
+            required_fields (list): Liste des champs à extraire
+            
+        Returns:
+            dict: Dictionnaire des paramètres extraits
+        """
+        parameters = {}
+        try:
+            # Parcourir chaque champ requis
+            for field in required_fields:
+                # Patterns de recherche pour différents formats
+                patterns = [
+                    f"{field}[:\s]+([^\n,]+)",  # Format: field: value
+                    f"{field}=([^\n,]+)",       # Format: field=value
+                    f"{field}\s+is\s+([^\n,]+)" # Format: field is value
+                ]
+                
+                # Essayer chaque pattern
+                for pattern in patterns:
+                    match = re.search(pattern, content, re.IGNORECASE)
+                    if match:
+                        parameters[field] = match.group(1).strip()
+                        break
+                        
+            return parameters
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'extraction des paramètres: {str(e)}")
+            return {}
+
+    def validate_parameters(self, intent: dict, params: dict) -> bool:
+        """
+        Valide que tous les paramètres requis sont présents et valides.
+        
+        Args:
+            intent (dict): L'intention détectée
+            params (dict): Les paramètres extraits
+            
+        Returns:
+            bool: True si tous les paramètres requis sont présents et valides
+        """
+        try:
+            # Si c'est une conversation simple, pas besoin de validation
+            if intent.get('intent') == 'conversation':
+                return True
+
+            # Obtenir les champs requis pour cette intention
+            required_fields = self.get_required_fields(intent)
+            
+            # Vérifier que tous les champs requis sont présents
+            for field in required_fields:
+                if field not in params:
+                    self.logger.warning(f"Paramètre manquant: {field}")
+                    return False
+                
+                # Vérifier que le champ n'est pas vide
+                if not params[field]:
+                    self.logger.warning(f"Paramètre vide: {field}")
+                    return False
+            
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la validation des paramètres: {str(e)}")
+            return False
+
+    def handle_error(self, error: Exception) -> str:
+        """
+        Gère les erreurs et retourne un message approprié pour l'utilisateur.
+        
+        Args:
+            error (Exception): L'erreur à gérer
+            
+        Returns:
+            str: Message d'erreur formaté pour l'utilisateur
+        """
+        try:
+            self.logger.error(f"Erreur détectée: {str(error)}")
+            
+            # Messages d'erreur personnalisés selon le type
+            error_messages = {
+                'ValidationError': "Certaines informations sont manquantes ou invalides.",
+                'PermissionError': "Vous n'avez pas les permissions nécessaires pour cette action.",
+                'ConnectionError': "Impossible de se connecter au service demandé.",
+                'TimeoutError': "Le service ne répond pas, veuillez réessayer plus tard.",
+                'ValueError': "Les valeurs fournies ne sont pas valides."
+            }
+            
+            # Obtenir le type d'erreur
+            error_type = error.__class__.__name__
+            
+            # Retourner le message personnalisé ou un message générique
+            message = error_messages.get(
+                error_type,
+                "Une erreur est survenue. Veuillez réessayer ou contacter le support."
+            )
+            
+            return f"❌ {message}\n\nDétails: {str(error)}"
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors du traitement de l'erreur: {str(e)}")
+            return "Une erreur inattendue est survenue."
+
+    def request_missing_parameters(self, intent: dict, params: dict) -> str:
+        """
+        Génère un message pour demander les paramètres manquants.
+        
+        Args:
+            intent (dict): L'intention détectée
+            params (dict): Les paramètres déjà fournis
+            
+        Returns:
+            str: Message demandant les paramètres manquants
+        """
+        try:
+            required_fields = self.get_required_fields(intent)
+            missing_fields = [field for field in required_fields if field not in params]
+            
+            if not missing_fields:
+                return "Tous les paramètres requis sont présents."
+            
+            # Personnaliser le message selon l'intégration
+            messages = {
+                'gmail': {
+                    'send': {
+                        'recipient': "À qui souhaitez-vous envoyer l'email ?",
+                        'subject': "Quel est le sujet de l'email ?",
+                        'body': "Quel est le contenu de l'email ?"
+                    }
+                },
+                'slack': {
+                    'send': {
+                        'channel': "Dans quel canal souhaitez-vous envoyer le message ?",
+                        'message': "Quel message souhaitez-vous envoyer ?"
+                    }
+                }
+                # Ajouter d'autres intégrations selon les besoins
+            }
+            
+            # Construire le message de demande
+            integration = intent.get('intent')
+            action = intent.get('action')
+            
+            if integration in messages and action in messages[integration]:
+                questions = [
+                    messages[integration][action].get(
+                        field,
+                        f"Veuillez fournir la valeur pour : {field}"
+                    )
+                    for field in missing_fields
+                ]
+            else:
+                questions = [f"Veuillez fournir la valeur pour : {field}" for field in missing_fields]
+            
+            return "J'ai besoin de quelques informations supplémentaires :\n" + "\n".join(questions)
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la demande de paramètres manquants: {str(e)}")
+            return "J'ai besoin de plus d'informations pour traiter votre demande."
+
+    def format_success_response(self, result: dict) -> str:
+        """
+        Formate la réponse de succès selon le type d'action
+        
+        Args:
+            result (dict): Le résultat de l'action
+            
+        Returns:
+            str: La réponse formatée
+        """
+        # Pour les conversations simples, retourner directement la réponse
+        if result.get('action_type') == 'conversation':
+            return result.get('response', "Je suis désolé, je n'ai pas compris votre message.")
+
+        # Pour les autres types d'actions
+        action_type = result.get('action_type', 'unknown')
+        status = result.get('status', 'error')
+        
+        if status == 'error':
+            return f"❌ {result.get('error', 'Une erreur est survenue')}"
+        
+        # Formater la réponse selon le type d'action
+        if action_type == 'email':
+            return f"✉️ {result.get('message', 'Email envoyé avec succès')}"
+        elif action_type == 'task':
+            return f"✅ {result.get('message', 'Tâche créée avec succès')}"
+        elif action_type == 'contact':
+            return f"👤 {result.get('message', 'Contact mis à jour avec succès')}"
+        elif action_type == 'file':
+            return f"📁 {result.get('message', 'Fichier traité avec succès')}"
+        else:
+            return f"✨ {result.get('message', 'Action exécutée avec succès')}"
 
 # Exemple de fonction pour appeler le modèle GPT-4o
 def call_gpt_model(model_input):
