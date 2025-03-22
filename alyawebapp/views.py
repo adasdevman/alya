@@ -260,25 +260,38 @@ def reset_domains(request):
 @login_required
 def chat_view(request):
     try:
-        if request.method == 'POST':
-            data = json.loads(request.body)
-            message = data.get('message')
-            chat_id = data.get('chat_id')
-            
-            if not message:
-                return JsonResponse({
-                    'status': 'error',
-                    'message': 'Le message ne peut pas être vide'
-                }, status=400)
-            
-            orchestrator = AIOrchestrator(user=request.user)
-            response = orchestrator.process_message(chat_id, message)
-            
-            return JsonResponse({
-                'status': 'success',
-                'response': response
-            })
-            
+        data = json.loads(request.body)
+        message = data.get('message')
+        chat_id = data.get('chat_id')
+        
+        # Créer ou récupérer le chat existant
+        chat = Chat.objects.get_or_create(
+            id=chat_id,
+            user=request.user
+        )[0]
+        
+        # Sauvegarder le message de l'utilisateur
+        Message.objects.create(
+            chat=chat,
+            content=message,
+            is_user=True
+        )
+        
+        # Traitement par l'IA
+        orchestrator = AIOrchestrator(user=request.user)
+        response = orchestrator.process_message(chat_id, message)
+        
+        # Sauvegarder la réponse de l'IA
+        Message.objects.create(
+            chat=chat,
+            content=response,
+            is_user=False
+        )
+        
+        return JsonResponse({
+            'status': 'success',
+            'response': response
+        })
     except Exception as e:
         logger.error(f"Erreur dans le chat: {str(e)}")
         return JsonResponse({

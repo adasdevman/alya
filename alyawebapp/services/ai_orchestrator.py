@@ -846,28 +846,56 @@ class AIOrchestrator:
         
         return None
 
-    def process_message(self, chat_id, message_content):
-        """Traite un message et génère une réponse appropriée"""
+    def process_message(self, chat_id: str, message: str) -> str:
+        # 1. Analyse du message pour déterminer l'intention
+        intent = self.analyze_intent(message)
+        
+        # 2. Extraction des paramètres nécessaires
+        params = self.extract_parameters(message, intent)
+        
+        # 3. Validation des paramètres requis
+        if not self.validate_parameters(intent, params):
+            return self.request_missing_parameters(intent, params)
+        
+        # 4. Exécution de l'action demandée
         try:
-            # Si ce n'est pas une question générale ni une action d'intégration reconnue,
-            # générer une réponse libre avec GPT-4
-            # Préparer le prompt pour une réponse générale
-            system_prompt = """Tu es Alya, un assistant IA intelligent et serviable. 
-            Tu peux répondre à des questions générales sur n'importe quel sujet.
-            Tu es amical, poli et tu fournis des informations précises et utiles.
-            Si tu ne connais pas la réponse à une question, tu le dis honnêtement.
-            Tu peux aussi aider avec des intégrations comme Trello, HubSpot, Gmail, etc."""
-            
-            # Appeler l'API OpenAI pour une réponse générale
-            response = self._get_ai_response(system_prompt + "\n" + "\n".join([f"{msg['role']}: {msg['content']}" for msg in self.conversation_history[-10:]]))
-            
-            # Sauvegarder la réponse
-            self._save_assistant_message(chat_id, response)
-            return response
-
+            result = self.execute_action(intent, params)
+            return self.format_success_response(result)
         except Exception as e:
-            self.logger.error(f"Erreur lors de la génération de réponse libre: {str(e)}")
-            return "Je ne suis pas sûre de comprendre. Pouvez-vous reformuler votre question ?"
+            return self.handle_error(e)
+    
+    def analyze_intent(self, message: str) -> dict:
+        """
+        Analyse l'intention de l'utilisateur via OpenAI
+        Retourne un dictionnaire contenant:
+        - integration: le service à utiliser
+        - action: l'action à effectuer
+        - parameters: les paramètres identifiés
+        """
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": get_system_prompt()},
+                {"role": "user", "content": message}
+            ]
+        )
+        print(response)
+        return self.parse_openai_response(response)
+    
+    def execute_action(self, intent: dict, params: dict) -> dict:
+        # 1. Identifier le service à utiliser
+        integration_name = intent['integration']
+        action_name = intent['action']
+        
+        # 2. Récupérer le handler approprié
+        handler = self.get_integration_handler(integration_name)
+        
+        # 3. Vérifier les autorisations utilisateur
+        if not self.check_permissions(integration_name, action_name):
+            raise PermissionError("Action non autorisée")
+        
+        # 4. Exécuter l'action demandée
+        return handler.execute_action(action_name, params)
 
     @RetryHandler(max_retries=3, base_delay=2, max_delay=15)
     def handle_hubspot_request(self, text):
