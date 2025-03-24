@@ -18,13 +18,13 @@
                 <!-- Liste des intégrations -->
                 <div class="row row-cols-2 row-cols-md-3 g-2">
                     <!-- Mailchimp -->
-                    <div class="col integration-card">
+                    <div class="col integration-card" data-integration="mailchimp">
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
                                 <i class="fab fa-mailchimp fa-lg"></i>
                                 <h6 class="card-title text-center my-1">Mailchimp</h6>
                                 <p class="card-text small text-muted text-center mb-1">Email marketing et automation</p>
-                                <a href="{% url 'mailchimp_oauth' %}" class="btn btn-sm btn-outline-dark">
+                                <a href="{% url 'mailchimp_oauth' %}" class="btn btn-sm btn-outline-dark config-button">
                                     <i class="fas fa-plug me-1"></i>Configurer
                                 </a>
                             </div>
@@ -32,13 +32,13 @@
                     </div>
 
                     <!-- Slack -->
-                    <div class="col integration-card">
+                    <div class="col integration-card" data-integration="slack">
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
                                 <i class="fab fa-slack fa-lg"></i>
                                 <h6 class="card-title text-center my-1">Slack</h6>
                                 <p class="card-text small text-muted text-center mb-1">Communication d'équipe</p>
-                                <a href="{% url 'slack_oauth' %}" class="btn btn-sm btn-outline-dark">
+                                <a href="{% url 'slack_oauth' %}" class="btn btn-sm btn-outline-dark config-button">
                                     <i class="fas fa-plug me-1"></i>Configurer
                                 </a>
                             </div>
@@ -46,13 +46,13 @@
                     </div>
 
                     <!-- Gmail -->
-                    <div class="col integration-card">
+                    <div class="col integration-card" data-integration="gmail">
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
                                 <i class="fa fa-envelope fa-lg"></i>
                                 <h6 class="card-title text-center my-1">Gmail</h6>
                                 <p class="card-text small text-muted text-center mb-1">Email professionnel</p>
-                                <a href="{% url 'gmail_oauth' %}" class="btn btn-sm btn-outline-dark">
+                                <a href="{% url 'gmail_oauth' %}" class="btn btn-sm btn-outline-dark config-button">
                                     <i class="fas fa-plug me-1"></i>Configurer
                                 </a>
                             </div>
@@ -60,13 +60,13 @@
                     </div>
 
                     <!-- Google Drive -->
-                    <div class="col integration-card">
+                    <div class="col integration-card" data-integration="google_drive">
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
                                 <i class="fab fa-google-drive fa-lg"></i>
                                 <h6 class="card-title text-center my-1">Google Drive</h6>
                                 <p class="card-text small text-muted text-center mb-1">Stockage de fichiers</p>
-                                <a href="{% url 'google_drive_oauth' %}" class="btn btn-sm btn-outline-dark">
+                                <a href="{% url 'google_drive_oauth' %}" class="btn btn-sm btn-outline-dark config-button">
                                     <i class="fas fa-plug me-1"></i>Configurer
                                 </a>
                             </div>
@@ -74,13 +74,13 @@
                     </div>
 
                     <!-- HubSpot -->
-                    <div class="col integration-card">
+                    <div class="col integration-card" data-integration="hubspot">
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
                                 <i class="fab fa-hubspot fa-lg"></i>
                                 <h6 class="card-title text-center my-1">HubSpot</h6>
                                 <p class="card-text small text-muted text-center mb-1">CRM et Marketing</p>
-                                <a href="{% url 'hubspot_oauth' %}" class="btn btn-sm btn-outline-dark">
+                                <a href="{% url 'hubspot_oauth' %}" class="btn btn-sm btn-outline-dark config-button">
                                     <i class="fas fa-plug me-1"></i>Configurer
                                 </a>
                             </div>
@@ -88,27 +88,13 @@
                     </div>
 
                     <!-- Trello -->
-                    <div class="col integration-card">
+                    <div class="col integration-card" data-integration="trello">
                         <div class="card" style="margin: 0 auto; height: 120px;">
                             <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
                                 <i class="fab fa-trello fa-lg"></i>
                                 <h6 class="card-title text-center my-1">Trello</h6>
                                 <p class="card-text small text-muted text-center mb-1">Gestion de projet</p>
-                                <button class="btn btn-sm btn-outline-dark trello-auth"
-                                        onclick="window.location.href='https://trello.com/1/authorize?expiration=never&name=Alya&scope=read,write&response_type=token&key={{ trello_api_key }}&return_url={{ trello_redirect_uri }}'">
-                                    <i class="fas fa-plug me-1"></i>Configurer
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Trello -->
-                    <div class="col integration-card">
-                        <div class="card" style="margin: 0 auto; height: 120px;">
-                            <div class="card-body p-2 d-flex flex-column align-items-center justify-content-center">
-                                <i class="fab fa-trello fa-lg"></i>
-                                <h6 class="card-title text-center my-1">Trello</h6>
-                                <p class="card-text small text-muted text-center mb-1">Gestion de projet</p>
-                                <button class="btn btn-sm btn-outline-dark trello-auth"
+                                <button class="btn btn-sm btn-outline-dark config-button trello-auth"
                                         onclick="window.location.href='https://trello.com/1/authorize?expiration=never&name=Alya&scope=read,write&response_type=token&key={{ trello_api_key }}&return_url={{ trello_redirect_uri }}'">
                                     <i class="fas fa-plug me-1"></i>Configurer
                                 </button>
@@ -140,9 +126,45 @@
         height: 110px !important;
     }
 }
+
+/* Bouton quand l'intégration est configurée */
+.integration-card .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+/* Badge de configuration */
+.integration-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.3rem;
+}
 </style>
 
-<script>
+<!-- Stocke les données pour le JavaScript -->
+{% if user_integrations %}
+    {{ user_integrations|json_script:"integration-data" }}
+{% else %}
+    <script id="integration-data" type="application/json">[]</script>
+{% endif %}
+
+<script type="text/javascript">
+// Fonction pour récupérer les données d'intégration
+function getConfiguredIntegrations() {
+    try {
+        const dataElement = document.getElementById('integration-data');
+        if (dataElement) {
+            return JSON.parse(dataElement.textContent);
+        }
+    } catch(e) {
+        console.error("Erreur lors du parsing des intégrations:", e);
+    }
+    return [];
+}
+
 document.getElementById('searchIntegrations').addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase();
     document.querySelectorAll('.integration-card').forEach(card => {
@@ -151,4 +173,34 @@ document.getElementById('searchIntegrations').addEventListener('input', function
         card.style.display = (title.includes(searchTerm) || description.includes(searchTerm)) ? '' : 'none';
     });
 });
+
+// Fonction pour vérifier si une intégration est configurée
+function updateIntegrationStatus() {
+    const configuredIntegrations = getConfiguredIntegrations();
+    
+    document.querySelectorAll('.integration-card').forEach(card => {
+        const integrationName = card.getAttribute('data-integration');
+        const button = card.querySelector('.config-button');
+        const cardBody = card.querySelector('.card-body');
+        
+        // Vérifier si l'intégration est dans la liste des intégrations configurées
+        if (configuredIntegrations.includes(integrationName)) {
+            // Modifier le bouton
+            button.classList.remove('btn-outline-dark');
+            button.classList.add('btn-success');
+            button.innerHTML = '<i class="fas fa-check me-1"></i>Configuré';
+            
+            // Ajouter un badge
+            if (!cardBody.querySelector('.integration-badge')) {
+                const badge = document.createElement('span');
+                badge.classList.add('badge', 'bg-success', 'integration-badge');
+                badge.textContent = 'Activé';
+                cardBody.appendChild(badge);
+            }
+        }
+    });
+}
+
+// Exécuter lors du chargement de la page
+document.addEventListener('DOMContentLoaded', updateIntegrationStatus);
 </script>

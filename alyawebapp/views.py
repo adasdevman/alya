@@ -146,10 +146,33 @@ def compte(request):
             ensure_ascii=False
         )
         
+        # Récupérer les intégrations activées de l'utilisateur
         user_integrations = UserIntegration.objects.filter(
             user=request.user, 
             enabled=True
-        ).values_list('integration_id', flat=True)
+        )
+        
+        # Créer un dictionnaire de configuration des intégrations
+        integration_mapping = {
+            'HubSpot CRM': 'hubspot',
+            'Slack': 'slack',
+            'Gmail': 'gmail',
+            'Google Drive': 'google_drive',
+            'Trello': 'trello',
+            'Mailchimp': 'mailchimp'
+        }
+        
+        # Liste des intégrations configurées pour le template
+        configured_integrations = []
+        
+        # Remplir la liste des intégrations configurées
+        for ui in user_integrations:
+            integration_name = ui.integration.name
+            if integration_name in integration_mapping:
+                configured_integrations.append(integration_mapping[integration_name])
+        
+        # Convertir la liste en JSON pour le template
+        configured_integrations_json = json.dumps(configured_integrations)
         
         context = {
             'user_domains': user_domains,
@@ -159,13 +182,14 @@ def compte(request):
             'company_sizes': company_sizes,
             'integrations': integrations,
             'integration_configs_data': integration_configs_json,
-            'user_integrations': list(user_integrations),
+            'user_integrations': configured_integrations_json,
             'trello_api_key': 'dfdd546608d5f4cbfe3b417f6cba8204',  # Pour déboguer
             'trello_redirect_uri': settings.TRELLO_REDIRECT_URI
         }
         
         # Déboguer les valeurs
         print(f"Trello API Key in context: {context['trello_api_key']}")
+        logger.info(f"Intégrations configurées: {configured_integrations}")
         
         return render(request, 'alyawebapp/compte.html', context)
     except Exception as e:

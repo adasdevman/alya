@@ -2155,46 +2155,7 @@
 </div>
 
 <!-- Modal des intégrations -->
-<div class="modal fade" id="integrationsModal" tabindex="-1" aria-labelledby="integrationsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="integrationsModalLabel">Intégrations Disponibles</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Champ de recherche -->
-                <div class="search-container mb-3">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                        <input type="text" id="integrationSearch" class="form-control" placeholder="Rechercher une intégration...">
-                                </div>
-                            </div>
-
-                <!-- Liste des intégrations -->
-                <div class="integrations-grid">
-                    <div class="row row-cols-1 row-cols-md-3 g-3" id="integrationsGrid">
-                        {% for integration in integrations %}
-                        <div class="col integration-item">
-                            <div class="card h-100">
-                                <div class="card-body text-center py-3">
-                                    <i class="{{ integration.icon_class }} fa-2x mb-2"></i>
-                                    <h6 class="card-title mb-2">{{ integration.name }}</h6>
-                                    <p class="card-text small mb-2">{{ integration.description|truncatechars:50 }}</p>
-                                    <button class="btn btn-primary btn-sm configure-integration" 
-                                            data-integration-id="{{ integration.id }}">
-                                        Configurer
-                                    </button>
-                        </div>
-                    </div>
-                                </div>
-                        {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                                </div>
-                            </div>
-                        </div>
+<!-- Supprimé pour éviter les conflits avec {% include "alyawebapp/modals/integrations_modal.html" %} -->
 
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#integrationsModal">
     <i class="fas fa-plug"></i> Voir les intégrations
