@@ -135,6 +135,17 @@ class HubSpotHandler:
                         date_info_str = date_info.strftime("%Y-%m-%d")
                         note_content = "À contacter pour un partenariat potentiel"
                         
+                        # Création de la note d'abord (généralement plus fiable)
+                        note_info = {
+                            'contact_id': contact.get('id'),
+                            'contact_email': email,
+                            'content': note_content
+                        }
+                        logger.info(f"Tentative de création de note pour {email}")
+                        note_result = self._create_note(note_info)
+                        note_created = note_result and note_result.get('id')
+                        logger.info(f"Note créée avec succès: {note_result.get('id', 'Unknown') if note_created else 'Échec'}")
+                        
                         # Créer la tâche
                         task_info = {
                             'contact_id': contact.get('id'),
@@ -144,25 +155,28 @@ class HubSpotHandler:
                             'notes': note_content
                         }
                         logger.info(f"Tentative de création de tâche pour {email}")
-                        task_result = self._create_task(task_info)
-                        logger.info(f"Tâche créée avec succès: {task_result.get('id', 'Unknown')}")
                         
-                        # Créer la note
-                        note_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'content': note_content
-                        }
-                        logger.info(f"Tentative de création de note pour {email}")
-                        note_result = self._create_note(note_info)
-                        logger.info(f"Note créée avec succès: {note_result.get('id', 'Unknown')}")
+                        try:
+                            task_result = self._create_task(task_info)
+                            task_created = task_result and task_result.get('id')
+                            logger.info(f"Tâche créée avec succès: {task_result.get('id', 'Unknown') if task_created else 'Échec'}")
+                        except Exception as task_error:
+                            task_created = False
+                            logger.error(f"Erreur lors de la création de la tâche: {str(task_error)}")
                         
                         # Réinitialiser l'état
                         self.conversation_state = None
                         logger.info("Réinitialisation de l'état de conversation")
                         
-                        # Message standard sans distinction entre simulé et réel
-                        return f"✅ J'ai planifié un suivi pour la semaine prochaine et ajouté la note 'À contacter pour un partenariat potentiel' pour {contact.get('properties', {}).get('firstname', '')} {contact.get('properties', {}).get('lastname', '')}."
+                        # Message selon les résultats
+                        if note_created and task_created:
+                            return f"✅ J'ai planifié un suivi pour la semaine prochaine et ajouté la note 'À contacter pour un partenariat potentiel' pour {contact.get('properties', {}).get('firstname', '')} {contact.get('properties', {}).get('lastname', '')}."
+                        elif note_created:
+                            return f"✅ J'ai ajouté la note 'À contacter pour un partenariat potentiel' pour {contact.get('properties', {}).get('firstname', '')} {contact.get('properties', {}).get('lastname', '')}. ⚠️ La tâche de suivi n'a pas pu être créée."
+                        elif task_created:
+                            return f"✅ J'ai planifié un suivi pour la semaine prochaine pour {contact.get('properties', {}).get('firstname', '')} {contact.get('properties', {}).get('lastname', '')}. ⚠️ La note n'a pas pu être ajoutée."
+                        else:
+                            return f"❌ Je n'ai pas pu créer la tâche ni la note pour {contact.get('properties', {}).get('firstname', '')} {contact.get('properties', {}).get('lastname', '')}. Veuillez vérifier les paramètres de votre instance HubSpot ou réessayer plus tard."
                     except Exception as e:
                         logger.error(f"Erreur lors de la création: {str(e)}")
                         self.conversation_state = None
@@ -939,33 +953,27 @@ class HubSpotHandler:
                 "hs_task_body": task_info.get('notes', ''),
                 "hs_task_priority": "HIGH",
                 "hs_task_status": "NOT_STARTED",
-                "hs_task_type": "CALL",
+                "hs_task_type": "CALL"
             }
             
-            # Ajouter la date d'échéance si elle est présente
+            # Pour les tâches HubSpot, hs_timestamp est utilisé pour la date de création
+            # et comme date d'échéance selon la documentation HubSpot
             if 'due_date' in task_info:
-                properties["hs_task_due_date"] = task_info['due_date']
-                
+                # Convertir la date d'échéance au format ISO requis par HubSpot
+                due_date = task_info['due_date']
+                # Convertir le format YYYY-MM-DD en YYYY-MM-DDT00:00:00Z
+                if 'T' not in due_date:
+                    due_date = f"{due_date}T00:00:00Z"
+                properties["hs_timestamp"] = due_date
+            else:
+                # Date d'échéance par défaut = maintenant
+                properties["hs_timestamp"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            
             data = {
                 "properties": properties
             }
             
-            # Ajouter la relation avec le contact
-            if 'contact_id' in task_info:
-                data["associations"] = [
-                    {
-                        "to": {
-                            "id": task_info['contact_id']
-                        },
-                        "types": [
-                            {
-                                "category": "TASK_CONTACT",
-                                "typeId": 1
-                            }
-                        ]
-                    }
-                ]
-            
+            # Créer d'abord la tâche sans association
             logger.info(f"[DEBUG TASK] Envoi de la requête pour créer une tâche: {data}")
             response = requests.post(url, headers=headers, json=data)
             
@@ -996,8 +1004,21 @@ class HubSpotHandler:
                         logger.info(f"[DEBUG TASK] Seconde réponse non-JSON (code: {response.status_code}): {response.text[:200]}")
             
             response.raise_for_status()
+            task_result = response.json()
+            task_id = task_result.get('id')
             
-            return response.json()
+            # Ajouter l'association au contact si un ID de contact est fourni
+            if 'contact_id' in task_info and task_id:
+                association_url = f"https://api.hubapi.com/crm/v3/objects/tasks/{task_id}/associations/contacts/{task_info['contact_id']}/task_to_contact"
+                logger.info(f"[DEBUG TASK] Envoi de la requête pour associer la tâche {task_id} au contact {task_info['contact_id']}")
+                
+                association_response = requests.put(association_url, headers=headers)
+                logger.info(f"[DEBUG TASK] Réponse d'association (code: {association_response.status_code})")
+                
+                if association_response.status_code not in [200, 201, 204]:
+                    logger.warning(f"[DEBUG TASK] Échec de l'association: {association_response.text[:200]}")
+            
+            return task_result
             
         except Exception as e:
             logger.error(f"Erreur lors de la création de la tâche: {str(e)}")
@@ -1062,6 +1083,10 @@ class HubSpotHandler:
                         ]
                     }
                 ]
+
+            # Supprimer les associations du JSON initial pour éviter les erreurs
+            if "associations" in data:
+                del data["associations"]
             
             logger.info(f"[DEBUG NOTE] Envoi de la requête pour créer une note: {data}")
             response = requests.post(url, headers=headers, json=data)
@@ -1093,8 +1118,21 @@ class HubSpotHandler:
                         logger.info(f"[DEBUG NOTE] Seconde réponse non-JSON (code: {response.status_code}): {response.text[:200]}")
             
             response.raise_for_status()
+            note_result = response.json()
             
-            return response.json()
+            # Ajouter l'association au contact si un ID de contact est fourni
+            if 'contact_id' in note_info:
+                note_id = note_result.get('id')
+                association_url = f"https://api.hubapi.com/crm/v3/objects/notes/{note_id}/associations/contacts/{note_info['contact_id']}/note_to_contact"
+                logger.info(f"[DEBUG NOTE] Envoi de la requête pour associer la note {note_id} au contact {note_info['contact_id']}")
+                
+                association_response = requests.put(association_url, headers=headers)
+                logger.info(f"[DEBUG NOTE] Réponse d'association (code: {association_response.status_code})")
+                
+                if association_response.status_code not in [200, 201, 204]:
+                    logger.warning(f"[DEBUG NOTE] Échec de l'association: {association_response.text[:200]}")
+            
+            return note_result
             
         except Exception as e:
             logger.error(f"Erreur lors de la création de la note: {str(e)}")
