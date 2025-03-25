@@ -49,6 +49,10 @@ class SlackHandler:
             if not self.slack_integration:
                 return "Vous n'avez pas installé l'intégration Slack. Veuillez configurer Slack dans vos intégrations avant de l'utiliser."
             
+            # Vérifier si le token d'accès est présent
+            if not isinstance(self.slack_integration.config, dict) or 'access_token' not in self.slack_integration.config or not self.slack_integration.config['access_token']:
+                return "⚠️ Votre intégration Slack nécessite une réautorisation. Le token d'accès est manquant ou a expiré. Veuillez vous rendre dans les paramètres d'intégration pour reconfigurer Slack."
+            
             # Machine à états pour l'envoi de messages
             if self.conversation_state == 'message_start':
                 channel = text.strip()
