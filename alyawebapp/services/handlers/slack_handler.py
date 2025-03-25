@@ -29,6 +29,17 @@ class SlackHandler:
                 integration=integration,
                 enabled=True
             )
+            
+            # Affichage de débogage pour examiner la structure de la configuration
+            if self.slack_integration and hasattr(self.slack_integration, 'config'):
+                logger.info(f"Configuration Slack trouvée: {self.slack_integration.config}")
+                if isinstance(self.slack_integration.config, dict):
+                    missing_fields = []
+                    for key in ['client_id', 'client_secret', 'redirect_uri']:
+                        if key not in self.slack_integration.config:
+                            missing_fields.append(key)
+                    if missing_fields:
+                        logger.warning(f"Champs manquants dans la configuration Slack: {', '.join(missing_fields)}")
         except (Integration.DoesNotExist, UserIntegration.DoesNotExist):
             self.slack_integration = None
     
@@ -45,7 +56,7 @@ class SlackHandler:
                 channel_exists = self._verify_channel_exists(channel)
                 if not channel_exists:
                     self.conversation_state = None
-                    return f"❌ Le canal #{channel} n'existe pas ou le bot n'y a pas accès. Veuillez vérifier le nom du canal et les permissions."
+                    return f"❌ Le canal #{channel} n'existe pas ou Alya n'y a pas accès. Veuillez vérifier le nom du canal et les permissions."
                 
                 self.message_info['channel'] = channel
                 self.conversation_state = 'waiting_for_message'
@@ -89,7 +100,7 @@ class SlackHandler:
                 # Vérifier si le canal existe
                 channel_exists = self._verify_channel_exists(channel)
                 if not channel_exists:
-                    return f"❌ Le canal #{channel} n'existe pas ou le bot n'y a pas accès. Veuillez vérifier le nom du canal."
+                    return f"❌ Le canal #{channel} n'existe pas ou Alya n'y a pas accès. Veuillez vérifier le nom du canal."
                 
                 self.message_info = {
                     'channel': channel,
@@ -104,7 +115,7 @@ class SlackHandler:
                     if "channel_not_found" in str(e):
                         return f"❌ Le canal #{channel} n'a pas été trouvé. Veuillez vérifier le nom du canal."
                     elif "not_in_channel" in str(e):
-                        return f"❌ Le bot Alya n'est pas membre du canal #{channel}. Veuillez l'ajouter au canal d'abord."
+                        return f"❌ Alya n'est pas membre du canal #{channel}. Veuillez l'ajouter au canal d'abord."
                     elif "invalid_auth" in str(e):
                         return "❌ Problème d'authentification avec Slack. Veuillez reconfigurer votre intégration Slack."
                     else:
@@ -130,7 +141,7 @@ class SlackHandler:
                     # Vérifier si le canal existe
                     channel_exists = self._verify_channel_exists(channel)
                     if not channel_exists:
-                        return f"❌ Le canal #{channel} n'existe pas ou le bot n'y a pas accès. Veuillez vérifier le nom du canal."
+                        return f"❌ Le canal #{channel} n'existe pas ou Alya n'y a pas accès. Veuillez vérifier le nom du canal."
                     
                     self.message_info = {
                         'channel': channel,
@@ -154,7 +165,7 @@ class SlackHandler:
                     # Vérifier si le canal existe
                     channel_exists = self._verify_channel_exists(channel)
                     if not channel_exists:
-                        return f"❌ Le canal #{channel} n'existe pas ou le bot n'y a pas accès. Veuillez vérifier le nom du canal."
+                        return f"❌ Le canal #{channel} n'existe pas ou Alya n'y a pas accès. Veuillez vérifier le nom du canal."
                     
                     self.message_info['channel'] = channel
                     
@@ -230,8 +241,27 @@ class SlackHandler:
             if not channel_name.startswith('#') and not channel_name.startswith('@'):
                 channel_name = '#' + channel_name
                 
+            # Vérifier la configuration avant d'initialiser le handler
+            config = self.slack_integration.config
+            if not isinstance(config, dict):
+                logger.error("Configuration Slack incorrecte: ce n'est pas un dictionnaire")
+                return False
+                
+            # Pour les appels API, seul l'access_token est vraiment nécessaire
+            if 'access_token' not in config or not config['access_token']:
+                logger.error("Configuration Slack incorrecte: access_token manquant")
+                return False
+                
+            # Assurons-nous que les champs requis par le constructeur existent
+            minimal_config = {
+                'client_id': config.get('client_id', 'default_id'),
+                'client_secret': config.get('client_secret', 'default_secret'),
+                'redirect_uri': config.get('redirect_uri', 'default_uri'),
+                'access_token': config['access_token']
+            }
+                
             # Récupérer la liste des canaux
-            slack_handler = SlackAPI(self.slack_integration.config)
+            slack_handler = SlackAPI(minimal_config)
             channels = slack_handler.get_channels()
             
             # Vérifier si le canal existe dans la liste
@@ -251,7 +281,26 @@ class SlackHandler:
         from alyawebapp.integrations.slack.handler import SlackHandler as SlackAPI
         
         try:
-            slack_handler = SlackAPI(self.slack_integration.config)
+            # Vérifier la configuration avant d'initialiser le handler
+            config = self.slack_integration.config
+            if not isinstance(config, dict):
+                logger.error("Configuration Slack incorrecte: ce n'est pas un dictionnaire")
+                return False
+                
+            # Pour les appels API, seul l'access_token est vraiment nécessaire
+            if 'access_token' not in config or not config['access_token']:
+                logger.error("Configuration Slack incorrecte: access_token manquant")
+                return False
+                
+            # Assurons-nous que les champs requis par le constructeur existent
+            minimal_config = {
+                'client_id': config.get('client_id', 'default_id'),
+                'client_secret': config.get('client_secret', 'default_secret'),
+                'redirect_uri': config.get('redirect_uri', 'default_uri'),
+                'access_token': config['access_token']
+            }
+                
+            slack_handler = SlackAPI(minimal_config)
             user_info = slack_handler.get_user_info(user_id)
             return bool(user_info) and 'id' in user_info
         except Exception as e:
@@ -263,7 +312,26 @@ class SlackHandler:
         from alyawebapp.integrations.slack.handler import SlackHandler as SlackAPI
         
         try:
-            slack_handler = SlackAPI(self.slack_integration.config)
+            # Vérifier la configuration avant d'initialiser le handler
+            config = self.slack_integration.config
+            if not isinstance(config, dict):
+                logger.error("Configuration Slack incorrecte: ce n'est pas un dictionnaire")
+                return []
+                
+            # Pour les appels API, seul l'access_token est vraiment nécessaire
+            if 'access_token' not in config or not config['access_token']:
+                logger.error("Configuration Slack incorrecte: access_token manquant")
+                return []
+                
+            # Assurons-nous que les champs requis par le constructeur existent
+            minimal_config = {
+                'client_id': config.get('client_id', 'default_id'),
+                'client_secret': config.get('client_secret', 'default_secret'),
+                'redirect_uri': config.get('redirect_uri', 'default_uri'),
+                'access_token': config['access_token']
+            }
+                
+            slack_handler = SlackAPI(minimal_config)
             return slack_handler.get_channels()
         except Exception as e:
             logger.error(f"Erreur lors de la récupération des canaux: {str(e)}")
@@ -292,7 +360,24 @@ class SlackHandler:
         
         # Utiliser l'implémentation existante
         try:
-            slack_handler = SlackAPI(self.slack_integration.config)
+            # Vérifier la configuration avant d'initialiser le handler
+            config = self.slack_integration.config
+            if not isinstance(config, dict):
+                raise ValueError("Configuration Slack incorrecte: ce n'est pas un dictionnaire")
+                
+            # Pour les appels API, seul l'access_token est vraiment nécessaire
+            if 'access_token' not in config or not config['access_token']:
+                raise ValueError("Configuration Slack incorrecte: access_token manquant. Veuillez reconfigurer votre intégration Slack.")
+                
+            # Assurons-nous que les champs requis par le constructeur existent
+            minimal_config = {
+                'client_id': config.get('client_id', 'default_id'),
+                'client_secret': config.get('client_secret', 'default_secret'),
+                'redirect_uri': config.get('redirect_uri', 'default_uri'),
+                'access_token': config['access_token']
+            }
+                
+            slack_handler = SlackAPI(minimal_config)
             result = slack_handler.send_message(
                 channel=channel,
                 message=message_info['message'],
@@ -305,7 +390,7 @@ class SlackHandler:
                 if error == 'channel_not_found':
                     raise ValueError(f"Le canal {channel} n'a pas été trouvé. Veuillez vérifier le nom du canal.")
                 elif error == 'not_in_channel':
-                    raise ValueError(f"Le bot Alya n'est pas membre du canal {channel}. Veuillez l'ajouter au canal d'abord.")
+                    raise ValueError(f"Alya n'est pas membre du canal {channel}. Veuillez l'ajouter au canal d'abord.")
                 elif error == 'invalid_auth':
                     raise ValueError("Problème d'authentification avec Slack. Veuillez reconfigurer votre intégration Slack.")
                 else:
@@ -321,8 +406,27 @@ class SlackHandler:
         from alyawebapp.integrations.slack.handler import SlackHandler as SlackAPI
         
         try:
+            # Vérifier la configuration avant d'initialiser le handler
+            config = self.slack_integration.config
+            if not isinstance(config, dict):
+                logger.error("Configuration Slack incorrecte: ce n'est pas un dictionnaire")
+                return "Désolé, votre intégration Slack n'est pas correctement configurée. Veuillez vérifier vos paramètres d'intégration."
+                
+            # Pour les appels API, seul l'access_token est vraiment nécessaire
+            if 'access_token' not in config or not config['access_token']:
+                logger.error("Configuration Slack incorrecte: access_token manquant")
+                return "Désolé, votre intégration Slack n'a pas de token d'accès. Veuillez reconfigurer votre intégration."
+                
+            # Assurons-nous que les champs requis par le constructeur existent
+            minimal_config = {
+                'client_id': config.get('client_id', 'default_id'),
+                'client_secret': config.get('client_secret', 'default_secret'),
+                'redirect_uri': config.get('redirect_uri', 'default_uri'),
+                'access_token': config['access_token']
+            }
+                
             # Utiliser l'implémentation existante
-            slack_handler = SlackAPI(self.slack_integration.config)
+            slack_handler = SlackAPI(minimal_config)
             reactions = slack_handler.get_message_reactions(channel, message_ts)
             
             if not reactions:
@@ -346,8 +450,27 @@ class SlackHandler:
         from alyawebapp.integrations.slack.handler import SlackHandler as SlackAPI
         
         try:
+            # Vérifier la configuration avant d'initialiser le handler
+            config = self.slack_integration.config
+            if not isinstance(config, dict):
+                logger.error("Configuration Slack incorrecte: ce n'est pas un dictionnaire")
+                return "Désolé, votre intégration Slack n'est pas correctement configurée. Veuillez vérifier vos paramètres d'intégration."
+                
+            # Pour les appels API, seul l'access_token est vraiment nécessaire
+            if 'access_token' not in config or not config['access_token']:
+                logger.error("Configuration Slack incorrecte: access_token manquant")
+                return "Désolé, votre intégration Slack n'a pas de token d'accès. Veuillez reconfigurer votre intégration."
+                
+            # Assurons-nous que les champs requis par le constructeur existent
+            minimal_config = {
+                'client_id': config.get('client_id', 'default_id'),
+                'client_secret': config.get('client_secret', 'default_secret'),
+                'redirect_uri': config.get('redirect_uri', 'default_uri'),
+                'access_token': config['access_token']
+            }
+                
             # Utiliser l'implémentation existante
-            slack_handler = SlackAPI(self.slack_integration.config)
+            slack_handler = SlackAPI(minimal_config)
             user_info = slack_handler.get_user_info(user_id)
             
             if not user_info:

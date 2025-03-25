@@ -14,21 +14,55 @@ class SlackHandler(BaseIntegration):
     def __init__(self, config):
         self.config = config
         self.validate_config(self.config)
-        self.client_id = config['client_id']
-        self.client_secret = config['client_secret']
-        self.redirect_uri = config['redirect_uri']
+        self.client_id = config.get('client_id', 'default_id')
+        self.client_secret = config.get('client_secret', 'default_secret')
+        self.redirect_uri = config.get('redirect_uri', 'default_uri')
         self.access_token = config.get('access_token')
         self.initialize_client()
 
     def initialize_client(self):
         """Initialise le client Slack"""
-        self.headers = {
-            'Authorization': f'Bearer {self.access_token}' if self.access_token else None,
-            'Content-Type': 'application/json'
-        }
+        self.headers = {}
+        if self.access_token:
+            self.headers['Authorization'] = f'Bearer {self.access_token}'
+        self.headers['Content-Type'] = 'application/json'
+        
+    def test_connection(self):
+        """Teste la connexion à l'API Slack"""
+        if not self.access_token:
+            logger.error("Test de connexion impossible: Token d'accès manquant pour l'API Slack")
+            return False
+            
+        try:
+            response = requests.get(
+                f"{self.API_BASE_URL}/auth.test",
+                headers=self.headers
+            )
+            return response.status_code == 200 and response.json().get('ok', False)
+        except Exception as e:
+            logger.error(f"Erreur lors du test de connexion Slack: {str(e)}")
+            return False
+
+    def validate_config(self, config):
+        """Valide la configuration Slack"""
+        if not isinstance(config, dict):
+            raise ValueError("La configuration doit être un dictionnaire")
+            
+        # Si nous avons un token d'accès, c'est suffisant pour les appels API
+        if 'access_token' in config and config['access_token']:
+            return
+            
+        # Sinon, vérifier que les champs requis pour l'authentification sont présents
+        required_fields = ['client_id', 'client_secret', 'redirect_uri']
+        missing_fields = [field for field in required_fields if field not in config]
+        if missing_fields:
+            raise ValueError(f"Champs requis manquants pour l'authentification: {', '.join(missing_fields)}")
 
     def send_message(self, channel: str, message: str, thread_ts: str = None) -> Dict[str, Any]:
         """Envoie un message dans un canal Slack"""
+        if not self.access_token:
+            raise ValueError("Token d'accès manquant pour l'API Slack")
+            
         url = f"{self.API_BASE_URL}/chat.postMessage"
         data = {
             'channel': channel,
@@ -41,6 +75,9 @@ class SlackHandler(BaseIntegration):
 
     def get_message_reactions(self, channel: str, message_ts: str) -> List[Dict[str, Any]]:
         """Récupère les réactions à un message"""
+        if not self.access_token:
+            raise ValueError("Token d'accès manquant pour l'API Slack")
+            
         url = f"{self.API_BASE_URL}/reactions.get"
         params = {
             'channel': channel,
@@ -52,6 +89,9 @@ class SlackHandler(BaseIntegration):
 
     def get_channel_replies(self, channel: str, message_ts: str) -> List[Dict[str, Any]]:
         """Récupère les réponses à un message"""
+        if not self.access_token:
+            raise ValueError("Token d'accès manquant pour l'API Slack")
+            
         url = f"{self.API_BASE_URL}/conversations.replies"
         params = {
             'channel': channel,
@@ -63,6 +103,9 @@ class SlackHandler(BaseIntegration):
 
     def get_user_info(self, user_id: str) -> Dict[str, Any]:
         """Récupère les informations d'un utilisateur"""
+        if not self.access_token:
+            raise ValueError("Token d'accès manquant pour l'API Slack")
+            
         url = f"{self.API_BASE_URL}/users.info"
         params = {'user': user_id}
         response = requests.get(url, headers=self.headers, params=params)
@@ -71,6 +114,9 @@ class SlackHandler(BaseIntegration):
         
     def get_channels(self) -> List[Dict[str, Any]]:
         """Récupère la liste des canaux accessibles"""
+        if not self.access_token:
+            raise ValueError("Token d'accès manquant pour l'API Slack")
+            
         url = f"{self.API_BASE_URL}/conversations.list"
         params = {
             'types': 'public_channel,private_channel',
