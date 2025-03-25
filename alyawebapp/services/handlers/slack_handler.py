@@ -240,11 +240,12 @@ class SlackHandler:
         """Vérifie si un canal existe et est accessible"""
         from alyawebapp.integrations.slack.handler import SlackHandler as SlackAPI
         
+        # Nettoyer le nom du canal (enlever le # au début si présent)
+        clean_channel_name = channel_name.strip()
+        if clean_channel_name.startswith('#'):
+            clean_channel_name = clean_channel_name[1:]
+        
         try:
-            # Formater le canal
-            if not channel_name.startswith('#') and not channel_name.startswith('@'):
-                channel_name = '#' + channel_name
-                
             # Vérifier la configuration avant d'initialiser le handler
             config = self.slack_integration.config
             if not isinstance(config, dict):
@@ -261,21 +262,41 @@ class SlackHandler:
                 'client_id': config.get('client_id', 'default_id'),
                 'client_secret': config.get('client_secret', 'default_secret'),
                 'redirect_uri': config.get('redirect_uri', 'default_uri'),
-                'access_token': config['access_token']
+                'access_token': config['access_token'],
+                'refresh_token': config.get('refresh_token')
             }
                 
-            # Récupérer la liste des canaux
+            # Initialiser le handler
             slack_handler = SlackAPI(minimal_config)
+            
+            # Vérifier et rafraîchir le token si nécessaire
+            if not slack_handler.verify_token():
+                logger.error("Échec de la vérification du token Slack")
+                return False
+            
+            # Si le token a été rafraîchi, mettre à jour la base de données
+            if (slack_handler.access_token != config['access_token'] or 
+                (slack_handler.refresh_token and slack_handler.refresh_token != config.get('refresh_token'))):
+                
+                logger.info("Le token Slack a été rafraîchi, mise à jour de la base de données")
+                
+                # Mettre à jour l'access_token et la configuration
+                config['access_token'] = slack_handler.access_token
+                if slack_handler.refresh_token:
+                    config['refresh_token'] = slack_handler.refresh_token
+                
+                # Mettre à jour la base de données
+                self.slack_integration.config = config
+                self.slack_integration.access_token = slack_handler.access_token
+                self.slack_integration.save()
+                logger.info("Token Slack mis à jour avec succès dans la base de données")
+            
+            # Récupérer la liste des canaux
             channels = slack_handler.get_channels()
             
-            # Vérifier si le canal existe dans la liste
-            channel_exists = False
-            for channel in channels:
-                if ('#' + channel.get('name', '')) == channel_name or channel.get('name', '') == channel_name.lstrip('#'):
-                    channel_exists = True
-                    break
-                    
-            return channel_exists
+            # Vérifier si le canal existe
+            return any(channel['name'] == clean_channel_name for channel in channels)
+        
         except Exception as e:
             logger.error(f"Erreur lors de la vérification du canal: {str(e)}")
             return False
@@ -301,10 +322,34 @@ class SlackHandler:
                 'client_id': config.get('client_id', 'default_id'),
                 'client_secret': config.get('client_secret', 'default_secret'),
                 'redirect_uri': config.get('redirect_uri', 'default_uri'),
-                'access_token': config['access_token']
+                'access_token': config['access_token'],
+                'refresh_token': config.get('refresh_token')
             }
                 
             slack_handler = SlackAPI(minimal_config)
+            
+            # Vérifier et rafraîchir le token si nécessaire
+            if not slack_handler.verify_token():
+                logger.error("Échec de la vérification du token Slack")
+                return False
+            
+            # Si le token a été rafraîchi, mettre à jour la base de données
+            if (slack_handler.access_token != config['access_token'] or 
+                (slack_handler.refresh_token and slack_handler.refresh_token != config.get('refresh_token'))):
+                
+                logger.info("Le token Slack a été rafraîchi, mise à jour de la base de données")
+                
+                # Mettre à jour l'access_token et la configuration
+                config['access_token'] = slack_handler.access_token
+                if slack_handler.refresh_token:
+                    config['refresh_token'] = slack_handler.refresh_token
+                
+                # Mettre à jour la base de données
+                self.slack_integration.config = config
+                self.slack_integration.access_token = slack_handler.access_token
+                self.slack_integration.save()
+                logger.info("Token Slack mis à jour avec succès dans la base de données")
+            
             user_info = slack_handler.get_user_info(user_id)
             return bool(user_info) and 'id' in user_info
         except Exception as e:
@@ -332,10 +377,34 @@ class SlackHandler:
                 'client_id': config.get('client_id', 'default_id'),
                 'client_secret': config.get('client_secret', 'default_secret'),
                 'redirect_uri': config.get('redirect_uri', 'default_uri'),
-                'access_token': config['access_token']
+                'access_token': config['access_token'],
+                'refresh_token': config.get('refresh_token')
             }
                 
             slack_handler = SlackAPI(minimal_config)
+            
+            # Vérifier et rafraîchir le token si nécessaire
+            if not slack_handler.verify_token():
+                logger.error("Échec de la vérification du token Slack")
+                return []
+            
+            # Si le token a été rafraîchi, mettre à jour la base de données
+            if (slack_handler.access_token != config['access_token'] or 
+                (slack_handler.refresh_token and slack_handler.refresh_token != config.get('refresh_token'))):
+                
+                logger.info("Le token Slack a été rafraîchi, mise à jour de la base de données")
+                
+                # Mettre à jour l'access_token et la configuration
+                config['access_token'] = slack_handler.access_token
+                if slack_handler.refresh_token:
+                    config['refresh_token'] = slack_handler.refresh_token
+                
+                # Mettre à jour la base de données
+                self.slack_integration.config = config
+                self.slack_integration.access_token = slack_handler.access_token
+                self.slack_integration.save()
+                logger.info("Token Slack mis à jour avec succès dans la base de données")
+            
             return slack_handler.get_channels()
         except Exception as e:
             logger.error(f"Erreur lors de la récupération des canaux: {str(e)}")
@@ -344,6 +413,7 @@ class SlackHandler:
     def _send_message(self, message_info):
         """Envoie un message Slack en utilisant l'intégration existante"""
         from alyawebapp.integrations.slack.handler import SlackHandler as SlackAPI
+        from alyawebapp.models import UserIntegration
         
         # Vérifier que tous les champs nécessaires sont présents
         required_fields = ['channel', 'message']
@@ -378,10 +448,38 @@ class SlackHandler:
                 'client_id': config.get('client_id', 'default_id'),
                 'client_secret': config.get('client_secret', 'default_secret'),
                 'redirect_uri': config.get('redirect_uri', 'default_uri'),
-                'access_token': config['access_token']
+                'access_token': config['access_token'],
+                'refresh_token': config.get('refresh_token')
             }
                 
             slack_handler = SlackAPI(minimal_config)
+            
+            # Avant l'appel API, vérifier le token une première fois
+            # Cela permettra de le rafraîchir si nécessaire
+            token_refreshed = False
+            if not slack_handler.verify_token():
+                # Si la vérification échoue et que le token n'a pas pu être rafraîchi, lever une exception
+                raise ValueError("Problème d'authentification avec Slack. Veuillez reconfigurer votre intégration Slack.")
+            
+            # Si le token a été rafraîchi, mettre à jour la base de données
+            if (slack_handler.access_token != config['access_token'] or 
+                (slack_handler.refresh_token and slack_handler.refresh_token != config.get('refresh_token'))):
+                
+                logger.info("Le token Slack a été rafraîchi, mise à jour de la base de données")
+                token_refreshed = True
+                
+                # Mettre à jour l'access_token et la configuration
+                config['access_token'] = slack_handler.access_token
+                if slack_handler.refresh_token:
+                    config['refresh_token'] = slack_handler.refresh_token
+                
+                # Mettre à jour la base de données
+                self.slack_integration.config = config
+                self.slack_integration.access_token = slack_handler.access_token
+                self.slack_integration.save()
+                logger.info("Token Slack mis à jour avec succès dans la base de données")
+            
+            # Envoyer le message
             result = slack_handler.send_message(
                 channel=channel,
                 message=message_info['message'],
@@ -396,7 +494,11 @@ class SlackHandler:
                 elif error == 'not_in_channel':
                     raise ValueError(f"Alya n'est pas membre du canal {channel}. Veuillez l'ajouter au canal d'abord.")
                 elif error == 'invalid_auth':
-                    raise ValueError("Problème d'authentification avec Slack. Veuillez reconfigurer votre intégration Slack.")
+                    # Si nous avons déjà essayé de rafraîchir le token et que ça ne fonctionne toujours pas
+                    if token_refreshed:
+                        raise ValueError("Problème d'authentification persistant avec Slack. Veuillez réautoriser l'application Slack.")
+                    else:
+                        raise ValueError("Problème d'authentification avec Slack. Veuillez reconfigurer votre intégration Slack.")
                 else:
                     raise ValueError(f"Erreur Slack: {error}")
                     
@@ -426,11 +528,34 @@ class SlackHandler:
                 'client_id': config.get('client_id', 'default_id'),
                 'client_secret': config.get('client_secret', 'default_secret'),
                 'redirect_uri': config.get('redirect_uri', 'default_uri'),
-                'access_token': config['access_token']
+                'access_token': config['access_token'],
+                'refresh_token': config.get('refresh_token')
             }
                 
             # Utiliser l'implémentation existante
             slack_handler = SlackAPI(minimal_config)
+            
+            # Vérifier et rafraîchir le token si nécessaire
+            if not slack_handler.verify_token():
+                return "Désolé, votre token Slack est invalide ou a expiré. Veuillez reconfigurer votre intégration."
+            
+            # Si le token a été rafraîchi, mettre à jour la base de données
+            if (slack_handler.access_token != config['access_token'] or 
+                (slack_handler.refresh_token and slack_handler.refresh_token != config.get('refresh_token'))):
+                
+                logger.info("Le token Slack a été rafraîchi, mise à jour de la base de données")
+                
+                # Mettre à jour l'access_token et la configuration
+                config['access_token'] = slack_handler.access_token
+                if slack_handler.refresh_token:
+                    config['refresh_token'] = slack_handler.refresh_token
+                
+                # Mettre à jour la base de données
+                self.slack_integration.config = config
+                self.slack_integration.access_token = slack_handler.access_token
+                self.slack_integration.save()
+                logger.info("Token Slack mis à jour avec succès dans la base de données")
+            
             reactions = slack_handler.get_message_reactions(channel, message_ts)
             
             if not reactions:
@@ -470,11 +595,34 @@ class SlackHandler:
                 'client_id': config.get('client_id', 'default_id'),
                 'client_secret': config.get('client_secret', 'default_secret'),
                 'redirect_uri': config.get('redirect_uri', 'default_uri'),
-                'access_token': config['access_token']
+                'access_token': config['access_token'],
+                'refresh_token': config.get('refresh_token')
             }
                 
             # Utiliser l'implémentation existante
             slack_handler = SlackAPI(minimal_config)
+            
+            # Vérifier et rafraîchir le token si nécessaire
+            if not slack_handler.verify_token():
+                return "Désolé, votre token Slack est invalide ou a expiré. Veuillez reconfigurer votre intégration."
+            
+            # Si le token a été rafraîchi, mettre à jour la base de données
+            if (slack_handler.access_token != config['access_token'] or 
+                (slack_handler.refresh_token and slack_handler.refresh_token != config.get('refresh_token'))):
+                
+                logger.info("Le token Slack a été rafraîchi, mise à jour de la base de données")
+                
+                # Mettre à jour l'access_token et la configuration
+                config['access_token'] = slack_handler.access_token
+                if slack_handler.refresh_token:
+                    config['refresh_token'] = slack_handler.refresh_token
+                
+                # Mettre à jour la base de données
+                self.slack_integration.config = config
+                self.slack_integration.access_token = slack_handler.access_token
+                self.slack_integration.save()
+                logger.info("Token Slack mis à jour avec succès dans la base de données")
+            
             user_info = slack_handler.get_user_info(user_id)
             
             if not user_info:
