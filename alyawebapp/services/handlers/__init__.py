@@ -6,6 +6,7 @@ from .google_drive_handler import GoogleDriveHandler
 from .salesforce_handler import SalesforceHandler
 from .quickbooks_handler import QuickBooksHandler
 from .slack_handler import SlackHandler
+from .mailchimp_handler import MailChimpHandler
 from .intent_analyzer import IntentAnalyzer
 from .router import IntegrationRouter
 
@@ -18,6 +19,7 @@ __all__ = [
     'SalesforceHandler',
     'QuickBooksHandler',
     'SlackHandler',
+    'MailChimpHandler',
     'IntentAnalyzer',
     'IntegrationRouter'
 ] 

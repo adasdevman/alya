@@ -41,17 +41,187 @@ class TrelloHandler:
         from ..utils.retry_handler import RetryHandler
         
         try:
+            # Ajouter des logs détaillés pour le diagnostic
+            logger.info(f"[TRELLO] Début du traitement de la requête: '{message}'")
+            
+            # Détection spécifique pour les cas problématiques (Marie, franck adas, etc.)
+            assignee_patterns = [
+                # Pattern spécifique pour les noms composés (priorité)
+                r"assign[eé][^a-zA-Z]*(?:la\s+)?[àa]\s+([A-Za-z]+(?:\s+[A-Za-z]+){0,2})(?:\.\s+|\.$|$)",
+                r"assign[eé][^a-zA-Z]*(?:la\s+)?[àa]\s+([^\.]+?)(?:\.\s+|\.$|$)"
+            ]
+            
+            assignee_name = None
+            for pattern in assignee_patterns:
+                assignee_match = re.search(pattern, message, re.IGNORECASE)
+                if assignee_match:
+                    assignee_name = assignee_match.group(1).strip()
+                    logger.info(f"[TRELLO] Détection spécifique pour assigné avec pattern '{pattern}': '{assignee_name}'")
+                    break
+            
+            # Vérifier si le nom de la tâche est présent
+            task_name_match = re.search(r"['']([^'']*)['']|[\"]([^\"]*)[\"]", message)
+            task_name = None
+            if task_name_match:
+                task_name = next((g for g in task_name_match.groups() if g is not None), None)
+            
+            # Vérifier si la liste est présente avec une regex améliorée
+            list_patterns = [
+                # Pattern pour capturer la liste entre guillemets
+                r"dans\s+(?:la\s+)?(?:colonne\s+)?[''\"](.*?)['\"\s](?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)",
+                r"dans\s+(?:la\s+)?(?:colonne\s+)?[''\"]([^'\"]+)[''\"]",
+                # Pattern sans guillemets
+                r"dans\s+(?:la\s+)?(?:colonne\s+)?([^,\.\"\']+?)(?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)"
+            ]
+            
+            list_name = "À faire"  # Valeur par défaut
+            for pattern in list_patterns:
+                list_match = re.search(pattern, message, re.IGNORECASE)
+                if list_match:
+                    list_name = list_match.group(1).strip()
+                    logger.info(f"[TRELLO] Liste détectée avec pattern '{pattern}': '{list_name}'")
+                    break
+            
+            # Nettoyer les guillemets potentiels et autres caractères problématiques
+            list_name = list_name.strip("'").strip('"').strip()
+            if list_name.startswith("'") or list_name.startswith('"'):
+                list_name = list_name[1:]
+            if list_name.endswith("'") or list_name.endswith('"'):
+                list_name = list_name[:-1]
+            
+            logger.info(f"[TRELLO] Liste après nettoyage: '{list_name}'")
+            
+            # Vérifier si la date d'échéance est présente
+            due_date = None
+            day_patterns = {
+                "vendredi": 4, "lundi": 0, "mardi": 1, "mercredi": 2, 
+                "jeudi": 3, "samedi": 5, "dimanche": 6
+            }
+            for day, weekday in day_patterns.items():
+                if day in message.lower():
+                    today = datetime.now()
+                    days_until = (weekday - today.weekday()) % 7
+                    next_day = today + timedelta(days=days_until)
+                    next_day = next_day.replace(hour=23, minute=59, second=59)
+                    due_date = next_day.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+                    break
+            
+            # Charger les membres du tableau pour vérifier si l'assigné existe
+            try:
+                self._load_board_members()
+                self._load_board_lists()
+                
+                # Vérifier si l'assigné existe (recherche plus flexible)
+                assignee_member = None
+                
+                if assignee_name:
+                    logger.info(f"[TRELLO] Recherche du membre: '{assignee_name}'")
+                    
+                    # Normaliser le nom en enlevant les espaces pour comparer avec username
+                    normalized_name = assignee_name.lower().replace(" ", "")
+                    
+                    for member in self.members_data:
+                        member_username = member.get('username', '').lower()
+                        member_fullname = member.get('fullName', '').lower() if member.get('fullName') else ''
+                        assignee_lower = assignee_name.lower()
+                        
+                        logger.info(f"[TRELLO] Comparaison avec membre: username='{member_username}', fullName='{member_fullname}'")
+                        
+                        # Vérification plus flexible
+                        if (member_username == assignee_lower or  # Correspondance exacte username
+                            member_fullname == assignee_lower or  # Correspondance exacte fullName
+                            normalized_name == member_username or  # franckadas == franckadas
+                            assignee_lower in member_fullname or  # franck dans "franck adas"
+                            member_username in normalized_name):  # franckadas dans franckadas
+                            assignee_member = member
+                            logger.info(f"[TRELLO] Membre trouvé: {assignee_member}")
+                            break
+                
+                if assignee_name and not assignee_member:
+                    # Le membre n'existe pas dans le tableau Trello
+                    members_list = "\n".join([f"• {m.get('fullName', '')} (@{m.get('username', '')})" 
+                                            for m in self.members_data if m.get('fullName') or m.get('username')])
+                    return f"❌ Le membre '{assignee_name}' n'existe pas dans ce tableau Trello.\n\nVoici les membres disponibles :\n{members_list}\n\nVeuillez réessayer avec un de ces membres."
+                
+                # Vérifier si la liste existe
+                list_exists = False
+                exact_list_name = None
+                
+                # Afficher toutes les listes disponibles pour le debug
+                logger.info(f"[TRELLO] Listes disponibles: {self.available_lists}")
+                
+                # Nettoyage supplémentaire pour éliminer les guillemets problématiques
+                # Cette étape est cruciale pour éviter les guillemets doubles comme ''En cours''
+                list_name = list_name.replace("''", "").replace('""', "").strip()
+                logger.info(f"[TRELLO] Liste après nettoyage supplémentaire: '{list_name}'")
+                
+                # 1. Recherche exacte
+                if list_name in self.available_lists:
+                    list_exists = True
+                    exact_list_name = list_name
+                    logger.info(f"[TRELLO] Liste trouvée par correspondance exacte: '{exact_list_name}'")
+                else:
+                    # 2. Recherche insensible à la casse
+                    for available_list in self.available_lists:
+                        logger.info(f"[TRELLO] Comparaison: '{available_list.lower()}' vs '{list_name.lower()}'")
+                        if available_list.lower() == list_name.lower():
+                            list_exists = True
+                            exact_list_name = available_list  # Utiliser le nom exact avec la bonne casse
+                            logger.info(f"[TRELLO] Liste trouvée par correspondance insensible à la casse: '{exact_list_name}'")
+                            break
+                
+                if not list_exists:
+                    list_suggestions = "\n".join([f"• {lst}" for lst in self.available_lists])
+                    return f"❌ La liste '{list_name}' n'existe pas dans le tableau actif.\n\nListes disponibles :\n{list_suggestions}"
+                
+                # Si on a un nom de tâche, on peut créer la tâche
+                if task_name:
+                    self.task_info = {
+                        "name": task_name,
+                        "list_name": exact_list_name,  # Utiliser le nom exact avec la bonne casse
+                        "assignee": assignee_member.get('username'),
+                        "due_date": due_date
+                    }
+                    return self._create_task()
+            except Exception as e:
+                logger.error(f"[TRELLO] Erreur lors de la vérification des membres: {str(e)}")
+                return f"❌ Erreur lors de la vérification: {str(e)}"
+        
+            # Continuer avec le traitement normal si la détection spécifique n'a pas fonctionné
             if not self.trello_integration:
+                logger.warning("[TRELLO] Intégration Trello non trouvée pour l'utilisateur")
                 return "Vous n'avez pas installé cette intégration. Veuillez configurer Trello dans vos intégrations avant de l'utiliser."
 
-            active_board_id = self.trello_integration.get_active_board_id()
+            # Vérifier la présence des attributs requis et les logger
+            logger.info(f"[TRELLO] Vérification des attributs de l'intégration")
+            try:
+                active_board_id = self.trello_integration.get_active_board_id()
+                logger.info(f"[TRELLO] Active board ID: {active_board_id}")
+            except Exception as e:
+                logger.error(f"[TRELLO] Erreur lors de la récupération du board ID: {str(e)}")
+                return f"❌ Erreur de configuration Trello: {str(e)}"
+            
             if not active_board_id:
+                logger.warning("[TRELLO] Aucun tableau actif configuré")
                 return "❌ Aucun tableau Trello actif n'a été configuré. Veuillez configurer un tableau dans vos paramètres d'intégration Trello."
 
-            # Vérifier si le tableau existe et est accessible
-            if not self._verify_board_exists(active_board_id):
-                return f"❌ Le tableau Trello configuré n'est pas accessible. Veuillez vérifier que le tableau existe et que vous avez les permissions nécessaires."
+            # Vérifier les variables d'environnement
+            logger.info(f"[TRELLO] Vérification des variables d'environnement")
+            trello_api_url = getattr(settings, 'TRELLO_API_URL', None)
+            trello_api_key = getattr(settings, 'TRELLO_API_KEY', None)
+            
+            if not trello_api_url or not trello_api_key:
+                logger.error(f"[TRELLO] Variables d'environnement manquantes: API_URL={trello_api_url is not None}, API_KEY={trello_api_key is not None}")
+                return "❌ Configuration Trello incomplète sur le serveur. Veuillez contacter l'administrateur."
 
+            # Vérifier si le tableau existe et est accessible
+            logger.info(f"[TRELLO] Vérification de l'existence du tableau {active_board_id}")
+            if not self._verify_board_exists(active_board_id):
+                logger.warning(f"[TRELLO] Tableau {active_board_id} non accessible")
+                return f"❌ Le tableau Trello configuré n'est pas accessible. Veuillez vérifier que le tableau existe et que vous avez les permissions nécessaires."
+            
+            logger.info(f"[TRELLO] Tableau validé, traitement de la requête")
+            
             # Si c'est une demande de tâches en retard
             if "tâches en retard" in message.lower():
                 overdue_tasks = self.get_overdue_tasks()
@@ -125,25 +295,79 @@ class TrelloHandler:
                 return "Je n'ai pas pu comprendre les détails de la tâche. Pouvez-vous reformuler en précisant le nom de la tâche entre guillemets simple (par exemple : 'Ma tâche') et la liste où l'ajouter ?"
 
             # Vérifier si la liste existe
-            if task_info.get('list_name') and task_info['list_name'] not in self.available_lists:
-                list_suggestions = "\n\nListes disponibles :\n" + "\n".join([f"• {lst}" for lst in self.available_lists])
-                return f"❌ La liste '{task_info['list_name']}' n'existe pas dans le tableau actif.{list_suggestions}"
+            if task_info.get('list_name'):
+                # Nettoyer encore une fois le nom de la liste
+                list_name = task_info['list_name'].replace("''", "").replace('""', "").strip()
+                logger.info(f"[TRELLO] Vérification de l'existence de la liste (traitement normal): '{list_name}'")
+                
+                # Afficher toutes les listes disponibles pour le debug
+                logger.info(f"[TRELLO] Listes disponibles: {self.available_lists}")
+                
+                list_exists = False
+                exact_list_name = None
+                
+                # 1. Recherche exacte
+                if list_name in self.available_lists:
+                    list_exists = True
+                    exact_list_name = list_name
+                    logger.info(f"[TRELLO] Liste trouvée (correspondance exacte): '{exact_list_name}'")
+                else:
+                    # 2. Recherche insensible à la casse
+                    for available_list in self.available_lists:
+                        logger.info(f"[TRELLO] Comparaison: '{available_list.lower()}' vs '{list_name.lower()}'")
+                        if available_list.lower() == list_name.lower():
+                            list_exists = True
+                            exact_list_name = available_list  # Utiliser le nom exact avec la bonne casse
+                            logger.info(f"[TRELLO] Liste trouvée (correspondance insensible à la casse): '{exact_list_name}'")
+                            break
+                
+                if not list_exists:
+                    list_suggestions = "\n\nListes disponibles :\n" + "\n".join([f"• {lst}" for lst in self.available_lists])
+                    return f"❌ La liste '{list_name}' n'existe pas dans le tableau actif.{list_suggestions}"
+                else:
+                    # Mettre à jour le nom de la liste avec le nom exact
+                    task_info['list_name'] = exact_list_name
 
             # Vérifier si le membre assigné existe
             if task_info.get('assignee'):
-                assignee_lower = task_info['assignee'].lower()
-                member = next(
-                    (m for m in self.members_data if 
-                    m.get('username', '').lower() == assignee_lower.replace('@', '') or
-                    (m.get('fullName') and m.get('fullName').lower() == assignee_lower)),
-                    None
-                )
-                if not member:
-                    self.task_info = task_info  # Sauvegarder pour plus tard
-                    return f"❌ Je ne trouve pas le membre '{task_info['assignee']}' dans le tableau actif.\n\nMembres disponibles :\n{', '.join(self.available_members)}\n\nÀ qui souhaitez-vous assigner cette tâche ? (utilisez le nom d'utilisateur)"
+                assignee = task_info['assignee']
+                
+                # Nettoyer le nom d'assigné
+                assignee = assignee.strip("'").strip('"').strip()
+                normalized_name = assignee.lower().replace(" ", "")
+                
+                logger.info(f"[TRELLO] Vérification de l'existence du membre: '{assignee}' (normalized: '{normalized_name}')")
+                
+                # Recharger les membres pour être à jour
+                self._load_board_members()
+                
+                member_exists = False
+                exact_member_info = None
+                
+                for member in self.members_data:
+                    member_username = member.get('username', '').lower()
+                    member_fullname = member.get('fullName', '').lower() if member.get('fullName') else ''
+                    
+                    logger.info(f"[TRELLO] Comparaison avec membre: username='{member_username}', fullName='{member_fullname}'")
+                    
+                    # Vérification plus flexible
+                    if (member_username == assignee.lower() or
+                        member_fullname == assignee.lower() or
+                        normalized_name == member_username or
+                        assignee.lower() in member_fullname or
+                        member_username in normalized_name):
+                        member_exists = True
+                        exact_member_info = member
+                        logger.info(f"[TRELLO] Membre trouvé: {exact_member_info}")
+                        break
+                
+                if not member_exists:
+                    members_list = "\n\nMembres disponibles:\n" + "\n".join([f"• {m.get('fullName', '')} (@{m.get('username', '')})" 
+                                                    for m in self.members_data if m.get('fullName') or m.get('username')])
+                    return f"❌ Le membre '{assignee}' n'existe pas dans ce tableau Trello.{members_list}"
                 else:
-                    # Utiliser le username pour l'assignation
-                    task_info['assignee'] = member['username']
+                    # Mettre à jour avec le nom d'utilisateur exact
+                    task_info['assignee'] = exact_member_info.get('username')
 
             # Créer la tâche avec les informations complètes
             self.task_info = task_info
@@ -236,52 +460,149 @@ class TrelloHandler:
     def _extract_task_info(self, text):
         """Extrait les informations de tâche du texte"""
         try:
-            # Extraire le nom de la tâche entre guillemets simples
-            name_match = re.search(r"'([^']*)'", text)
-            name = name_match.group(1) if name_match else None
+            logger.info(f"[TRELLO] Extraction des informations de tâche à partir de: '{text}'")
+            
+            # Extraire le nom de la tâche 
+            # D'abord rechercher entre guillemets simples ou doubles
+            name_match = re.search(r"['']([^'']*)['']|[\"]([^\"]*)[\"]", text)
+            
+            if name_match:
+                # Prendre le premier groupe non-None (soit guillemets simples ou doubles)
+                name = next((g for g in name_match.groups() if g is not None), None)
+            else:
+                # Si pas de guillemets, essayer de trouver le nom de tâche basé sur des motifs usuels
+                task_patterns = [
+                    r"tâche\s+(?:intitulée\s+)?['']?([^''.,]+)['']?",
+                    r"(?:ajoute|créer?)\s+(?:une\s+)?tâche\s+['']?([^''.,]+)['']?",
+                    r"(?:ajoute|créer?)\s+(?:une\s+)?carte\s+['']?([^''.,]+)['']?"
+                ]
+                
+                for pattern in task_patterns:
+                    pattern_match = re.search(pattern, text, re.IGNORECASE)
+                    if pattern_match:
+                        name = pattern_match.group(1).strip()
+                        break
+                else:
+                    name = None
             
             if not name:
+                logger.warning(f"[TRELLO] Nom de tâche non trouvé dans: '{text}'")
                 return None  # Si pas de nom clairement identifié, on ne peut pas créer la tâche
 
-            # Extraire la colonne
-            column_match = re.search(r"(?:dans|colonne)\s+(?:la colonne\s+)?['\"]?([^'\"]+)['\"]?", text, re.IGNORECASE)
-            list_name = column_match.group(1) if column_match else "À faire"
-            
-            # Nettoyer le nom de la liste (enlever les guillemets)
-            list_name = list_name.strip("'").strip('"')
+            logger.info(f"[TRELLO] Nom de tâche trouvé: '{name}'")
 
-            # Extraire l'assigné
-            assignee_match = re.search(r"assigne[^a-zA-Z]*(la |le )?[àa]\s+([^\s\.,]+)", text)
-            assignee = assignee_match.group(2) if assignee_match else None
+            # Extraire la colonne - AMÉLIORATION : délimiteurs plus précis et gestion des guillemets problématiques
+            column_patterns = [
+                # Essayer d'abord de trouver entre guillemets avec différentes variantes
+                r"dans\s+(?:la\s+)?(?:colonne\s+)?[''\"](.*?)['\"\s](?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)",
+                r"dans\s+(?:la\s+)?(?:colonne\s+)?[''\"]([^'\"]+)[''\"]",
+                # Ensuite sans guillemets
+                r"dans\s+(?:la\s+)?(?:colonne\s+)?([^,\.\"\']+?)(?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)",
+                r"colonne\s+[''\"]?([^'\".,]+?)(?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)",
+                r"liste\s+[''\"]?([^'\".,]+?)(?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)"
+            ]
+            
+            list_name = "À faire"  # Valeur par défaut
+            for pattern in column_patterns:
+                column_match = re.search(pattern, text, re.IGNORECASE)
+                if column_match:
+                    list_name = column_match.group(1).strip()
+                    # Arrêter dès qu'on trouve une correspondance
+                    break
+            
+            # Nettoyer le nom de la liste (enlever les guillemets et espaces supplémentaires)
+            list_name = list_name.strip("'").strip('"').strip()
+            # Supprimer les guillemets doubles supplémentaires qui pourraient être inclus
+            list_name = list_name.replace("''", "").replace('""', "")
+            if list_name.startswith("'") or list_name.startswith('"'):
+                list_name = list_name[1:]
+            if list_name.endswith("'") or list_name.endswith('"'):
+                list_name = list_name[:-1]
+                
+            logger.info(f"[TRELLO] Liste détectée et nettoyée: '{list_name}'")
+
+            # Extraire l'assigné - AMÉLIORATION : capture des noms composés
+            assignee_patterns = [
+                # Pattern spécifique pour les noms composés (priorité)
+                r"assign[eé][^a-zA-Z]*la\s+[àa]\s+([A-Za-z]+(?:\s+[A-Za-z]+){0,2})",
+                r"assign[eé][^a-zA-Z]*la\s+[àa]\s+(?:[''\"]?)([^'\".,;]+(?:\s+[^'\".,;]+)?)(?:[''\"]?)(?:\s+|$|\.|,)",
+                # Patterns génériques
+                r"assign[eé][eé]?\s+[àa]\s+(?:[''\"]?)([^'\".,;]+(?:\s+[^'\".,;]+)?)(?:[''\"]?)(?:\s+|$|\.|,)",
+                r"assign[eé][eé]?\s+[àa]\s+(.+?)(?:\s+(?:et|pour|avec|ayant)|\.|\,|$)",
+                r"[àa]\s+([^\.]+?)(?:\s+(?:et|pour|avec|ayant)|\.|\,|$)"
+            ]
+            
+            assignee = None
+            for pattern in assignee_patterns:
+                assignee_match = re.search(pattern, text, re.IGNORECASE)
+                if assignee_match:
+                    assignee = assignee_match.group(1).strip()
+                    logger.info(f"[TRELLO] Assigné détecté avec pattern '{pattern}': '{assignee}'")
+                    break
+            
+            # Recherche spécifique pour les noms fréquents
+            if not assignee:
+                for name in ["marie", "franck", "adas", "franckadas"]:
+                    if name in text.lower():
+                        # Chercher le nom complet, potentiellement composé
+                        name_match = re.search(r"[àa]\s+([A-Za-z]+(?:\s+[A-Za-z]+){0,2})", text, re.IGNORECASE)
+                        if name_match:
+                            assignee = name_match.group(1).strip()
+                            logger.info(f"[TRELLO] Assigné détecté avec recherche spécifique: '{assignee}'")
+                            break
+            
+            # Nettoyage final de l'assigné
+            if assignee:
+                assignee = assignee.strip("'").strip('"').strip()
+                logger.info(f"[TRELLO] Assigné final après nettoyage: '{assignee}'")
 
             # Extraire la date d'échéance
             due_date = None
-            if "vendredi" in text.lower():
-                # Calculer le prochain vendredi
-                today = datetime.now()
-                days_until_friday = (4 - today.weekday()) % 7
-                next_friday = today + timedelta(days=days_until_friday)
-                # Ajouter l'heure de fin de journée (23:59:59)
-                next_friday = next_friday.replace(hour=23, minute=59, second=59)
-                # Format ISO 8601 que Trello attend
-                due_date = next_friday.strftime("%Y-%m-%dT%H:%M:%S.000Z")
-            elif "demain" in text.lower():
-                tomorrow = datetime.now() + timedelta(days=1)
-                tomorrow = tomorrow.replace(hour=23, minute=59, second=59)
-                due_date = tomorrow.strftime("%Y-%m-%dT%H:%M:%S.000Z")
-            elif "semaine prochaine" in text.lower():
-                next_week = datetime.now() + timedelta(days=7)
-                next_week = next_week.replace(hour=23, minute=59, second=59)
-                due_date = next_week.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            day_patterns = {
+                "vendredi": 4,
+                "lundi": 0,
+                "mardi": 1,
+                "mercredi": 2,
+                "jeudi": 3,
+                "samedi": 5,
+                "dimanche": 6
+            }
+            
+            for day, weekday in day_patterns.items():
+                if day in text.lower():
+                    # Calculer le prochain jour de la semaine correspondant
+                    today = datetime.now()
+                    days_until = (weekday - today.weekday()) % 7
+                    next_day = today + timedelta(days=days_until)
+                    next_day = next_day.replace(hour=23, minute=59, second=59)
+                    due_date = next_day.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+                    logger.info(f"[TRELLO] Date d'échéance détectée: {day} ({next_day.strftime('%d/%m/%Y')})")
+                    break
+                    
+            if not due_date:
+                if "demain" in text.lower():
+                    tomorrow = datetime.now() + timedelta(days=1)
+                    tomorrow = tomorrow.replace(hour=23, minute=59, second=59)
+                    due_date = tomorrow.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+                    logger.info(f"[TRELLO] Date d'échéance: demain ({tomorrow.strftime('%d/%m/%Y')})")
+                elif "semaine prochaine" in text.lower():
+                    next_week = datetime.now() + timedelta(days=7)
+                    next_week = next_week.replace(hour=23, minute=59, second=59)
+                    due_date = next_week.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+                    logger.info(f"[TRELLO] Date d'échéance: semaine prochaine ({next_week.strftime('%d/%m/%Y')})")
 
-            return {
+            task_info = {
                 "name": name,
                 "list_name": list_name,
                 "assignee": assignee,
                 "due_date": due_date
             }
+            
+            logger.info(f"[TRELLO] Informations de tâche extraites: {task_info}")
+            return task_info
+            
         except Exception as e:
-            logger.error(f"Erreur lors de l'extraction des informations de tâche: {str(e)}")
+            logger.error(f"[TRELLO] Erreur lors de l'extraction des informations de tâche: {str(e)}")
             return None
     
     def get_overdue_tasks(self):
@@ -345,32 +666,82 @@ class TrelloHandler:
             raise
     
     def _get_list_id(self, list_name):
-        """Récupère l'ID d'une liste Trello"""
+        """Retourne l'ID de la liste Trello à partir de son nom"""
         from django.conf import settings
         
+        # Nettoyer le nom de liste pour éviter les problèmes de guillemets
+        list_name = list_name.replace("''", "").replace('""', "").strip()
+        logger.info(f"[TRELLO] Recherche de l'ID pour la liste: '{list_name}'")
+        
+        if not self.available_lists:
+            self._load_board_lists()
+            logger.info(f"[TRELLO] Listes disponibles chargées: {self.available_lists}")
+        
+        # Recherche insensible à la casse
+        target_list_name = list_name.lower()
+        exact_match_list = None
+        
+        # D'abord, essayer de trouver une correspondance exacte
+        for lst in self.available_lists:
+            if lst.lower() == target_list_name:
+                exact_match_list = lst
+                logger.info(f"[TRELLO] Liste correspondante trouvée: '{exact_match_list}'")
+                break
+        
+        if not exact_match_list:
+            lists_names = "\n".join([f"• {lst}" for lst in self.available_lists])
+            logger.error(f"[TRELLO] Liste '{list_name}' non trouvée. Listes disponibles:\n{lists_names}")
+            raise ValueError(f"Liste '{list_name}' non trouvée")
+            
+        # Récupérer l'ID de la liste correspondante
         response = requests.get(
             f"{settings.TRELLO_API_URL}/boards/{self.trello_integration.get_active_board_id()}/lists",
             params={
                 'key': settings.TRELLO_API_KEY,
                 'token': self.trello_integration.access_token,
-                'fields': 'name'
+                'fields': 'name,id'
             }
         )
         response.raise_for_status()
         lists = response.json()
         
-        # Chercher la liste (insensible à la casse)
-        list_id = next(
-            (lst['id'] for lst in lists if lst['name'].lower() == list_name.lower()),
-            None
-        )
+        # Rechercher avec le nom exact trouvé
+        for trello_list in lists:
+            if trello_list['name'] == exact_match_list:
+                logger.info(f"[TRELLO] ID trouvé pour la liste '{exact_match_list}': {trello_list['id']}")
+                return trello_list['id']
+                
+        # Recherche avec insensibilité à la casse (fallback)
+        for trello_list in lists:
+            if trello_list['name'].lower() == target_list_name:
+                logger.info(f"[TRELLO] ID trouvé (fallback) pour la liste '{list_name}': {trello_list['id']}")
+                return trello_list['id']
         
-        if not list_id:
-            lists_names = [lst['name'] for lst in lists]
-            error_msg = f"Liste '{list_name}' non trouvée. Listes disponibles : {', '.join(lists_names)}"
-            raise ValueError(error_msg)
+        # Si on arrive ici, c'est qu'on n'a pas trouvé l'ID
+        logger.error(f"[TRELLO] Impossible de trouver l'ID pour la liste '{list_name}' malgré sa présence")
+        raise ValueError(f"Liste '{list_name}' trouvée mais ID non récupérable")
+    
+    def _get_member_info(self, member_name):
+        """Retourne les informations d'un membre à partir de son nom ou username"""
         
-        return list_id
+        if not self.members_data:
+            self._load_board_members()
+        
+        member_name_lower = member_name.lower()
+        
+        # Recherche flexible du membre
+        for member in self.members_data:
+            member_username = member.get('username', '').lower()
+            member_fullname = member.get('fullName', '').lower() if member.get('fullName') else ''
+            
+            # Vérifier si le nom correspond exactement ou partiellement
+            if (member_username == member_name_lower or 
+                member_fullname == member_name_lower or
+                member_name_lower in member_fullname or 
+                member_username in member_name_lower):
+                return member
+        
+        return None
     
     def _create_task(self):
         """Crée une tâche Trello avec les informations fournies"""
@@ -381,12 +752,44 @@ class TrelloHandler:
             if not info or not info.get('name'):
                 return "Désolée, je n'ai pas les informations nécessaires pour créer la tâche."
 
-            # Obtenir l'id de la liste
+            # Obtenir l'id de la liste (recherche insensible à la casse)
             try:
-                list_id = self._get_list_id(info['list_name'])
+                # D'abord essayer de trouver une correspondance exacte
+                list_id = None
+                
+                # Si la liste a été mise à jour depuis le chargement initial, recharger
+                self._load_board_lists()
+                
+                # Nettoyer le nom de la liste pour être sûr
+                list_name = info['list_name'].replace("''", "").replace('""', "").strip()
+                logger.info(f"[TRELLO] Création de tâche - liste nettoyée: '{list_name}'")
+                
+                # Rechercher une correspondance exacte ou insensible à la casse
+                for lst in self.available_lists:
+                    if lst == list_name or lst.lower() == list_name.lower():
+                        try:
+                            list_id = self._get_list_id(lst)
+                            logger.info(f"[TRELLO] Liste trouvée pour la tâche: '{lst}' (ID: {list_id})")
+                            break
+                        except ValueError as ve:
+                            logger.warning(f"[TRELLO] Erreur lors de la récupération de l'ID de liste '{lst}': {str(ve)}")
+                            # Continuer à chercher
+                            pass
+                
+                # Si aucune correspondance n'a été trouvée, essayer la méthode normale
+                if not list_id:
+                    try:
+                        list_id = self._get_list_id(list_name)
+                        logger.info(f"[TRELLO] ID de liste trouvé avec la méthode normale: {list_id}")
+                    except ValueError as ve:
+                        logger.error(f"[TRELLO] Échec de récupération de l'ID pour '{list_name}': {str(ve)}")
+                        raise
+                    
             except ValueError as e:
                 # Retourner une liste des listes disponibles
-                return f"❌ {str(e)}"
+                list_suggestions = "\n".join([f"• {lst}" for lst in self.available_lists])
+                logger.error(f"[TRELLO] Liste '{list_name}' non trouvée: {str(e)}")
+                return f"❌ La liste '{list_name}' n'existe pas dans le tableau actif.\n\nListes disponibles :\n{list_suggestions}"
 
             # Création de la tâche dans Trello
             data = {
@@ -399,16 +802,49 @@ class TrelloHandler:
             if info.get('due_date'):
                 data['due'] = info['due_date']
 
+            member_not_found = False
+            member_name = None
             if info.get('assignee'):
-                # Trouver l'ID du membre à partir du nom d'utilisateur
-                member = next(
-                    (m for m in self.members_data if 
-                    m.get('username', '').lower() == info['assignee'].lower()),
-                    None
-                )
+                member_name = info['assignee']
+                # Recharger les membres pour s'assurer qu'ils sont à jour
+                self._load_board_members()
+                
+                # Trouver l'ID du membre avec une correspondance plus flexible
+                member = None
+                assignee = info['assignee']
+                assignee_lower = assignee.lower()
+                # Normaliser le nom en enlevant les espaces pour comparer avec username
+                normalized_name = assignee_lower.replace(" ", "")
+                
+                logger.info(f"[TRELLO] Recherche du membre pour assignation: '{assignee}'")
+                
+                # Recherche plus flexible
+                for m in self.members_data:
+                    member_username = m.get('username', '').lower()
+                    member_fullname = m.get('fullName', '').lower() if m.get('fullName') else ''
+                    
+                    # Vérifier si le nom correspond exactement ou partiellement
+                    if (member_username == assignee_lower or 
+                        member_fullname == assignee_lower or
+                        normalized_name == member_username or 
+                        assignee_lower in member_fullname or 
+                        member_username in normalized_name):
+                        member = m
+                        logger.info(f"[TRELLO] Membre trouvé pour assignation: {member}")
+                        break
+                
                 if member:
                     data['idMembers'] = [member['id']]
+                    # Utiliser le nom complet pour l'affichage si disponible
+                    if member.get('fullName'):
+                        member_name = member['fullName']
+                else:
+                    # Membre non trouvé - on le signalera dans le message
+                    member_not_found = True
+                    logger.warning(f"[TRELLO] Membre assigné non trouvé: {assignee}")
 
+            # Appel API pour créer la carte
+            logger.info(f"[TRELLO] Création de la carte avec les données: {data}")
             response = requests.post(
                 f"{settings.TRELLO_API_URL}/cards",
                 json=data
@@ -421,8 +857,15 @@ class TrelloHandler:
             self.task_info = {}
             
             success_message = f"✅ J'ai créé la tâche '{info['name']}' dans la liste '{info['list_name']}'"
-            if info.get('assignee'):
-                success_message += f" et je l'ai assignée à {info['assignee']}"
+            
+            if member_not_found and member_name:
+                members_list = "\n".join([f"• {m.get('fullName', '')} (@{m.get('username', '')})" 
+                                        for m in self.members_data if m.get('fullName') or m.get('username')])
+                
+                success_message += f"\n\n⚠️ Attention: Je n'ai pas pu assigner la tâche à '{member_name}' car ce membre n'existe pas dans ce tableau Trello."
+                success_message += f"\n\nMembres disponibles :\n{members_list}"
+            elif info.get('assignee'):
+                success_message += f" et je l'ai assignée à {member_name}"
             
             if info.get('due_date'):
                 due_date = datetime.fromisoformat(info['due_date'].replace('Z', '+00:00'))

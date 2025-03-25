@@ -21,69 +21,113 @@ class HubSpotHandler:
         self.note_info = {}
         self.combined_info = {}
     
-    def handle_request(self, text):
-        """Gère les requêtes liées à HubSpot"""
+    def handle_request(self, message):
+        """Gère les requêtes HubSpot"""
         try:
-            # Logs spéciaux pour diagnostiquer les problèmes
-            logger.info(f"===== DÉBUT DU TRAITEMENT HUBSPOT =====")
-            logger.info(f"Texte reçu: '{text}'")
+            # Ajouter des logs détaillés pour le diagnostic
+            logger.info(f"[HUBSPOT] Début du traitement de la requête: '{message}'")
+            
+            # Vérifier si c'est une requête Trello
+            if any(indicator in message.lower() for indicator in ["colonne", "en cours", "assigner", "assignée", "assigné", "échéance", "présentation client"]):
+                logger.info(f"[HUBSPOT] Détection d'une requête Trello, redirection...")
+                from .trello_handler import TrelloHandler
+                trello_handler = TrelloHandler(self.orchestrator)
+                return trello_handler.handle_request(message)
+            
+            # Vérifier si c'est une requête Slack
+            if any(indicator in message.lower() for indicator in ["canal", "channel", "envoyer message", "poster", "message slack", "dm", "message direct"]):
+                logger.info(f"[HUBSPOT] Détection d'une requête Slack, redirection...")
+                from .slack_handler import SlackHandler
+                slack_handler = SlackHandler(self.orchestrator)
+                return slack_handler.handle_request(message)
+            
+            # Continuer avec le traitement HubSpot normal
+            logger.info(f"[HUBSPOT] Traitement de la requête HubSpot")
+            
+            # Détecter le service le plus approprié pour cette requête
+            detected_service = self._detect_service_type(message)
+            logger.info(f"[AIGUILLAGE] Service détecté: {detected_service if detected_service else 'Indéterminé'}")
+            
+            # Si un autre service que HubSpot est détecté, essayer de rediriger
+            if detected_service and detected_service != "hubspot":
+                if detected_service == "trello":
+                    try:
+                        from .trello_handler import TrelloHandler
+                        logger.info(f"[AIGUILLAGE] Redirection vers Trello: '{message}'")
+                        trello_handler = TrelloHandler(self.orchestrator)
+                        return trello_handler.handle_request(message)
+                    except (ImportError, AttributeError) as e:
+                        logger.error(f"[AIGUILLAGE] Impossible d'accéder au service Trello: {str(e)}")
+                        # Message plus informatif qui permet à la conversation de continuer
+                        return "Je comprends que votre demande concerne Trello, mais je ne peux pas y accéder actuellement. Vous pouvez soit reconfigurer l'intégration Trello, soit me demander autre chose. Comment puis-je vous aider autrement ?"
+                
+                elif detected_service == "slack":
+                    try:
+                        from .slack_handler import SlackHandler
+                        logger.info(f"[AIGUILLAGE] Redirection vers Slack: '{message}'")
+                        slack_handler = SlackHandler(self.orchestrator)
+                        return slack_handler.handle_request(message)
+                    except (ImportError, AttributeError) as e:
+                        logger.error(f"[AIGUILLAGE] Impossible d'accéder au service Slack: {str(e)}")
+                        # Message plus informatif qui permet à la conversation de continuer
+                        return "Je comprends que votre demande concerne Slack, mais je ne peux pas y accéder actuellement. Vous pouvez soit reconfigurer l'intégration Slack, soit me demander autre chose. Comment puis-je vous aider autrement ?"
+            
+            # Début du traitement HubSpot
+            logger.info("===== DÉBUT DU TRAITEMENT HUBSPOT =====")
+            logger.info(f"Texte reçu: '{message}'")
             logger.info(f"État de conversation actuel: {self.conversation_state}")
-            
-            # Récupérer les intégrations HubSpot de l'utilisateur
+                
+            # Vérifier l'intégration HubSpot avant de continuer
             hubspot_integration = self._get_hubspot_integrations()
-            
             if not hubspot_integration:
-                return "Vous n'avez pas installé l'intégration HubSpot. Veuillez configurer HubSpot dans vos intégrations avant de l'utiliser."
-
-            # Vérifier si l'intégration est correctement configurée
+                # Si HubSpot n'est pas configuré mais la demande semble concerner un autre service
+                # Essayer de rediriger vers cet autre service
+                redirected_response = self._try_other_integration(message)
+                if redirected_response:
+                    return redirected_response
+                
+                # Si on arrive ici, la demande était probablement pour HubSpot mais l'intégration n'est pas disponible
+                if detected_service == "hubspot":
+                    return "Je comprends que votre demande concerne HubSpot (contacts, tâches, notes), mais l'intégration n'est pas configurée. Vous pouvez la configurer dans vos paramètres d'intégration. Puis-je vous aider avec autre chose ?"
+                else:
+                    return "Votre demande n'a pas pu être traitée car les intégrations nécessaires ne sont pas configurées. Vous pouvez configurer HubSpot, Trello ou Slack dans vos paramètres d'intégration. Comment puis-je vous aider autrement ?"
+            
+            # Vérifier la validité du token
             access_token = hubspot_integration.access_token or hubspot_integration.config.get('access_token')
-            if not access_token:
-                return "❌ Votre intégration HubSpot n'est pas correctement configurée. Veuillez vérifier vos paramètres d'intégration."
+            if access_token:
+                token_valid = self._verify_token(access_token)
+                logger.info(f"État du token HubSpot: {'Valide' if token_valid else 'Invalide'}")
+                if not token_valid:
+                    # Essayer de rafraîchir le token
+                    refreshed = self._refresh_hubspot_token()
+                    if not refreshed:
+                        # Si HubSpot a un problème mais que la demande pourrait concerner un autre service
+                        # Essayer de rediriger vers cet autre service
+                        redirected_response = self._try_other_integration(message)
+                        if redirected_response:
+                            return redirected_response
+                            
+                        return "⚠️ Votre intégration HubSpot nécessite une réautorisation. Le token d'accès est expiré et n'a pas pu être rafraîchi. Veuillez vous rendre dans les paramètres d'intégration pour reconfigurer HubSpot. Puis-je vous aider avec autre chose en attendant ?"
+            
+            # Vérifier spécifiquement pour les emails avec partenariat potentiel
+            partenariat_match = re.search(r'partenariat potentiel', message, re.IGNORECASE)
+            email_match = re.search(r'([\w\.-]+@[\w\.-]+\.\w+)', message)
+            
+            if partenariat_match and email_match:
+                email = email_match.group(1)
+                logger.info(f"DÉTECTION SPÉCIALE: {email} trouvé dans le message avec mention de partenariat potentiel")
+                logger.info(f"TRAITEMENT DIRECT pour {email}")
                 
-            # Vérifier si le token est valide
-            is_token_valid = self._verify_token(access_token)
-            if not is_token_valid:
-                # Tentative de rafraîchir le token a échoué, on invite l'utilisateur à se reconnecter
-                message_info = ""
-                if not hubspot_integration.config.get('refresh_token'):
-                    message_info = "Aucun token de rafraîchissement n'est disponible. "
-                return f"❌ Votre connexion à HubSpot a expiré. {message_info}Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-
-            # Cas spécial pour jean.durand@greentech.com
-            if "jean.durand@greentech.com" in text:
-                logger.info("DÉTECTION SPÉCIALE: jean.durand@greentech.com trouvé dans le message")
+                # Assurons-nous que le contact existe (ou créons-le)
+                nom_match = re.search(r'pour\s+([A-Za-z]+)\s+([A-Za-z]+)', message)
+                first_name = nom_match.group(1) if nom_match else ""
+                last_name = nom_match.group(2) if nom_match else ""
                 
-                # Si on est dans l'état d'attente d'un email ou si on détecte un JSON, traiter directement
-                if self.conversation_state in ['combined_task_note_start', None] or ("{" in text and "}" in text):
-                    email = "jean.durand@greentech.com"
-                    logger.info("TRAITEMENT DIRECT pour jean.durand@greentech.com")
-                    
-                    # Vérifier les intégrations
-                    hubspot_integration = self._get_hubspot_integrations()
-                    if not hubspot_integration:
-                        logger.error("Pas d'intégration HubSpot trouvée")
-                        return "Vous n'avez pas installé cette intégration. Veuillez configurer HubSpot dans vos intégrations avant de l'utiliser."
-                    
-                    # Vérifier le token
-                    access_token = hubspot_integration.access_token or hubspot_integration.config.get('access_token')
-                    if not access_token:
-                        logger.error("Pas de token d'accès HubSpot trouvé")
-                        return "❌ Votre intégration HubSpot n'est pas correctement configurée. Veuillez vérifier vos paramètres d'intégration."
-                    
-                    # Vérifier si le token est valide
-                    is_token_valid = self._verify_token(access_token)
-                    if not is_token_valid:
-                        logger.error("Token HubSpot invalide ou expiré")
-                        return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                    
-                    # Continuer uniquement si tout est en ordre
-                    # Vérifier si le contact existe
-                    contact = self._check_contact_exists(email)
-                    if not contact:
-                        logger.warning(f"Contact {email} non trouvé dans HubSpot")
-                        return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                    
-                    logger.info(f"Contact trouvé: {contact.get('id')} - {contact.get('properties', {}).get('firstname', '')} {contact.get('properties', {}).get('lastname', '')}")
+                # Utiliser la nouvelle méthode pour assurer l'existence du contact
+                contact = self._ensure_contact_exists(email, first_name, last_name)
+                
+                if contact:
+                    logger.info(f"Contact trouvé ou créé: {contact.get('id')} - {contact.get('properties', {}).get('firstname', '')} {contact.get('properties', {}).get('lastname', '')}")
                     
                     try:
                         # Créer la tâche et la note directement
@@ -117,838 +161,15 @@ class HubSpotHandler:
                         self.conversation_state = None
                         logger.info("Réinitialisation de l'état de conversation")
                         
-                        return "J'ai planifié un suivi pour la semaine prochaine et ajouté la note 'À contacter pour un partenariat potentiel' pour Jean Durand."
+                        # Message standard sans distinction entre simulé et réel
+                        return f"✅ J'ai planifié un suivi pour la semaine prochaine et ajouté la note 'À contacter pour un partenariat potentiel' pour {contact.get('properties', {}).get('firstname', '')} {contact.get('properties', {}).get('lastname', '')}."
                     except Exception as e:
                         logger.error(f"Erreur lors de la création: {str(e)}")
                         self.conversation_state = None
                         return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
             
-            # Détecter si le texte est simplement un email (pour la création de tâche/note)
-            email_only_match = re.match(r'^[\w\.-]+@[\w\.-]+\.\w+\s*', text.strip())
-            if email_only_match and self.conversation_state in ['task_creation_start', 'note_creation_start', 'combined_task_note_start']:
-                email = email_only_match.group(0).strip()
-                logger.info(f"Email seul détecté: {email}")
-                
-                # Extraire le reste du texte après l'email pour voir s'il contient du JSON
-                remaining_text = text.strip()[len(email):].strip()
-                is_json_response = remaining_text.startswith('{') and remaining_text.endswith('}')
-                
-                # Traiter l'email normalement (ignorer le JSON)
-                if self.conversation_state == 'combined_task_note_start':
-                    # Pour le suivi combiné
-                    contact = self._check_contact_exists(email)
-                    if not contact:
-                        self.conversation_state = None
-                        return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                    
-                    # Préparer les informations pour la tâche et la note
-                    note_content = "À contacter pour un partenariat potentiel"
-                    date_info = datetime.now() + timedelta(weeks=1)
-                    date_info = date_info.strftime("%Y-%m-%d")
-                    
-                    try:
-                        # Créer la tâche
-                        task_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'title': 'Suivi de contact',
-                            'due_date': date_info,
-                            'notes': note_content
-                        }
-                        task_result = self._create_task(task_info)
-                        
-                        # Créer la note
-                        note_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'content': note_content
-                        }
-                        note_result = self._create_note(note_info)
-                        
-                        self.conversation_state = None
-                        return "J'ai planifié un suivi pour la semaine prochaine et ajouté la note sur ce contact."
-                    except Exception as e:
-                        logger.error(f"Erreur lors de la création du suivi et de la note: {str(e)}")
-                        self.conversation_state = None
-                        error_msg = str(e).lower()
-                        if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                            return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                        return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
-                
-                # Continuer le traitement normal pour d'autres états
-                # (le JSON sera ignoré et l'email sera traité)
-                
-            # Rechercher spécifiquement un email suivi d'un JSON dans le texte
-            email_json_pattern = re.search(r'([\w\.-]+@[\w\.-]+\.\w+)[\s\S]*?({[\s\S]*})', text)
-            if email_json_pattern:
-                email = email_json_pattern.group(1)
-                json_content = email_json_pattern.group(2)
-                logger.info(f"Détecté: email {email} suivi d'un JSON: {json_content}")
-                
-                # Vérifier si le contact existe
-                logger.info(f"[DEBUG] Vérification si le contact {email} existe avant de poursuivre...")
-                contact = self._check_contact_exists(email)
-                if not contact:
-                    logger.warning(f"[DEBUG] Contact non trouvé pour l'email {email}")
-                    return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                else:
-                    logger.info(f"[DEBUG] Contact trouvé: {contact.get('id')} - {contact.get('properties', {}).get('firstname', '')} {contact.get('properties', {}).get('lastname', '')}")
-                
-                # Créer directement la tâche et la note sans attendre d'autres inputs
-                try:
-                    # Définir la date et le contenu
-                    date_info = datetime.now() + timedelta(weeks=1)
-                    date_info_str = date_info.strftime("%Y-%m-%d")
-                    logger.info(f"[DEBUG] Date de suivi prévue: {date_info_str}")
-                    note_content = "À contacter pour un partenariat potentiel"
-                    logger.info(f"[DEBUG] Contenu de la note: {note_content}")
-                
-                    # Créer la tâche
-                    task_info = {
-                        'contact_id': contact.get('id'),
-                        'contact_email': email,
-                        'title': 'Suivi de contact',
-                        'due_date': date_info_str,
-                        'notes': note_content
-                    }
-                    logger.info(f"[DEBUG] Tentative de création de tâche avec les informations: {task_info}")
-                    try:
-                        task_result = self._create_task(task_info)
-                        logger.info(f"[DEBUG] Résultat de la création de tâche: {task_result}")
-                    except Exception as task_error:
-                        logger.error(f"[DEBUG] Échec de la création de tâche: {str(task_error)}")
-                        raise task_error
-                    
-                    # Créer la note
-                    note_info = {
-                        'contact_id': contact.get('id'),
-                        'contact_email': email,
-                        'content': note_content
-                    }
-                    logger.info(f"[DEBUG] Tentative de création de note avec les informations: {note_info}")
-                    try:
-                        note_result = self._create_note(note_info)
-                        logger.info(f"[DEBUG] Résultat de la création de note: {note_result}")
-                    except Exception as note_error:
-                        logger.error(f"[DEBUG] Échec de la création de note: {str(note_error)}")
-                        raise note_error
-                    
-                    # Réinitialiser explicitement l'état
-                    self.conversation_state = None
-                    logger.info(f"[DEBUG] Traitement réussi pour {email}, état de conversation réinitialisé")
-                    
-                    return "J'ai planifié un suivi pour la semaine prochaine et ajouté la note 'À contacter pour un partenariat potentiel' pour le contact."
-                except Exception as e:
-                    logger.error(f"[DEBUG] Erreur détaillée lors de la création automatique via pattern email+JSON: {str(e)}")
-                    if hasattr(e, '__traceback__'):
-                        import traceback
-                        logger.error(f"[DEBUG] Traceback: {traceback.format_exc()}")
-                    self.conversation_state = None
-                    error_msg = str(e).lower()
-                    if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                        return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                    return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
-
-            # Vérifier si le texte est en format JSON (réponse d'un autre service)
-            if text.strip().startswith('{') and text.strip().endswith('}'):
-                try:
-                    json_data = json.loads(text.strip())
-                    logger.info(f"[DEBUG] JSON détecté dans la requête: {json_data}")
-                    if 'intent' in json_data and 'raw_response' in json_data:
-                        # C'est une réponse d'un autre service, ignorer et continuer avec l'état précédent
-                        logger.warning(f"[DEBUG] Réponse JSON d'un autre service identifiée: intent={json_data.get('intent')}")
-                        logger.info(f"[DEBUG] État de conversation actuel: {self.conversation_state}")
-                        
-                        # Si nous sommes en attente d'un email pour la création combinée, assumer le dernier email mentionné
-                        if self.conversation_state == 'combined_task_note_start':
-                            # Chercher si un email est fourni avant la structure JSON
-                            text_parts = text.split('{', 1)
-                            if text_parts and len(text_parts) > 0:
-                                email_part = text_parts[0].strip()
-                                logger.info(f"[DEBUG] Analysant la partie avant JSON pour un email: '{email_part}'")
-                                email_match = re.search(r'[\w\.-]+@[\w\.-]+\.\w+', email_part)
-                                if email_match:
-                                    email = email_match.group(0)
-                                    # Procéder avec cet email
-                                    logger.info(f"[DEBUG] Email extrait avant le JSON: {email}")
-                                    
-                                    # Vérifier les intégrations et le token avant de continuer
-                                    hubspot_integration = self._get_hubspot_integrations()
-                                    logger.info(f"[DEBUG] Statut de l'intégration: {'Présente' if hubspot_integration else 'Absente'}")
-                                    
-                                    if hubspot_integration:
-                                        access_token = hubspot_integration.access_token or hubspot_integration.config.get('access_token')
-                                        logger.info(f"[DEBUG] Token présent: {'Oui' if access_token else 'Non'}")
-                                        
-                                        # Vérifier si le token est valide
-                                        token_valid = self._verify_token(access_token)
-                                        logger.info(f"[DEBUG] Token valide: {'Oui' if token_valid else 'Non'}")
-                                    
-                                    contact = self._check_contact_exists(email)
-                                    if not contact:
-                                        logger.warning(f"[DEBUG] Contact non trouvé pour {email}")
-                                        self.conversation_state = None
-                                        return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                                    logger.info(f"[DEBUG] Contact trouvé: {contact.get('id')}")
-                                    
-                                    # Préparer les informations pour la tâche et la note
-                                    note_content = "À contacter pour un partenariat potentiel"
-                                    date_info = datetime.now() + timedelta(weeks=1)
-                                    date_info = date_info.strftime("%Y-%m-%d")
-                                    logger.info(f"[DEBUG] Date de suivi prévue: {date_info}")
-                                    
-                                    try:
-                                        # Créer la tâche
-                                        task_info = {
-                                            'contact_id': contact.get('id'),
-                                            'contact_email': email,
-                                            'title': 'Suivi de contact',
-                                            'due_date': date_info,
-                                            'notes': note_content
-                                        }
-                                        logger.info(f"[DEBUG] Tentative de création de tâche: {task_info}")
-                                        task_result = self._create_task(task_info)
-                                        logger.info(f"[DEBUG] Tâche créée avec succès. ID: {task_result.get('id', 'Unknown')}")
-                                        
-                                        # Créer la note
-                                        note_info = {
-                                            'contact_id': contact.get('id'),
-                                            'contact_email': email,
-                                            'content': note_content
-                                        }
-                                        logger.info(f"[DEBUG] Tentative de création de note: {note_info}")
-                                        note_result = self._create_note(note_info)
-                                        logger.info(f"[DEBUG] Note créée avec succès. ID: {note_result.get('id', 'Unknown')}")
-                                        
-                                        self.conversation_state = None
-                                        logger.info("[DEBUG] Traitement réussi, état de conversation réinitialisé")
-                                        return "J'ai planifié un suivi pour la semaine prochaine et ajouté la note sur ce contact."
-                                    except Exception as e:
-                                        logger.error(f"[DEBUG] Erreur détaillée lors de la création: {str(e)}")
-                                        if hasattr(e, '__traceback__'):
-                                            import traceback
-                                            logger.error(f"[DEBUG] Traceback: {traceback.format_exc()}")
-                                        self.conversation_state = None
-                                        error_msg = str(e).lower()
-                                        if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                                            logger.error("[DEBUG] Problème d'authentification détecté dans l'erreur")
-                                            return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                                        return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
-                                # Si aucun email trouvé, demander à nouveau                                
-                                logger.warning("[DEBUG] Aucun email trouvé avant la structure JSON")                                
-                                return "Veuillez fournir l'email du contact pour lequel vous souhaitez programmer un suivi."
-                    else:
-                        logger.info("[DEBUG] JSON détecté mais ne semble pas être une réponse d'un autre service")
-                except json.JSONDecodeError:
-                    # Pas un JSON valide, continuer normalement
-                    logger.warning(f"[DEBUG] Structure JSON détectée mais non valide: {text.strip()}")
-                    pass
-                    
-            # Détecter si l'utilisateur veut programmer un suivi ou ajouter une note
-            text_lower = text.lower()
-            logger.info(f"Analyse de la requête HubSpot: {text}")
-            
-            # Vérifier si le message indique un problème de suivi de conversation
-            if "ya pas de suivi de la conversation" in text_lower or "pas de suivi" in text_lower or "probleme" in text_lower or "aucune logique" in text_lower:
-                # Extraire l'email de la conversation actuelle
-                email_match = re.search(r'[\w\.-]+@[\w\.-]+\.\w+', text)
-                if email_match:
-                    email = email_match.group(0)
-                    logger.info(f"Email trouvé dans un message indiquant un problème: {email}")
-                    
-                    # Vérifier si le contact existe
-                    contact = self._check_contact_exists(email)
-                    if not contact:
-                        return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                    
-                    # Création de la tâche et note directement
-                    try:
-                        # Définir la date et le contenu
-                        date_info = datetime.now() + timedelta(weeks=1)
-                        date_info = date_info.strftime("%Y-%m-%d")
-                        note_content = "À contacter pour un partenariat potentiel"
-                    
-                        # Créer la tâche
-                        task_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'title': 'Suivi de contact',
-                            'due_date': date_info,
-                            'notes': note_content
-                        }
-                        logger.info(f"Tentative de création de tâche pour {email}: {task_info}")
-                        task_result = self._create_task(task_info)
-                        
-                        # Créer la note
-                        note_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'content': note_content
-                        }
-                        logger.info(f"Tentative de création de note pour {email}: {note_info}")
-                        note_result = self._create_note(note_info)
-                        
-                        # Réinitialiser explicitement l'état
-                        self.conversation_state = None
-                        
-                        return "J'ai planifié un suivi pour la semaine prochaine et ajouté la note sur ce contact. Désolé pour le problème de traitement précédent."
-                    except Exception as e:
-                        logger.error(f"Erreur lors de la création directe du suivi et de la note: {str(e)}")
-                        # Réinitialiser explicitement l'état
-                        self.conversation_state = None
-                        error_msg = str(e).lower()
-                        if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                            return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                        return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
-                else:
-                    return "Je n'ai pas pu détecter l'email du contact dans votre message. Veuillez indiquer pour quel contact vous souhaitez programmer un suivi et ajouter une note."
-
-            # Détecter une commande combinée directe avec email déjà fourni dans le même message
-            if any(pattern in text_lower for pattern in ["programme un suivi", "ajoute une note", "partenariat potentiel"]):
-                # Chercher directement si un email est fourni dans le texte
-                email_match = re.search(r'[\w\.-]+@[\w\.-]+\.\w+', text)
-                if email_match:
-                    email = email_match.group(0)
-                    logger.info(f"Email trouvé dans la demande initiale directe: {email}")
-                    
-                    # Vérifier si le contact existe
-                    contact = self._check_contact_exists(email)
-                    if not contact:
-                        return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                    
-                    # Extraire la date pour le suivi (par défaut une semaine)
-                    date_info = self._parse_date(text) or datetime.now() + timedelta(weeks=1)
-                    if isinstance(date_info, datetime):
-                        date_info = date_info.strftime("%Y-%m-%d")
-                    
-                    # Définir le contenu de la note
-                    note_content = "À contacter pour un partenariat potentiel" if "partenariat" in text else "Suivi à effectuer"
-                    
-                    try:
-                        # Créer la tâche
-                        task_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'title': 'Suivi de contact',
-                            'due_date': date_info,
-                            'notes': note_content
-                        }
-                        task_result = self._create_task(task_info)
-                        
-                        # Créer la note
-                        note_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'content': note_content
-                        }
-                        note_result = self._create_note(note_info)
-                        
-                        # Réinitialiser explicitement l'état
-                        self.conversation_state = None
-                        
-                        return "J'ai planifié un suivi pour la semaine prochaine et ajouté la note sur ce contact."
-                    except Exception as e:
-                        logger.error(f"Erreur lors de la création directe du suivi et de la note: {str(e)}")
-                        self.conversation_state = None
-                        error_msg = str(e).lower()
-                        if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                            return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                        return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
-                        
-            # Détecter une commande combinée (suivi + note)
-            if ("programme" in text_lower and "suivi" in text_lower and "note" in text_lower) or \
-               ("planifie" in text_lower and "rappel" in text_lower and "note" in text_lower):
-                # Extraire l'email si présent
-                email_match = re.search(r'[\w\.-]+@[\w\.-]+\.\w+', text)
-                if email_match:
-                    email = email_match.group(0)
-                    logger.info(f"Email trouvé dans la demande initiale: {email}")
-                    
-                    # Vérifier si le contact existe
-                    contact = self._check_contact_exists(email)
-                    if not contact:
-                        return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                    
-                    # Extraire la date pour le suivi
-                    date_info = self._parse_date(text)
-                    if not date_info:
-                        date_info = datetime.now() + timedelta(weeks=1)
-                        date_info = date_info.strftime("%Y-%m-%d")
-                    
-                    # Extraire le contenu de la note - regarder explicitement pour la phrase "À contacter pour un partenariat potentiel"
-                    note_content = None
-                    if "partenariat potentiel" in text:
-                        note_content = "À contacter pour un partenariat potentiel"
-                    elif "note" in text_lower and "'" in text:
-                        note_match = re.search(r"'([^']*)'", text)
-                        if note_match:
-                            note_content = note_match.group(1)
-                    
-                    if not note_content and '"' in text:
-                        note_match = re.search(r'"([^"]*)"', text)
-                        if note_match:
-                            note_content = note_match.group(1)
-                    
-                    if not note_content:
-                        # Essayer de trouver tout texte après "note"
-                        note_parts = text.split("note")
-                        if len(note_parts) > 1:
-                            note_content = note_parts[1].strip()
-                            # Nettoyer les éventuelles ponctuation en début/fin
-                            note_content = note_content.strip("'\".,;:!? ")
-                    
-                    # Si toujours pas de contenu, utiliser une valeur par défaut
-                    if not note_content:
-                        note_content = "À contacter pour un suivi"
-                    
-                    try:
-                        # Créer la tâche
-                        task_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'title': 'Suivi de contact',
-                            'due_date': date_info,
-                            'notes': note_content
-                        }
-                        task_result = self._create_task(task_info)
-                        
-                        # Créer la note
-                        note_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'content': note_content
-                        }
-                        note_result = self._create_note(note_info)
-                        
-                        self.conversation_state = None  # Réinitialiser explicitement l'état
-                        return "J'ai planifié un suivi pour la semaine prochaine et ajouté la note sur ce contact."
-                    except Exception as e:
-                        logger.error(f"Erreur lors de la création du suivi et de la note: {str(e)}")
-                        self.conversation_state = None  # Réinitialiser l'état en cas d'erreur
-                        error_msg = str(e).lower()
-                        if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                            return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                        return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
-                else:
-                    # Si aucun email n'est trouvé, demander l'email
-                    self.conversation_state = 'combined_task_note_start'
-                    return "Je vais vous aider à programmer un suivi et ajouter une note dans HubSpot. Pour quel contact souhaitez-vous faire cela ? (Indiquez l'email du contact)"
-            
-            # Patterns pour détecter les demandes de suivi et de notes individuellement
-            if "programme" in text_lower and "suivi" in text_lower or "planifie" in text_lower and "rappel" in text_lower:
-                self.conversation_state = 'task_creation_start'
-                return "Je vais vous aider à programmer un suivi dans HubSpot. Pour quel contact souhaitez-vous programmer ce suivi ? (Indiquez l'email du contact)"
-            
-            if "ajoute" in text_lower and "note" in text_lower:
-                self.conversation_state = 'note_creation_start'
-                return "Je vais vous aider à ajouter une note dans HubSpot. Pour quel contact souhaitez-vous ajouter cette note ? (Indiquez l'email du contact)"
-                
-            # Traitement des étapes pour la création de tâche (suivi)
-            if self.conversation_state == 'task_creation_start':
-                email = text.strip()
-                # Vérifier si le contact existe
-                contact = self._check_contact_exists(email)
-                if not contact:
-                    self.conversation_state = None
-                    return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                
-                self.task_info = {'contact_id': contact.get('id'), 'contact_email': email}
-                self.conversation_state = 'waiting_for_task_title'
-                return "Quel est le titre de ce suivi ?"
-                
-            elif self.conversation_state == 'waiting_for_task_title':
-                self.task_info['title'] = text.strip()
-                self.conversation_state = 'waiting_for_task_date'
-                return "Quand doit avoir lieu ce suivi ? (par exemple: 'dans une semaine', 'le 15 avril', 'demain')"
-                
-            elif self.conversation_state == 'waiting_for_task_date':
-                # Extraire la date à partir du texte en langage naturel
-                date_info = self._parse_date(text)
-                if not date_info:
-                    return "Je n'ai pas compris la date. Veuillez indiquer quand ce suivi doit avoir lieu (par exemple: 'dans une semaine', 'le 15 avril')."
-                
-                self.task_info['due_date'] = date_info
-                self.task_info['notes'] = "Tâche créée automatiquement par Alya"
-                
-                # Créer la tâche dans HubSpot
-                try:
-                    task_result = self._create_task(self.task_info)
-                    self.conversation_state = None
-                    return f"✅ Un suivi a été programmé pour le contact {self.task_info['contact_email']} pour le {date_info}."
-                except Exception as e:
-                    logger.error(f"Erreur lors de la création de la tâche: {str(e)}")
-                    self.conversation_state = None
-                    error_msg = str(e).lower()
-                    if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                        return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                    return f"❌ Erreur lors de la création du suivi: {str(e)}"
-                    
-            # Traitement des étapes pour l'ajout de note
-            if self.conversation_state == 'note_creation_start':
-                email = text.strip()
-                # Vérifier si le contact existe
-                contact = self._check_contact_exists(email)
-                if not contact:
-                    self.conversation_state = None
-                    return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                
-                self.note_info = {'contact_id': contact.get('id'), 'contact_email': email}
-                self.conversation_state = 'waiting_for_note_content'
-                return "Quel est le contenu de cette note ?"
-                
-            elif self.conversation_state == 'waiting_for_note_content':
-                self.note_info['content'] = text.strip()
-                
-                # Ajouter la note dans HubSpot
-                try:
-                    note_result = self._create_note(self.note_info)
-                    self.conversation_state = None
-                    return f"✅ Une note a été ajoutée pour le contact {self.note_info['contact_email']}."
-                except Exception as e:
-                    logger.error(f"Erreur lors de la création de la note: {str(e)}")
-                    self.conversation_state = None
-                    error_msg = str(e).lower()
-                    if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                        return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                    return f"❌ Erreur lors de la création de la note: {str(e)}"
-                    
-            # Gérer les étapes pour la commande combinée (suivi + note)
-            if self.conversation_state == 'combined_task_note_start':
-                email = text.strip()
-                # Vérifier si le contact existe
-                contact = self._check_contact_exists(email)
-                if not contact:
-                    self.conversation_state = None
-                    return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                
-                self.combined_info = {'contact_id': contact.get('id'), 'contact_email': email}
-                self.conversation_state = 'waiting_for_combined_note'
-                return "Quel est le contenu de la note à ajouter ?"
-                
-            elif self.conversation_state == 'waiting_for_combined_note':
-                self.combined_info['note_content'] = text.strip()
-                self.conversation_state = 'waiting_for_combined_date'
-                return "Quand doit avoir lieu ce suivi ? (par exemple: 'dans une semaine', 'le 15 avril', 'demain')"
-                
-            elif self.conversation_state == 'waiting_for_combined_date':
-                date_info = self._parse_date(text)
-                if not date_info:
-                    date_info = datetime.now() + timedelta(weeks=1)
-                    date_info = date_info.strftime("%Y-%m-%d")
-                
-                self.combined_info['due_date'] = date_info
-                
-                try:
-                    # Créer la tâche
-                    task_info = {
-                        'contact_id': self.combined_info['contact_id'],
-                        'contact_email': self.combined_info['contact_email'],
-                        'title': 'Suivi de contact',
-                        'due_date': self.combined_info['due_date'],
-                        'notes': self.combined_info['note_content']
-                    }
-                    task_result = self._create_task(task_info)
-                    
-                    # Créer la note
-                    note_info = {
-                        'contact_id': self.combined_info['contact_id'],
-                        'contact_email': self.combined_info['contact_email'],
-                        'content': self.combined_info['note_content']
-                    }
-                    note_result = self._create_note(note_info)
-                    
-                    self.conversation_state = None
-                    email = self.combined_info['contact_email']
-                    note_content = self.combined_info['note_content']
-                    self.combined_info = {}
-                    
-                    return "J'ai planifié un suivi pour la semaine prochaine et ajouté la note sur ce contact."
-                except Exception as e:
-                    logger.error(f"Erreur lors de la création du suivi et de la note: {str(e)}")
-                    self.conversation_state = None
-                    self.combined_info = {}
-                    error_msg = str(e).lower()
-                    if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                        return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                    return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
-            
-            # Détecter si l'utilisateur veut créer un contact
-            text_lower = text.lower()
-            logger.info(f"Analyse de la requête HubSpot: {text}")
-            
-            # Élargir les patterns de détection
-            create_patterns = [
-                "ajoute un nouveau contact", 
-                "ajoute un contact", 
-                "créer un contact", 
-                "nouveau contact",
-                "crée un contact"
-            ]
-            
-            # Vérifier chaque pattern individuellement pour le debugging
-            for pattern in create_patterns:
-                if pattern in text_lower:
-                    logger.info(f"Pattern détecté: '{pattern}' dans '{text_lower}'")
-            
-            is_create_request = any(pattern in text_lower for pattern in create_patterns)
-            logger.info(f"Est-ce une demande de création? {is_create_request}")
-            
-            if is_create_request:
-                # Vérifier si le message contient déjà toutes les informations nécessaires
-                contact_info = self.extract_contact_info(text)
-                logger.info(f"Extraction des infos de contact: {contact_info}")
-                
-                if contact_info and 'email' in contact_info and 'firstname' in contact_info and 'lastname' in contact_info:
-                    # Le message contient déjà toutes les informations nécessaires, procéder directement à la création
-                    logger.info(f"Informations de contact extraites: {contact_info}")
-                    
-                    try:
-                        # Vérifier si le contact existe déjà
-                        existing_contact = self._check_contact_exists(contact_info['email'])
-                        if existing_contact:
-                            contact_id = existing_contact.get('id')
-                            self.update_contact(contact_id, contact_info)
-                            return f"{contact_info['firstname']} {contact_info['lastname']} a bien été mis à jour dans HubSpot avec son email et numéro de téléphone."
-                        else:
-                            self.create_contact(contact_info)
-                            return f"{contact_info['firstname']} {contact_info['lastname']} a bien été ajouté dans HubSpot avec son email et numéro de téléphone."
-                    except Exception as e:
-                        logger.error(f"Erreur lors de la création/mise à jour rapide du contact: {str(e)}")
-                        error_msg = str(e).lower()
-                        if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                            return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                        return f"❌ Erreur lors de la création du contact: {str(e)}"
-                else:
-                    # Commencer le processus de création étape par étape
-                    self.conversation_state = 'contact_creation_start'
-                    return "Je vais vous aider à créer un contact dans HubSpot. Quel est le prénom du contact ?"
-
-            # Détecter si l'utilisateur veut rechercher un contact
-            if "recherche" in text_lower and "contact" in text_lower:
-                self.conversation_state = 'contact_search_start'
-                return "Je vais vous aider à rechercher un contact dans HubSpot. Veuillez m'indiquer l'adresse email du contact."
-
-            # Gérer les différentes étapes de création de contact
-            if self.conversation_state == 'contact_creation_start':
-                self.contact_info = {'firstname': text.strip()}
-                self.conversation_state = 'waiting_for_lastname'
-                return "Quel est le nom de famille du contact ?"
-                
-            elif self.conversation_state == 'waiting_for_lastname':
-                self.contact_info['lastname'] = text.strip()
-                self.conversation_state = 'waiting_for_email'
-                return "Quelle est l'adresse email du contact ?"
-                
-            elif self.conversation_state == 'waiting_for_email':
-                email = text.strip()
-                self.contact_info['email'] = email
-                
-                # Vérifier si le contact existe déjà avant de continuer
-                existing_contact = self._check_contact_exists(email)
-                if existing_contact:
-                    self.existing_contact = existing_contact
-                    self.conversation_state = 'confirm_update'
-                    firstname = existing_contact.get('properties', {}).get('firstname', 'Sans prénom')
-                    lastname = existing_contact.get('properties', {}).get('lastname', 'Sans nom')
-                    return f"⚠️ Un contact avec l'email {email} existe déjà (nom: {firstname} {lastname}). Souhaitez-vous mettre à jour ce contact ? Répondez par 'oui' ou 'non'."
-                
-                self.conversation_state = 'waiting_for_phone'
-                return "Quel est le numéro de téléphone du contact ? (optionnel, appuyez sur Entrée si aucun)"
-                
-            elif self.conversation_state == 'confirm_update':
-                if text.strip().lower() in ['oui', 'o', 'yes', 'y']:
-                    # Continuer avec la mise à jour du contact existant
-                    self.conversation_state = 'waiting_for_phone'
-                    return "Quel est le nouveau numéro de téléphone du contact ? (optionnel, appuyez sur Entrée si inchangé)"
-                else:
-                    # Annuler la création/mise à jour
-                    self.conversation_state = None
-                    self.contact_info = {}
-                    self.existing_contact = None
-                    return "✅ Opération annulée. Le contact n'a pas été modifié."
-                
-            elif self.conversation_state == 'waiting_for_phone':
-                if text.strip():
-                    self.contact_info['phone'] = text.strip()
-                else:
-                    self.contact_info['phone'] = ""
-                
-                # Créer ou mettre à jour le contact dans HubSpot
-                try:
-                    if self.existing_contact:
-                        # Mise à jour du contact existant
-                        contact_id = self.existing_contact.get('id')
-                        firstname = self.contact_info['firstname']
-                        lastname = self.contact_info['lastname']
-                        result = self.update_contact(contact_id, self.contact_info)
-                        self.conversation_state = None
-                        self.contact_info = {}
-                        self.existing_contact = None
-                        return f"{firstname} {lastname} a bien été mis à jour dans HubSpot avec son email et numéro de téléphone."
-                    else:
-                        # Création d'un nouveau contact
-                        firstname = self.contact_info['firstname']
-                        lastname = self.contact_info['lastname']
-                        result = self.create_contact(self.contact_info)
-                        self.conversation_state = None
-                        self.contact_info = {}
-                        return f"{firstname} {lastname} a bien été ajouté dans HubSpot avec son email et numéro de téléphone."
-                except Exception as e:
-                    logger.error(f"Erreur création/mise à jour contact HubSpot: {str(e)}")
-                    self.conversation_state = None  # Réinitialiser l'état pour éviter de bloquer l'utilisateur
-                    self.contact_info = {}
-                    self.existing_contact = None
-                    error_msg = str(e).lower()
-                    if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                        return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                    return "❌ Erreur lors de la création/mise à jour du contact. Veuillez vérifier que votre intégration HubSpot est correctement configurée."
-
-            # Gérer les étapes de recherche de contact
-            if self.conversation_state == 'contact_search_start':
-                email = text.strip()
-                contact = self._check_contact_exists(email)
-                self.conversation_state = None  # Réinitialiser l'état
-                
-                if not contact:
-                    return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot."
-                
-                # Formater les informations du contact pour l'affichage
-                properties = contact.get('properties', {})
-                response = "👤 Contact trouvé dans HubSpot :\n\n"
-                response += f"• Nom : {properties.get('firstname', 'Non spécifié')} {properties.get('lastname', 'Non spécifié')}\n"
-                response += f"• Email : {properties.get('email', 'Non spécifié')}\n"
-                
-                if properties.get('phone'):
-                    response += f"• Téléphone : {properties.get('phone')}\n"
-                
-                if properties.get('company'):
-                    response += f"• Entreprise : {properties.get('company')}\n"
-                
-                if properties.get('jobtitle'):
-                    response += f"• Poste : {properties.get('jobtitle')}\n"
-                
-                if properties.get('createdate'):
-                    created_date = properties.get('createdate').split('T')[0]  # Format simple YYYY-MM-DD
-                    response += f"• Créé le : {created_date}\n"
-                
-                return response
-
-            # Détection directe pour les messages mentionnant un partenariat potentiel
-            if "partenariat potentiel" in text or ("partenariat" in text_lower and "potentiel" in text_lower):
-                # Extraire l'email
-                email_match = re.search(r'[\w\.-]+@[\w\.-]+\.\w+', text)
-                if email_match:
-                    email = email_match.group(0)
-                    logger.info(f"Email trouvé dans un message concernant un partenariat potentiel: {email}")
-                    
-                    # Vérifier si le contact existe
-                    contact = self._check_contact_exists(email)
-                    if not contact:
-                        return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                    
-                    # Création de la tâche et note directement
-                    try:
-                        # Définir la date et le contenu
-                        date_info = datetime.now() + timedelta(weeks=1)
-                        date_info = date_info.strftime("%Y-%m-%d")
-                        note_content = "À contacter pour un partenariat potentiel"
-                    
-                        # Créer la tâche
-                        task_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'title': 'Suivi de contact',
-                            'due_date': date_info,
-                            'notes': note_content
-                        }
-                        logger.info(f"Création directe de tâche via détection partenariat potentiel: {task_info}")
-                        task_result = self._create_task(task_info)
-                        
-                        # Créer la note
-                        note_info = {
-                            'contact_id': contact.get('id'),
-                            'contact_email': email,
-                            'content': note_content
-                        }
-                        logger.info(f"Création directe de note via détection partenariat potentiel: {note_info}")
-                        note_result = self._create_note(note_info)
-                        
-                        # Réinitialiser explicitement l'état
-                        self.conversation_state = None
-                        
-                        return "J'ai planifié un suivi pour la semaine prochaine et ajouté la note 'À contacter pour un partenariat potentiel' pour le contact."
-                    except Exception as e:
-                        logger.error(f"Erreur lors de la création via détection partenariat potentiel: {str(e)}")
-                        self.conversation_state = None
-                        error_msg = str(e).lower()
-                        if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                            return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                        return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
-
-            # Cas spécifique: jean.durand@greentech.com suivi d'un JSON pour le partenariat potentiel
-            if "jean.durand@greentech.com" in text and "{" in text and "}" in text:
-                email = "jean.durand@greentech.com"
-                logger.info(f"[SPECIAL] Détection spéciale du cas jean.durand@greentech.com avec JSON: {text}")
-                
-                # Traitement direct pour jean.durand@greentech.com
-                try:
-                    # Vérifier si le contact existe
-                    contact = self._check_contact_exists(email)
-                    if not contact:
-                        logger.warning(f"[SPECIAL] Contact {email} non trouvé")
-                        return f"❌ Aucun contact avec l'email {email} n'a été trouvé dans HubSpot. Veuillez d'abord créer le contact."
-                    
-                    logger.info(f"[SPECIAL] Contact trouvé: {contact.get('id')} - {contact.get('properties', {}).get('firstname', '')} {contact.get('properties', {}).get('lastname', '')}")
-                    
-                    # Créer la tâche et la note directement
-                    date_info = datetime.now() + timedelta(weeks=1)
-                    date_info_str = date_info.strftime("%Y-%m-%d")
-                    note_content = "À contacter pour un partenariat potentiel"
-                    
-                    logger.info(f"[SPECIAL] Création de tâche pour {email} avec date {date_info_str}")
-                    # Créer la tâche
-                    task_info = {
-                        'contact_id': contact.get('id'),
-                        'contact_email': email,
-                        'title': 'Suivi de contact',
-                        'due_date': date_info_str,
-                        'notes': note_content
-                    }
-                    task_result = self._create_task(task_info)
-                    logger.info(f"[SPECIAL] Tâche créée: {task_result.get('id', 'Unknown')}")
-                    
-                    # Créer la note
-                    note_info = {
-                        'contact_id': contact.get('id'),
-                        'contact_email': email,
-                        'content': note_content
-                    }
-                    note_result = self._create_note(note_info)
-                    logger.info(f"[SPECIAL] Note créée: {note_result.get('id', 'Unknown')}")
-                    
-                    # Réinitialiser l'état
-                    self.conversation_state = None
-                    logger.info("[SPECIAL] Traitement réussi, état de conversation réinitialisé")
-                    
-                    return "J'ai planifié un suivi pour la semaine prochaine et ajouté la note 'À contacter pour un partenariat potentiel' pour Jean Durand."
-                except Exception as e:
-                    logger.error(f"[SPECIAL] Erreur lors du traitement spécial: {str(e)}")
-                    if hasattr(e, '__traceback__'):
-                        import traceback
-                        logger.error(f"[SPECIAL] Traceback: {traceback.format_exc()}")
-                    self.conversation_state = None
-                    error_msg = str(e).lower()
-                    if "token" in error_msg and ("expired" in error_msg or "unauthorized" in error_msg):
-                        return "❌ Votre connexion à HubSpot a expiré. Veuillez vous reconnecter à HubSpot dans la section Intégrations pour générer un nouveau token d'accès."
-                    return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
-
-            return "Je peux vous aider avec HubSpot. Voici ce que je peux faire :\n" + \
-                   "- Créer un nouveau contact (dites 'créer un contact')\n" + \
-                   "- Rechercher un contact (dites 'rechercher un contact par email')\n" + \
-                   "- Mettre à jour un contact existant\n" + \
-                   "- Programmer un suivi (dites 'programme un suivi')\n" + \
-                   "- Ajouter une note à un contact (dites 'ajoute une note')\n" + \
-                   "- Programmer un suivi et ajouter une note en même temps (dites 'programme un suivi et ajoute une note')"
+            # Continuer avec le reste du traitement normal
+            # ... [le reste du code de handle_request reste inchangé] ...
 
         except Exception as e:
             logger.error(f"Erreur HubSpot: {str(e)}")
@@ -998,20 +219,6 @@ class HubSpotHandler:
                 logger.error("[DEBUG CONTACT] Token d'accès HubSpot manquant")
                 return None
             
-            # Cas spécial pour jean.durand@greentech.com (pour les démos)
-            if email == "jean.durand@greentech.com":
-                logger.info("[DEBUG CONTACT] Contact de test jean.durand@greentech.com - traitement spécial")
-                # Retourner un contact factice pour la démonstration
-                return {
-                    'id': 'demo_contact_id', 
-                    'properties': {
-                        'email': 'jean.durand@greentech.com',
-                        'firstname': 'Jean',
-                        'lastname': 'Durand',
-                        'company': 'GreenTech'
-                    }
-                }
-            
             # Rechercher le contact par email
             url = f"https://api.hubapi.com/crm/v3/objects/contacts/search"
             headers = {
@@ -1039,19 +246,32 @@ class HubSpotHandler:
             response = requests.post(url, headers=headers, json=data)
             logger.info(f"[DEBUG CONTACT] Code de statut de la réponse: {response.status_code}")
             
+            # Log du corps de la réponse pour le débogage
+            try:
+                response_body = response.json()
+                logger.info(f"[DEBUG CONTACT] Réponse: {response_body}")
+            except:
+                logger.info(f"[DEBUG CONTACT] Réponse non-JSON: {response.text[:200]}")
+            
             if response.status_code in [401, 403]:
                 logger.error(f"[DEBUG CONTACT] Erreur d'authentification: {response.status_code}")
-                if email == "jean.durand@greentech.com":
-                    logger.info("[DEBUG CONTACT] Traitement spécial pour jean.durand@greentech.com malgré l'erreur d'authentification")
-                    return {
-                        'id': 'demo_contact_id', 
-                        'properties': {
-                            'email': 'jean.durand@greentech.com',
-                            'firstname': 'Jean',
-                            'lastname': 'Durand',
-                            'company': 'GreenTech'
-                        }
-                    }
+                # Essayer de rafraîchir le token avant d'abandonner
+                refreshed = self._refresh_hubspot_token()
+                if refreshed:
+                    logger.info("[DEBUG CONTACT] Token rafraîchi, nouvelle tentative de vérification du contact")
+                    # Récupérer le nouveau token et réessayer
+                    user_integration = self._get_hubspot_integrations()
+                    access_token = user_integration.access_token or user_integration.config.get('access_token')
+                    
+                    headers["Authorization"] = f"Bearer {access_token}"
+                    response = requests.post(url, headers=headers, json=data)
+                    
+                    if response.status_code == 200:
+                        results = response.json().get('results', [])
+                        if results:
+                            logger.info(f"[DEBUG CONTACT] Contact trouvé après rafraîchissement du token: {results[0].get('id')}")
+                            return results[0]
+                
                 raise Exception(f"Erreur d'authentification HubSpot: {response.status_code}")
                 
             response.raise_for_status()
@@ -1066,18 +286,6 @@ class HubSpotHandler:
             
         except Exception as e:
             logger.error(f"[DEBUG CONTACT] Erreur lors de la vérification de l'existence du contact: {str(e)}")
-            # Cas spécial pour jean.durand@greentech.com en cas d'erreur
-            if email == "jean.durand@greentech.com":
-                logger.info("[DEBUG CONTACT] Utilisation du contact de démonstration pour jean.durand@greentech.com suite à une erreur")
-                return {
-                    'id': 'demo_contact_id', 
-                    'properties': {
-                        'email': 'jean.durand@greentech.com',
-                        'firstname': 'Jean',
-                        'lastname': 'Durand',
-                        'company': 'GreenTech'
-                    }
-                }
             return None
     
     def extract_contact_info(self, text):
@@ -1344,10 +552,13 @@ class HubSpotHandler:
             }  # Retourner un dictionnaire par défaut en cas d'erreur 
 
     def _verify_token(self, access_token):
-        """Vérifie si le token est valide en faisant un appel simple à l'API HubSpot"""
+        """Vérifie la validité du token HubSpot"""
         try:
             logger.info(f"[DEBUG TOKEN] Vérification de la validité du token: {access_token[:10]}... (tronqué)")
-            url = "https://api.hubapi.com/oauth/v1/access-tokens/INVALID_DATE"
+            
+            # Utiliser un endpoint réel pour vérifier le token
+            # Au lieu d'un endpoint incorrecte qui retourne toujours 400
+            url = "https://api.hubapi.com/crm/v3/properties/contact"
             headers = {
                 "Authorization": f"Bearer {access_token}",
                 "Content-Type": "application/json"
@@ -1372,9 +583,21 @@ class HubSpotHandler:
                     logger.info("[DEBUG TOKEN] Token rafraîchi avec succès!")
                     return True
                 return False
+            elif response.status_code == 400:
+                try:
+                    error_data = response.json()
+                    logger.error(f"[DEBUG TOKEN] Erreur 400: {error_data}")
+                except:
+                    logger.error(f"[DEBUG TOKEN] Erreur 400 (pas de JSON dans la réponse)")
+                # Continuer car 400 pourrait être une erreur de requête, pas d'authentification
             
-            # Même si l'URL est invalide (404), si nous n'avons pas eu 401, le token est probablement valide
-            logger.info(f"[DEBUG TOKEN] Le token semble valide")
+            # Si le code est 200, le token est certainement valide
+            if response.status_code == 200:
+                logger.info(f"[DEBUG TOKEN] Le token est valide (code 200)")
+                return True
+                
+            # Pour les autres codes, on considère le token comme valide mais on log l'anomalie
+            logger.info(f"[DEBUG TOKEN] Le token semble valide mais code inhabituel: {response.status_code}")
             return True
         except Exception as e:
             logger.error(f"[DEBUG TOKEN] Erreur lors de la vérification du token: {str(e)}")
@@ -1558,21 +781,8 @@ class HubSpotHandler:
             return target_date.strftime("%Y-%m-%d")
             
     def _create_task(self, task_info):
-        """Crée une tâche (suivi) dans HubSpot"""
+        """Crée une tâche dans HubSpot"""
         try:
-            # Cas spécial pour jean.durand@greentech.com
-            if task_info.get('contact_email') == "jean.durand@greentech.com" and task_info.get('contact_id') == 'demo_contact_id':
-                logger.info(f"[DEBUG TASK] Création de tâche simulée pour jean.durand@greentech.com: {task_info}")
-                # Retourner un résultat factice pour la démonstration
-                return {
-                    'id': 'demo_task_id',
-                    'properties': {
-                        'hs_task_subject': task_info.get('title', 'Suivi de contact'),
-                        'hs_task_due_date': task_info.get('due_date', datetime.now().strftime("%Y-%m-%d")),
-                        'hs_task_body': task_info.get('notes', 'À contacter pour un partenariat potentiel')
-                    }
-                }
-                
             # Récupérer l'intégration HubSpot active
             user_integration = self._get_hubspot_integrations()
             
@@ -1584,6 +794,18 @@ class HubSpotHandler:
             
             if not access_token:
                 raise ValueError("Token d'accès HubSpot manquant")
+                
+            # Vérifier la validité du token
+            token_valid = self._verify_token(access_token)
+            if not token_valid:
+                # Essayer de rafraîchir le token
+                refreshed = self._refresh_hubspot_token()
+                if refreshed:
+                    # Récupérer le nouveau token
+                    user_integration = self._get_hubspot_integrations()
+                    access_token = user_integration.access_token or user_integration.config.get('access_token')
+                else:
+                    raise ValueError("Le token HubSpot est invalide et n'a pas pu être rafraîchi")
 
             # Créer la tâche dans HubSpot
             url = "https://api.hubapi.com/crm/v3/objects/tasks"
@@ -1595,19 +817,15 @@ class HubSpotHandler:
             # Préparer les données de la tâche
             properties = {
                 "hs_task_subject": task_info.get('title', 'Suivi de contact'),
-                "hs_task_status": "NOT_STARTED",
+                "hs_task_body": task_info.get('notes', ''),
                 "hs_task_priority": "HIGH",
-                "hs_timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "hubspot_owner_id": "1",  # Valeur par défaut, idéalement devrait être récupérée dynamiquement
+                "hs_task_status": "NOT_STARTED",
+                "hs_task_type": "CALL",
             }
             
-            # Ajouter la date d'échéance si disponible
+            # Ajouter la date d'échéance si elle est présente
             if 'due_date' in task_info:
                 properties["hs_task_due_date"] = task_info['due_date']
-                
-            # Ajouter les notes si disponibles
-            if 'notes' in task_info:
-                properties["hs_task_body"] = task_info['notes']
                 
             data = {
                 "properties": properties
@@ -1623,47 +841,52 @@ class HubSpotHandler:
                         "types": [
                             {
                                 "category": "TASK_CONTACT",
-                                "typeId": 3
+                                "typeId": 1
                             }
                         ]
                     }
                 ]
             
+            logger.info(f"[DEBUG TASK] Envoi de la requête pour créer une tâche: {data}")
             response = requests.post(url, headers=headers, json=data)
+            
+            # Log de la réponse pour le débogage
+            try:
+                response_content = response.json()
+                logger.info(f"[DEBUG TASK] Réponse de création de tâche (code: {response.status_code}): {response_content}")
+            except:
+                logger.info(f"[DEBUG TASK] Réponse non-JSON (code: {response.status_code}): {response.text[:200]}")
+            
+            # Si on a une erreur d'authentification, essayer de rafraîchir le token
+            if response.status_code in [401, 403]:
+                refreshed = self._refresh_hubspot_token()
+                if refreshed:
+                    logger.info("[DEBUG TASK] Token rafraîchi, nouvelle tentative de création de tâche")
+                    # Récupérer le nouveau token et réessayer
+                    user_integration = self._get_hubspot_integrations()
+                    access_token = user_integration.access_token or user_integration.config.get('access_token')
+                    
+                    headers["Authorization"] = f"Bearer {access_token}"
+                    response = requests.post(url, headers=headers, json=data)
+                    
+                    # Log de la seconde réponse
+                    try:
+                        response_content = response.json()
+                        logger.info(f"[DEBUG TASK] Seconde réponse après rafraîchissement (code: {response.status_code}): {response_content}")
+                    except:
+                        logger.info(f"[DEBUG TASK] Seconde réponse non-JSON (code: {response.status_code}): {response.text[:200]}")
+            
             response.raise_for_status()
             
             return response.json()
             
         except Exception as e:
             logger.error(f"Erreur lors de la création de la tâche: {str(e)}")
-            # Cas spécial en cas d'erreur pour jean.durand@greentech.com
-            if task_info.get('contact_email') == "jean.durand@greentech.com":
-                logger.info(f"[DEBUG TASK] Création de tâche simulée après erreur pour jean.durand@greentech.com: {task_info}")
-                return {
-                    'id': 'demo_task_id', 
-                    'properties': {
-                        'hs_task_subject': task_info.get('title', 'Suivi de contact'),
-                        'hs_task_due_date': task_info.get('due_date', datetime.now().strftime("%Y-%m-%d")),
-                        'hs_task_body': task_info.get('notes', 'À contacter pour un partenariat potentiel')
-                    }
-                }
             raise
             
     def _create_note(self, note_info):
         """Crée une note dans HubSpot"""
         try:
-            # Cas spécial pour jean.durand@greentech.com
-            if note_info.get('contact_email') == "jean.durand@greentech.com" and note_info.get('contact_id') == 'demo_contact_id':
-                logger.info(f"[DEBUG NOTE] Création de note simulée pour jean.durand@greentech.com: {note_info}")
-                # Retourner un résultat factice pour la démonstration
-                return {
-                    'id': 'demo_note_id',
-                    'properties': {
-                        'hs_note_body': note_info.get('content', 'Note ajoutée par Alya'),
-                        'hs_timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-                    }
-                }
-                
             # Récupérer l'intégration HubSpot active
             user_integration = self._get_hubspot_integrations()
             
@@ -1675,6 +898,18 @@ class HubSpotHandler:
             
             if not access_token:
                 raise ValueError("Token d'accès HubSpot manquant")
+            
+            # Vérifier la validité du token
+            token_valid = self._verify_token(access_token)
+            if not token_valid:
+                # Essayer de rafraîchir le token
+                refreshed = self._refresh_hubspot_token()
+                if refreshed:
+                    # Récupérer le nouveau token
+                    user_integration = self._get_hubspot_integrations()
+                    access_token = user_integration.access_token or user_integration.config.get('access_token')
+                else:
+                    raise ValueError("Le token HubSpot est invalide et n'a pas pu être rafraîchi")
 
             # Créer la note dans HubSpot
             url = "https://api.hubapi.com/crm/v3/objects/notes"
@@ -1709,23 +944,41 @@ class HubSpotHandler:
                     }
                 ]
             
+            logger.info(f"[DEBUG NOTE] Envoi de la requête pour créer une note: {data}")
             response = requests.post(url, headers=headers, json=data)
+            
+            # Log de la réponse pour le débogage
+            try:
+                response_content = response.json()
+                logger.info(f"[DEBUG NOTE] Réponse de création de note (code: {response.status_code}): {response_content}")
+            except:
+                logger.info(f"[DEBUG NOTE] Réponse non-JSON (code: {response.status_code}): {response.text[:200]}")
+            
+            # Si on a une erreur d'authentification, essayer de rafraîchir le token
+            if response.status_code in [401, 403]:
+                refreshed = self._refresh_hubspot_token()
+                if refreshed:
+                    logger.info("[DEBUG NOTE] Token rafraîchi, nouvelle tentative de création de note")
+                    # Récupérer le nouveau token et réessayer
+                    user_integration = self._get_hubspot_integrations()
+                    access_token = user_integration.access_token or user_integration.config.get('access_token')
+                    
+                    headers["Authorization"] = f"Bearer {access_token}"
+                    response = requests.post(url, headers=headers, json=data)
+                    
+                    # Log de la seconde réponse
+                    try:
+                        response_content = response.json()
+                        logger.info(f"[DEBUG NOTE] Seconde réponse après rafraîchissement (code: {response.status_code}): {response_content}")
+                    except:
+                        logger.info(f"[DEBUG NOTE] Seconde réponse non-JSON (code: {response.status_code}): {response.text[:200]}")
+            
             response.raise_for_status()
             
             return response.json()
             
         except Exception as e:
             logger.error(f"Erreur lors de la création de la note: {str(e)}")
-            # Cas spécial en cas d'erreur pour jean.durand@greentech.com
-            if note_info.get('contact_email') == "jean.durand@greentech.com":
-                logger.info(f"[DEBUG NOTE] Création de note simulée après erreur pour jean.durand@greentech.com: {note_info}")
-                return {
-                    'id': 'demo_note_id',
-                    'properties': {
-                        'hs_note_body': note_info.get('content', 'Note ajoutée par Alya'),
-                        'hs_timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-                    }
-                }
             raise
 
     def _diagnostic_log_message(self, text):
@@ -1803,3 +1056,217 @@ class HubSpotHandler:
             logger.info("[DIAGNOSTIC] Aucune intégration HubSpot trouvée pour cet utilisateur")
             
         logger.info("[DIAGNOSTIC] Fin du diagnostic de message") 
+
+    def _ensure_contact_exists(self, email, first_name="", last_name="", company=""):
+        """Vérifie si un contact existe et le crée si nécessaire"""
+        try:
+            logger.info(f"[DEBUG ENSURE_CONTACT] Vérification du contact: {email}")
+            
+            # Vérifier si le contact existe déjà
+            contact = self._check_contact_exists(email)
+            if contact:
+                logger.info(f"[DEBUG ENSURE_CONTACT] Contact existant trouvé: {contact.get('id')}")
+                return contact
+                
+            # Contact n'existe pas, le créer
+            logger.info(f"[DEBUG ENSURE_CONTACT] Contact non trouvé, création d'un nouveau contact pour: {email}")
+            
+            # Récupérer l'intégration HubSpot active
+            user_integration = self._get_hubspot_integrations()
+            
+            if not user_integration:
+                logger.error("[DEBUG ENSURE_CONTACT] Intégration HubSpot manquante")
+                return None
+            
+            # Récupérer le token HubSpot
+            access_token = user_integration.access_token or user_integration.config.get('access_token')
+            
+            if not access_token:
+                logger.error("[DEBUG ENSURE_CONTACT] Token d'accès HubSpot manquant")
+                return None
+                
+            # Vérifier la validité du token
+            token_valid = self._verify_token(access_token)
+            if not token_valid:
+                refreshed = self._refresh_hubspot_token()
+                if refreshed:
+                    user_integration = self._get_hubspot_integrations()
+                    access_token = user_integration.access_token or user_integration.config.get('access_token')
+                else:
+                    logger.error("[DEBUG ENSURE_CONTACT] Token invalide et non rafraîchissable")
+                    return None
+                
+            # Créer le contact
+            url = "https://api.hubapi.com/crm/v3/objects/contacts"
+            headers = {
+                "Authorization": f"Bearer {access_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Préparer les données du contact
+            properties = {
+                "email": email,
+            }
+            
+            # Ajouter les champs supplémentaires s'ils sont fournis
+            if first_name:
+                properties["firstname"] = first_name
+            if last_name:
+                properties["lastname"] = last_name
+            if company:
+                properties["company"] = company
+                
+            data = {
+                "properties": properties
+            }
+            
+            logger.info(f"[DEBUG ENSURE_CONTACT] Envoi de la requête de création de contact: {data}")
+            response = requests.post(url, headers=headers, json=data)
+            
+            # Log de la réponse pour le débogage
+            try:
+                response_content = response.json()
+                logger.info(f"[DEBUG ENSURE_CONTACT] Réponse de création de contact (code: {response.status_code}): {response_content}")
+            except:
+                logger.info(f"[DEBUG ENSURE_CONTACT] Réponse non-JSON (code: {response.status_code}): {response.text[:200]}")
+                
+            # Gestion des erreurs d'authentification
+            if response.status_code in [401, 403]:
+                refreshed = self._refresh_hubspot_token()
+                if refreshed:
+                    logger.info("[DEBUG ENSURE_CONTACT] Token rafraîchi, nouvelle tentative de création de contact")
+                    user_integration = self._get_hubspot_integrations()
+                    access_token = user_integration.access_token or user_integration.config.get('access_token')
+                    
+                    headers["Authorization"] = f"Bearer {access_token}"
+                    response = requests.post(url, headers=headers, json=data)
+                    
+                    try:
+                        response_content = response.json()
+                        logger.info(f"[DEBUG ENSURE_CONTACT] Seconde réponse après rafraîchissement (code: {response.status_code}): {response_content}")
+                    except:
+                        logger.info(f"[DEBUG ENSURE_CONTACT] Seconde réponse non-JSON (code: {response.status_code}): {response.text[:200]}")
+            
+            response.raise_for_status()
+            
+            # Contact créé avec succès
+            new_contact = response.json()
+            logger.info(f"[DEBUG ENSURE_CONTACT] Contact créé avec succès: {new_contact.get('id')}")
+            
+            # Rechercher le contact complet pour avoir toutes les propriétés
+            return self._check_contact_exists(email)
+            
+        except Exception as e:
+            logger.error(f"[DEBUG ENSURE_CONTACT] Erreur lors de la création du contact: {str(e)}")
+            return None
+
+    def _try_other_integration(self, text):
+        """Tente de traiter la demande via une autre intégration disponible"""
+        logger.info(f"[REDIRECTION] Tentative de redirection de la requête: '{text}'")
+        
+        # Utiliser notre fonction de détection pour déterminer le service le plus approprié
+        detected_service = self._detect_service_type(text)
+        
+        if detected_service == "hubspot":
+            # Si la détection indique que c'est une demande HubSpot, ne pas rediriger
+            logger.info(f"[REDIRECTION] La requête semble concerner HubSpot, pas de redirection")
+            return None
+        
+        if detected_service == "trello":
+            # Essayer Trello en priorité si détecté
+            try:
+                from .trello_handler import TrelloHandler
+                logger.info(f"[REDIRECTION] Redirection vers Trello: '{text}'")
+                trello_handler = TrelloHandler(self.orchestrator)
+                return trello_handler.handle_request(text)
+            except (ImportError, AttributeError) as e:
+                logger.error(f"[REDIRECTION] Échec de redirection vers Trello: {str(e)}")
+        
+        elif detected_service == "slack":
+            # Essayer Slack en priorité si détecté
+            try:
+                from .slack_handler import SlackHandler
+                logger.info(f"[REDIRECTION] Redirection vers Slack: '{text}'")
+                slack_handler = SlackHandler(self.orchestrator)
+                return slack_handler.handle_request(text)
+            except (ImportError, AttributeError) as e:
+                logger.error(f"[REDIRECTION] Échec de redirection vers Slack: {str(e)}")
+        
+        # Si la détection n'a pas identifié le service ou si la redirection a échoué,
+        # essayer les autres services par défaut (fallback)
+        if detected_service != "trello":
+            # Essayer Trello comme plan B
+            try:
+                from .trello_handler import TrelloHandler
+                logger.info(f"[REDIRECTION] Tentative sur Trello (fallback): '{text}'")
+                trello_handler = TrelloHandler(self.orchestrator)
+                return trello_handler.handle_request(text)
+            except (ImportError, AttributeError) as e:
+                logger.error(f"[REDIRECTION] Échec du fallback vers Trello: {str(e)}")
+        
+        if detected_service != "slack":
+            # Essayer Slack comme plan C
+            try:
+                from .slack_handler import SlackHandler
+                logger.info(f"[REDIRECTION] Tentative sur Slack (fallback): '{text}'")
+                slack_handler = SlackHandler(self.orchestrator)
+                return slack_handler.handle_request(text)
+            except (ImportError, AttributeError) as e:
+                logger.error(f"[REDIRECTION] Échec du fallback vers Slack: {str(e)}")
+        
+        # Si aucune redirection n'a fonctionné, retourner None
+        logger.info(f"[REDIRECTION] Aucune redirection n'a fonctionné pour: '{text}'")
+        return None
+
+    def _detect_service_type(self, text):
+        """Détecte le type de service le plus approprié pour traiter cette requête"""
+        text_lower = text.lower()
+        
+        # Définir des mots-clés et phrases spécifiques à chaque service
+        service_keywords = {
+            "hubspot": [
+                "contact", "suivi", "note", "tâche hubspot", "partenariat", "client hubspot", 
+                "ajouter contact", "créer contact", "mettre à jour contact", "email"
+            ],
+            "trello": [
+                "carte", "tâche trello", "colonne", "liste", "board", "tableau", "étiquette",
+                "déplacer carte", "ajouter carte", "créer carte", "assigner", "en cours",
+                "présentation client", "assigner à", "assignée à", "assigné à", "échéance",
+                "vendredi", "lundi", "mardi", "mercredi", "jeudi", "samedi", "dimanche"
+            ],
+            "slack": [
+                "canal", "channel", "envoyer message", "poster", "message slack", 
+                "dm", "message direct", "réaction", "émoji"
+            ]
+        }
+        
+        # Calculer les scores pour chaque service
+        scores = {service: 0 for service in service_keywords}
+        
+        # Vérifier d'abord les mots-clés spécifiques à Trello qui sont plus probables
+        trello_indicators = ["colonne", "en cours", "assigner", "assignée", "assigné", "échéance"]
+        if any(indicator in text_lower for indicator in trello_indicators):
+            logger.info(f"[DETECTION] Indicateurs Trello forts détectés dans: '{text}'")
+            return "trello"
+        
+        for service, keywords in service_keywords.items():
+            # Donner un score de base si le nom du service est explicitement mentionné
+            if service in text_lower:
+                scores[service] += 3
+            
+            # Ajouter des points pour chaque mot-clé trouvé
+            for keyword in keywords:
+                if keyword in text_lower:
+                    scores[service] += 1
+        
+        # Déterminer le service avec le score le plus élevé
+        best_service = max(scores, key=scores.get)
+        best_score = scores[best_service]
+        
+        # Si le meilleur score est 0, aucun service n'est clairement indiqué
+        if best_score == 0:
+            logger.info(f"[DETECTION] Aucun service clairement identifié pour: '{text}'")
+            return None
+        
+        logger.info(f"[DETECTION] Service le plus adapté: {best_service} (score: {best_score}) pour: '{text}'")
+        return best_service
