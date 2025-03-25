@@ -57,6 +57,13 @@ class SlackHandler(BaseIntegration):
         missing_fields = [field for field in required_fields if field not in config]
         if missing_fields:
             raise ValueError(f"Champs requis manquants pour l'authentification: {', '.join(missing_fields)}")
+            
+        # Vérifier si l'erreur est liée à une application non distribuée
+        if 'error' in config and config['error'] == 'invalid_team_for_non_distributed_app':
+            raise ValueError(
+                "Cette application Slack n'est pas configurée pour être distribuée. "
+                "Veuillez vérifier les paramètres de distribution de l'application sur api.slack.com/apps"
+            )
 
     def send_message(self, channel: str, message: str, thread_ts: str = None) -> Dict[str, Any]:
         """Envoie un message dans un canal Slack"""

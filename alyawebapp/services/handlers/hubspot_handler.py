@@ -33,9 +33,31 @@ class HubSpotHandler:
 
             # Détecter si l'utilisateur veut créer un contact
             text_lower = text.lower()
-            if "créer" in text_lower and "contact" in text_lower or "nouveau contact" in text_lower:
-                self.conversation_state = 'contact_creation_start'
-                return "Je vais vous aider à créer un contact dans HubSpot. Quel est le prénom du contact ?"
+            if ("créer" in text_lower and "contact" in text_lower) or "nouveau contact" in text_lower or "ajoute un nouveau contact" in text_lower:
+                # Vérifier si le message contient déjà toutes les informations nécessaires
+                contact_info = self.extract_contact_info(text)
+                
+                if contact_info and 'email' in contact_info and 'firstname' in contact_info and 'lastname' in contact_info:
+                    # Le message contient déjà toutes les informations nécessaires, procéder directement à la création
+                    logger.info(f"Informations de contact extraites: {contact_info}")
+                    
+                    try:
+                        # Vérifier si le contact existe déjà
+                        existing_contact = self._check_contact_exists(contact_info['email'])
+                        if existing_contact:
+                            contact_id = existing_contact.get('id')
+                            self.update_contact(contact_id, contact_info)
+                            return f"{contact_info['firstname']} {contact_info['lastname']} a bien été mis à jour dans HubSpot avec son email et numéro de téléphone."
+                        else:
+                            self.create_contact(contact_info)
+                            return f"{contact_info['firstname']} {contact_info['lastname']} a bien été ajouté dans HubSpot avec son email et numéro de téléphone."
+                    except Exception as e:
+                        logger.error(f"Erreur lors de la création/mise à jour rapide du contact: {str(e)}")
+                        return f"❌ Erreur lors de la création du contact: {str(e)}"
+                else:
+                    # Commencer le processus de création étape par étape
+                    self.conversation_state = 'contact_creation_start'
+                    return "Je vais vous aider à créer un contact dans HubSpot. Quel est le prénom du contact ?"
 
             # Détecter si l'utilisateur veut rechercher un contact
             if "recherche" in text_lower and "contact" in text_lower:
