@@ -67,4 +67,21 @@ class SlackHandler(BaseIntegration):
         params = {'user': user_id}
         response = requests.get(url, headers=self.headers, params=params)
         response.raise_for_status()
-        return response.json().get('user', {}) 
+        return response.json().get('user', {})
+        
+    def get_channels(self) -> List[Dict[str, Any]]:
+        """Récupère la liste des canaux accessibles"""
+        url = f"{self.API_BASE_URL}/conversations.list"
+        params = {
+            'types': 'public_channel,private_channel',
+            'exclude_archived': True,
+            'limit': 100  # Limiter les résultats pour des performances optimales
+        }
+        
+        try:
+            response = requests.get(url, headers=self.headers, params=params)
+            response.raise_for_status()
+            return response.json().get('channels', [])
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des canaux Slack: {str(e)}")
+            return [] 

@@ -52,6 +52,49 @@ class GoogleDriveHandler(BaseIntegration):
             logger.error(f"Erreur lors du partage du fichier: {str(e)}")
             raise
 
+    def get_file_info(self, file_id: str) -> Dict[str, Any]:
+        """Récupère les informations d'un fichier"""
+        try:
+            return self.service.files().get(
+                fileId=file_id,
+                fields='id,name,mimeType,createdTime,modifiedTime,owners,size'
+            ).execute()
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des infos du fichier: {str(e)}")
+            return None
+
+    def find_files_by_name(self, name: str) -> List[Dict[str, Any]]:
+        """Recherche des fichiers par nom"""
+        try:
+            # Créer une requête pour trouver les fichiers correspondant au nom
+            query = f"name contains '{name}' and trashed=false"
+            results = self.service.files().list(
+                q=query,
+                spaces='drive',
+                fields='files(id,name,mimeType,createdTime,modifiedTime)',
+                orderBy='modifiedTime desc'
+            ).execute()
+            
+            return results.get('files', [])
+        except Exception as e:
+            logger.error(f"Erreur lors de la recherche de fichiers: {str(e)}")
+            raise
+
+    def list_recent_files(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Liste les fichiers récemment modifiés"""
+        try:
+            results = self.service.files().list(
+                orderBy='modifiedTime desc',
+                pageSize=limit,
+                fields='files(id,name,mimeType,createdTime,modifiedTime)',
+                q="trashed=false"
+            ).execute()
+            
+            return results.get('files', [])
+        except Exception as e:
+            logger.error(f"Erreur lors du listage des fichiers récents: {str(e)}")
+            raise
+
     def get_file_permissions(self, file_id: str) -> List[Dict[str, Any]]:
         """Récupère les permissions d'un fichier"""
         try:
@@ -85,7 +128,7 @@ class GoogleDriveHandler(BaseIntegration):
             
             return self.service.files().create(
                 body=file_metadata,
-                fields='id'
+                fields='id,name,mimeType,webViewLink'
             ).execute()
         except Exception as e:
             logger.error(f"Erreur lors de la création du dossier: {str(e)}")

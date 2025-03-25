@@ -18,6 +18,7 @@ class TrelloHandler:
         self.task_info = {}
         self.available_members = []
         self.members_data = []
+        self.available_lists = []
         self._initialize()
     
     def _initialize(self):
@@ -41,7 +42,15 @@ class TrelloHandler:
         
         try:
             if not self.trello_integration:
-                return "Vous n'avez pas installé cette intégration."
+                return "Vous n'avez pas installé cette intégration. Veuillez configurer Trello dans vos intégrations avant de l'utiliser."
+
+            active_board_id = self.trello_integration.get_active_board_id()
+            if not active_board_id:
+                return "❌ Aucun tableau Trello actif n'a été configuré. Veuillez configurer un tableau dans vos paramètres d'intégration Trello."
+
+            # Vérifier si le tableau existe et est accessible
+            if not self._verify_board_exists(active_board_id):
+                return f"❌ Le tableau Trello configuré n'est pas accessible. Veuillez vérifier que le tableau existe et que vous avez les permissions nécessaires."
 
             # Si c'est une demande de tâches en retard
             if "tâches en retard" in message.lower():
@@ -60,6 +69,35 @@ class TrelloHandler:
                 response += "Voulez-vous que j'envoie un rappel aux responsables ?"
                 return response
 
+            # Si c'est une demande de lister les tableaux
+            if "affiche" in message.lower() and "tableaux" in message.lower():
+                boards = self._get_available_boards()
+                if not boards:
+                    return "❌ Je n'ai pas pu récupérer vos tableaux Trello. Veuillez vérifier votre intégration."
+                
+                response = "📋 Voici vos tableaux Trello :\n\n"
+                active_board_id = self.trello_integration.get_active_board_id()
+                
+                for board in boards:
+                    is_active = board['id'] == active_board_id
+                    response += f"• {board['name']}{' (Tableau actif)' if is_active else ''}\n"
+                
+                response += "\nVous pouvez changer de tableau actif dans les paramètres de votre intégration Trello."
+                return response
+
+            # Si c'est une demande de lister les listes du tableau
+            if "affiche" in message.lower() and "listes" in message.lower():
+                self._load_board_lists()
+                
+                if not self.available_lists:
+                    return "❌ Je n'ai pas pu récupérer les listes du tableau. Veuillez vérifier que le tableau existe et que vous avez les permissions nécessaires."
+                
+                response = "📝 Voici les listes disponibles sur votre tableau Trello actif :\n\n"
+                for lst in self.available_lists:
+                    response += f"• {lst}\n"
+                
+                return response
+
             # Si c'est une réponse simple avec juste le nom d'un membre
             if self.task_info and message.strip().lower() in [
                 m.get('username', '').lower() for m in self.members_data
@@ -76,14 +114,20 @@ class TrelloHandler:
             # Récupérer d'abord les membres disponibles
             try:
                 self._load_board_members()
+                self._load_board_lists()
             except Exception as e:
-                logger.error(f"Erreur lors de la récupération des membres Trello: {str(e)}")
-                return "Désolée, je n'arrive pas à récupérer la liste des membres. Veuillez réessayer."
+                logger.error(f"Erreur lors de la récupération des données Trello: {str(e)}")
+                return "Désolée, je n'arrive pas à récupérer les informations du tableau Trello. Veuillez vérifier votre configuration."
 
             # Extraire les informations de la tâche
             task_info = self._extract_task_info(message)
             if not task_info:
-                return "Je n'ai pas pu comprendre les détails de la tâche. Pouvez-vous reformuler ?"
+                return "Je n'ai pas pu comprendre les détails de la tâche. Pouvez-vous reformuler en précisant le nom de la tâche entre guillemets simple (par exemple : 'Ma tâche') et la liste où l'ajouter ?"
+
+            # Vérifier si la liste existe
+            if task_info.get('list_name') and task_info['list_name'] not in self.available_lists:
+                list_suggestions = "\n\nListes disponibles :\n" + "\n".join([f"• {lst}" for lst in self.available_lists])
+                return f"❌ La liste '{task_info['list_name']}' n'existe pas dans le tableau actif.{list_suggestions}"
 
             # Vérifier si le membre assigné existe
             if task_info.get('assignee'):
@@ -96,7 +140,7 @@ class TrelloHandler:
                 )
                 if not member:
                     self.task_info = task_info  # Sauvegarder pour plus tard
-                    return f"Je ne trouve pas le membre '{task_info['assignee']}'. 🤔\n\nVoici les membres disponibles :\n{', '.join(self.available_members)}\n\nÀ qui souhaitez-vous assigner cette tâche ? (utilisez le nom d'utilisateur)"
+                    return f"❌ Je ne trouve pas le membre '{task_info['assignee']}' dans le tableau actif.\n\nMembres disponibles :\n{', '.join(self.available_members)}\n\nÀ qui souhaitez-vous assigner cette tâche ? (utilisez le nom d'utilisateur)"
                 else:
                     # Utiliser le username pour l'assignation
                     task_info['assignee'] = member['username']
@@ -108,6 +152,44 @@ class TrelloHandler:
         except Exception as e:
             logger.error(f"Erreur lors de la gestion de la requête Trello: {str(e)}")
             return "Désolée, une erreur s'est produite lors de la création de la tâche. Veuillez réessayer."
+    
+    def _verify_board_exists(self, board_id):
+        """Vérifie si le tableau existe et est accessible"""
+        from django.conf import settings
+        
+        try:
+            response = requests.get(
+                f"{settings.TRELLO_API_URL}/boards/{board_id}",
+                params={
+                    'key': settings.TRELLO_API_KEY,
+                    'token': self.trello_integration.access_token,
+                    'fields': 'name'
+                }
+            )
+            return response.status_code == 200
+        except Exception as e:
+            logger.error(f"Erreur lors de la vérification du tableau: {str(e)}")
+            return False
+    
+    def _get_available_boards(self):
+        """Récupère la liste des tableaux disponibles"""
+        from django.conf import settings
+        
+        try:
+            response = requests.get(
+                f"{settings.TRELLO_API_URL}/members/me/boards",
+                params={
+                    'key': settings.TRELLO_API_KEY,
+                    'token': self.trello_integration.access_token,
+                    'filter': 'open',
+                    'fields': 'name'
+                }
+            )
+            response.raise_for_status()
+            return response.json()
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des tableaux: {str(e)}")
+            return []
     
     def _load_board_members(self):
         """Charge les membres du tableau Trello actif"""
@@ -135,16 +217,38 @@ class TrelloHandler:
             if member_desc:
                 self.available_members.append(" ".join(member_desc))
     
+    def _load_board_lists(self):
+        """Charge les listes du tableau Trello actif"""
+        from django.conf import settings
+        
+        response = requests.get(
+            f"{settings.TRELLO_API_URL}/boards/{self.trello_integration.get_active_board_id()}/lists",
+            params={
+                'key': settings.TRELLO_API_KEY,
+                'token': self.trello_integration.access_token,
+                'fields': 'name'
+            }
+        )
+        response.raise_for_status()
+        lists = response.json()
+        self.available_lists = [lst['name'] for lst in lists]
+    
     def _extract_task_info(self, text):
         """Extrait les informations de tâche du texte"""
         try:
             # Extraire le nom de la tâche entre guillemets simples
             name_match = re.search(r"'([^']*)'", text)
             name = name_match.group(1) if name_match else None
+            
+            if not name:
+                return None  # Si pas de nom clairement identifié, on ne peut pas créer la tâche
 
             # Extraire la colonne
-            column_match = re.search(r"colonne '([^']*)'", text)
+            column_match = re.search(r"(?:dans|colonne)\s+(?:la colonne\s+)?['\"]?([^'\"]+)['\"]?", text, re.IGNORECASE)
             list_name = column_match.group(1) if column_match else "À faire"
+            
+            # Nettoyer le nom de la liste (enlever les guillemets)
+            list_name = list_name.strip("'").strip('"')
 
             # Extraire l'assigné
             assignee_match = re.search(r"assigne[^a-zA-Z]*(la |le )?[àa]\s+([^\s\.,]+)", text)
@@ -161,6 +265,14 @@ class TrelloHandler:
                 next_friday = next_friday.replace(hour=23, minute=59, second=59)
                 # Format ISO 8601 que Trello attend
                 due_date = next_friday.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            elif "demain" in text.lower():
+                tomorrow = datetime.now() + timedelta(days=1)
+                tomorrow = tomorrow.replace(hour=23, minute=59, second=59)
+                due_date = tomorrow.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            elif "semaine prochaine" in text.lower():
+                next_week = datetime.now() + timedelta(days=7)
+                next_week = next_week.replace(hour=23, minute=59, second=59)
+                due_date = next_week.strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
             return {
                 "name": name,
@@ -254,7 +366,9 @@ class TrelloHandler:
         )
         
         if not list_id:
-            raise ValueError(f"Liste '{list_name}' non trouvée")
+            lists_names = [lst['name'] for lst in lists]
+            error_msg = f"Liste '{list_name}' non trouvée. Listes disponibles : {', '.join(lists_names)}"
+            raise ValueError(error_msg)
         
         return list_id
     
@@ -267,10 +381,17 @@ class TrelloHandler:
             if not info or not info.get('name'):
                 return "Désolée, je n'ai pas les informations nécessaires pour créer la tâche."
 
+            # Obtenir l'id de la liste
+            try:
+                list_id = self._get_list_id(info['list_name'])
+            except ValueError as e:
+                # Retourner une liste des listes disponibles
+                return f"❌ {str(e)}"
+
             # Création de la tâche dans Trello
             data = {
                 'name': info['name'],
-                'idList': self._get_list_id(info['list_name']),
+                'idList': list_id,
                 'key': settings.TRELLO_API_KEY,
                 'token': self.trello_integration.access_token
             }
@@ -296,14 +417,21 @@ class TrelloHandler:
 
             # Réinitialiser après succès
             result = response.json()
+            card_url = result.get('shortUrl', '#')
             self.task_info = {}
             
-            success_message = f"✅ J'ai créé la tâche '{info['name']}'"
+            success_message = f"✅ J'ai créé la tâche '{info['name']}' dans la liste '{info['list_name']}'"
             if info.get('assignee'):
                 success_message += f" et je l'ai assignée à {info['assignee']}"
+            
+            if info.get('due_date'):
+                due_date = datetime.fromisoformat(info['due_date'].replace('Z', '+00:00'))
+                success_message += f", avec échéance le {due_date.strftime('%d/%m/%Y')}"
+            
+            success_message += f"\n\nVoir la carte: {card_url}"
             
             return success_message
 
         except Exception as e:
             logger.error(f"Erreur lors de la création de la tâche: {str(e)}")
-            return "Désolée, une erreur s'est produite lors de la création de la tâche. Veuillez réessayer." 
+            return f"Désolée, une erreur s'est produite lors de la création de la tâche: {str(e)}" 
