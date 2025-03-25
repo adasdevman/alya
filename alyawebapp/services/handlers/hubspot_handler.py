@@ -22,31 +22,12 @@ class HubSpotHandler:
         self.combined_info = {}
     
     def handle_request(self, message):
-        """Gère les requêtes HubSpot"""
+        """Gère une requête HubSpot"""
+        
         try:
-            # Ajouter des logs détaillés pour le diagnostic
-            logger.info(f"[HUBSPOT] Début du traitement de la requête: '{message}'")
-            
-            # Vérifier si c'est une requête Trello
-            if any(indicator in message.lower() for indicator in ["colonne", "en cours", "assigner", "assignée", "assigné", "échéance", "présentation client"]):
-                logger.info(f"[HUBSPOT] Détection d'une requête Trello, redirection...")
-                from .trello_handler import TrelloHandler
-                trello_handler = TrelloHandler(self.orchestrator)
-                return trello_handler.handle_request(message)
-            
-            # Vérifier si c'est une requête Slack
-            if any(indicator in message.lower() for indicator in ["canal", "channel", "envoyer message", "poster", "message slack", "dm", "message direct"]):
-                logger.info(f"[HUBSPOT] Détection d'une requête Slack, redirection...")
-                from .slack_handler import SlackHandler
-                slack_handler = SlackHandler(self.orchestrator)
-                return slack_handler.handle_request(message)
-            
-            # Continuer avec le traitement HubSpot normal
-            logger.info(f"[HUBSPOT] Traitement de la requête HubSpot")
-            
-            # Détecter le service le plus approprié pour cette requête
+            # Vérification et redirection multi-services
             detected_service = self._detect_service_type(message)
-            logger.info(f"[AIGUILLAGE] Service détecté: {detected_service if detected_service else 'Indéterminé'}")
+            logger.info(f"[AIGUILLAGE] Service détecté: '{detected_service}' pour: '{message}'")
             
             # Si un autre service que HubSpot est détecté, essayer de rediriger
             if detected_service and detected_service != "hubspot":
@@ -92,23 +73,42 @@ class HubSpotHandler:
                 else:
                     return "Votre demande n'a pas pu être traitée car les intégrations nécessaires ne sont pas configurées. Vous pouvez configurer HubSpot, Trello ou Slack dans vos paramètres d'intégration. Comment puis-je vous aider autrement ?"
             
-            # Vérifier la validité du token
-            access_token = hubspot_integration.access_token or hubspot_integration.config.get('access_token')
-            if access_token:
-                token_valid = self._verify_token(access_token)
-                logger.info(f"État du token HubSpot: {'Valide' if token_valid else 'Invalide'}")
-                if not token_valid:
-                    # Essayer de rafraîchir le token
-                    refreshed = self._refresh_hubspot_token()
-                    if not refreshed:
-                        # Si HubSpot a un problème mais que la demande pourrait concerner un autre service
-                        # Essayer de rediriger vers cet autre service
-                        redirected_response = self._try_other_integration(message)
-                        if redirected_response:
-                            return redirected_response
-                            
-                        return "⚠️ Votre intégration HubSpot nécessite une réautorisation. Le token d'accès est expiré et n'a pas pu être rafraîchi. Veuillez vous rendre dans les paramètres d'intégration pour reconfigurer HubSpot. Puis-je vous aider avec autre chose en attendant ?"
-            
+            # Vérifier la validité du token de manière proactive
+            token_valid = self._ensure_valid_token()
+            if not token_valid:
+                # Diagnostiquer la raison de l'échec
+                config = hubspot_integration.config
+                error_details = ""
+                
+                if not isinstance(config, dict):
+                    error_details = "La configuration de l'intégration est invalide."
+                elif not config.get('refresh_token'):
+                    error_details = "Le refresh_token est manquant. Vous devez reconfigurer l'application."
+                elif not config.get('client_id') or not config.get('client_secret'):
+                    error_details = "Les informations client (client_id ou client_secret) sont manquantes ou incorrectes."
+                elif config.get('refresh_errors'):
+                    # Analyser les erreurs précédentes pour donner un diagnostic plus précis
+                    last_error = config['refresh_errors'][-1]
+                    if isinstance(last_error, dict):
+                        if 'error' in last_error and isinstance(last_error['error'], dict):
+                            error_status = last_error['error'].get('status')
+                            if error_status == 'BAD_REFRESH_TOKEN':
+                                error_details = "Le refresh_token n'est plus valide ou a expiré."
+                            elif error_status == 'UNAUTHORIZED':
+                                error_details = "Les informations client (client_id ou client_secret) sont incorrectes."
+                
+                # Construire un message d'erreur informatif avec des suggestions
+                error_message = "⚠️ Votre intégration HubSpot nécessite une réautorisation. "
+                error_message += "Le token d'accès est expiré et n'a pas pu être rafraîchi. "
+                
+                if error_details:
+                    error_message += f"Diagnostic : {error_details} "
+                
+                error_message += "Veuillez vous rendre dans les paramètres d'intégration pour reconfigurer HubSpot. "
+                error_message += "Puis-je vous aider avec autre chose en attendant ?"
+                
+                return error_message
+                
             # Vérifier spécifiquement pour les emails avec partenariat potentiel
             partenariat_match = re.search(r'partenariat potentiel', message, re.IGNORECASE)
             email_match = re.search(r'([\w\.-]+@[\w\.-]+\.\w+)', message)
@@ -168,6 +168,59 @@ class HubSpotHandler:
                         self.conversation_state = None
                         return f"❌ Erreur lors de la création du suivi et de la note: {str(e)}"
             
+            # Détection d'ajout de contact HubSpot
+            contact_match = re.search(r'(?:ajoute|crée|creer|créer|créé|ajouter)\s+(?:un\s+)?(?:nouveau\s+)?contact', message, re.IGNORECASE)
+            
+            if contact_match:
+                logger.info("Détection d'une demande d'ajout de contact")
+                
+                # Extraire les informations du contact
+                try:
+                    contact_info = self.extract_contact_info(message)
+                    
+                    if not contact_info or not isinstance(contact_info, dict):
+                        logger.error(f"Extraction d'informations de contact échouée. Résultat: {contact_info}")
+                        return "Je n'ai pas pu extraire toutes les informations nécessaires pour créer ce contact. Pourriez-vous reformuler en précisant l'email, le prénom et le nom du contact?"
+                    
+                    # S'assurer que les champs requis sont présents
+                    required_fields = ['email', 'firstname', 'lastname']
+                    missing_fields = [field for field in required_fields if field not in contact_info]
+                    
+                    if missing_fields:
+                        logger.warning(f"Informations de contact incomplètes. Champs manquants: {missing_fields}")
+                        return f"Il me manque des informations pour créer ce contact: {', '.join(missing_fields)}. Pourriez-vous les préciser?"
+                    
+                    # Créer ou mettre à jour le contact
+                    logger.info(f"Tentative de création de contact avec les informations: {contact_info}")
+                    result = self.create_contact(contact_info)
+                    
+                    # Vérifier le résultat
+                    if isinstance(result, str):
+                        # Si résultat est un message d'erreur
+                        logger.error(f"Erreur lors de la création du contact: {result}")
+                        return f"❌ {result}"
+                    elif isinstance(result, dict) and result.get('id'):
+                        # Contact créé ou mis à jour avec succès
+                        contact_id = result.get('id')
+                        properties = result.get('properties', {})
+                        firstname = properties.get('firstname', contact_info.get('firstname', ''))
+                        lastname = properties.get('lastname', contact_info.get('lastname', ''))
+                        
+                        # Vérifier si c'était une mise à jour
+                        existing_contact = self._check_contact_exists(contact_info['email'])
+                        if existing_contact and existing_contact.get('id') == contact_id:
+                            return f"✅ Les informations du contact {firstname} {lastname} ont été mises à jour dans HubSpot."
+                        else:
+                            return f"✅ Le contact {firstname} {lastname} a été créé avec succès dans HubSpot."
+                    else:
+                        # Cas imprévu
+                        logger.error(f"Résultat inattendu de la création de contact: {result}")
+                        return "Une erreur inattendue s'est produite lors du traitement du contact. Veuillez réessayer."
+                
+                except Exception as e:
+                    logger.error(f"Erreur lors du traitement de la demande d'ajout de contact: {str(e)}")
+                    return f"❌ Une erreur est survenue lors de la création du contact: {str(e)}"
+            
             # Continuer avec le reste du traitement normal
             # ... [le reste du code de handle_request reste inchangé] ...
 
@@ -212,12 +265,14 @@ class HubSpotHandler:
                 logger.error("[DEBUG CONTACT] Intégration HubSpot manquante")
                 return None
             
-            # Récupérer le token HubSpot
-            access_token = user_integration.access_token or user_integration.config.get('access_token')
-            
-            if not access_token:
-                logger.error("[DEBUG CONTACT] Token d'accès HubSpot manquant")
+            # Assurer que nous avons un token valide avant de faire l'appel API
+            token_valid = self._ensure_valid_token()
+            if not token_valid:
+                logger.error("[DEBUG CONTACT] Impossible d'obtenir un token valide")
                 return None
+            
+            # Récupérer le token HubSpot rafraîchi si nécessaire
+            access_token = user_integration.access_token or user_integration.config.get('access_token')
             
             # Rechercher le contact par email
             url = f"https://api.hubapi.com/crm/v3/objects/contacts/search"
@@ -246,46 +301,38 @@ class HubSpotHandler:
             response = requests.post(url, headers=headers, json=data)
             logger.info(f"[DEBUG CONTACT] Code de statut de la réponse: {response.status_code}")
             
-            # Log du corps de la réponse pour le débogage
-            try:
-                response_body = response.json()
-                logger.info(f"[DEBUG CONTACT] Réponse: {response_body}")
-            except:
-                logger.info(f"[DEBUG CONTACT] Réponse non-JSON: {response.text[:200]}")
-            
+            # Si on a une erreur d'authentification, essayer de rafraîchir le token
             if response.status_code in [401, 403]:
-                logger.error(f"[DEBUG CONTACT] Erreur d'authentification: {response.status_code}")
-                # Essayer de rafraîchir le token avant d'abandonner
+                logger.info("[DEBUG CONTACT] Erreur d'authentification, tentative de rafraîchissement...")
                 refreshed = self._refresh_hubspot_token()
                 if refreshed:
-                    logger.info("[DEBUG CONTACT] Token rafraîchi, nouvelle tentative de vérification du contact")
                     # Récupérer le nouveau token et réessayer
                     user_integration = self._get_hubspot_integrations()
                     access_token = user_integration.access_token or user_integration.config.get('access_token')
                     
                     headers["Authorization"] = f"Bearer {access_token}"
                     response = requests.post(url, headers=headers, json=data)
-                    
-                    if response.status_code == 200:
-                        results = response.json().get('results', [])
-                        if results:
-                            logger.info(f"[DEBUG CONTACT] Contact trouvé après rafraîchissement du token: {results[0].get('id')}")
-                            return results[0]
-                
-                raise Exception(f"Erreur d'authentification HubSpot: {response.status_code}")
-                
-            response.raise_for_status()
+                else:
+                    logger.error("[DEBUG CONTACT] Échec du rafraîchissement du token")
+                    return None
             
-            results = response.json().get('results', [])
-            if results:
-                logger.info(f"[DEBUG CONTACT] Contact trouvé: {results[0].get('id')}")
-                return results[0]
-            
-            logger.info(f"[DEBUG CONTACT] Aucun contact trouvé pour: {email}")
+            if response.status_code == 200:
+                result = response.json()
+                total = result.get('total', 0)
+                
+                if total > 0 and result.get('results'):
+                    contact = result['results'][0]
+                    logger.info(f"[DEBUG CONTACT] Contact trouvé: {contact.get('id')}")
+                    return contact
+                else:
+                    logger.info("[DEBUG CONTACT] Aucun contact trouvé")
+                    return None
+            else:
+                logger.error(f"[DEBUG CONTACT] Erreur lors de la recherche: {response.status_code} - {response.text}")
             return None
             
         except Exception as e:
-            logger.error(f"[DEBUG CONTACT] Erreur lors de la vérification de l'existence du contact: {str(e)}")
+            logger.error(f"[DEBUG CONTACT] Erreur lors de la vérification du contact: {str(e)}")
             return None
     
     def extract_contact_info(self, text):
@@ -608,6 +655,7 @@ class HubSpotHandler:
     def _refresh_hubspot_token(self):
         """Rafraîchit le token HubSpot en utilisant le refresh_token s'il est disponible"""
         from alyawebapp.models import Integration, UserIntegration
+        from datetime import datetime, timedelta
         
         try:
             # Récupérer l'intégration HubSpot active
@@ -627,6 +675,17 @@ class HubSpotHandler:
             client_id = config.get('client_id')
             client_secret = config.get('client_secret')
             
+            # Vérifier si une tentative récente a échoué (éviter des tentatives répétées)
+            if config.get('refresh_failure_time'):
+                try:
+                    last_failure = datetime.fromisoformat(config['refresh_failure_time'])
+                    if datetime.now() - last_failure < timedelta(minutes=5):
+                        logger.warning("[REFRESH TOKEN] Une tentative récente a échoué, attente avant nouvelle tentative")
+                        return False
+                except (ValueError, TypeError):
+                    # Si le format de date est invalide, ignorer ce contrôle
+                    pass
+            
             if not (refresh_token and client_id and client_secret):
                 logger.error("[REFRESH TOKEN] Paramètres manquants pour le rafraîchissement du token")
                 if not refresh_token:
@@ -635,6 +694,11 @@ class HubSpotHandler:
                     logger.error("[REFRESH TOKEN] client_id manquant")
                 if not client_secret:
                     logger.error("[REFRESH TOKEN] client_secret manquant")
+                
+                # Marquer comme échec récent pour éviter des tentatives répétées
+                config['refresh_failure_time'] = datetime.now().isoformat()
+                user_integration.config = config
+                user_integration.save()
                 return False
             
             # Faire l'appel API à HubSpot pour rafraîchir le token
@@ -651,12 +715,39 @@ class HubSpotHandler:
             
             if response.status_code != 200:
                 logger.error(f"[REFRESH TOKEN] Échec du rafraîchissement du token: {response.status_code} - {response.text}")
+                
+                # Enregistrer l'échec pour éviter des tentatives répétées
+                config['refresh_failure_time'] = datetime.now().isoformat()
+                # Enregistrer les détails de l'erreur pour le diagnostic
+                try:
+                    error_data = response.json()
+                    if not config.get('refresh_errors'):
+                        config['refresh_errors'] = []
+                    config['refresh_errors'].append({
+                        'timestamp': datetime.now().isoformat(),
+                        'error': error_data
+                    })
+                    # Limiter la taille de l'historique des erreurs
+                    if len(config['refresh_errors']) > 5:
+                        config['refresh_errors'] = config['refresh_errors'][-5:]
+                except:
+                    if not config.get('refresh_errors'):
+                        config['refresh_errors'] = []
+                    config['refresh_errors'].append({
+                        'timestamp': datetime.now().isoformat(),
+                        'status_code': response.status_code,
+                        'text': response.text[:200]
+                    })
+                
+                user_integration.config = config
+                user_integration.save()
                 return False
             
             # Extraire les nouvelles valeurs de token
             token_data = response.json()
             new_access_token = token_data.get('access_token')
             new_refresh_token = token_data.get('refresh_token')  # HubSpot fournit aussi un nouveau refresh_token
+            expires_in = token_data.get('expires_in', 1800)  # Par défaut 30 minutes si non spécifié
             
             if not new_access_token:
                 logger.error("[REFRESH TOKEN] Pas d'access_token dans la réponse")
@@ -666,6 +757,14 @@ class HubSpotHandler:
             config['access_token'] = new_access_token
             if new_refresh_token:
                 config['refresh_token'] = new_refresh_token
+            
+            # Calculer et stocker la date d'expiration avec une marge de sécurité
+            expiry_time = datetime.now() + timedelta(seconds=expires_in - 300)  # 5 minutes de marge
+            config['token_expiry'] = expiry_time.isoformat()
+            
+            # Supprimer les marqueurs d'échec si présents
+            if 'refresh_failure_time' in config:
+                del config['refresh_failure_time']
             
             user_integration.config = config
             user_integration.access_token = new_access_token
@@ -679,6 +778,26 @@ class HubSpotHandler:
             if hasattr(e, '__traceback__'):
                 import traceback
                 logger.error(f"[REFRESH TOKEN] Traceback: {traceback.format_exc()}")
+            
+            # Enregistrer l'exception pour éviter des tentatives répétées
+            try:
+                if user_integration and isinstance(user_integration.config, dict):
+                    config = user_integration.config
+                    config['refresh_failure_time'] = datetime.now().isoformat()
+                    if not config.get('refresh_errors'):
+                        config['refresh_errors'] = []
+                    config['refresh_errors'].append({
+                        'timestamp': datetime.now().isoformat(),
+                        'exception': str(e)
+                    })
+                    # Limiter la taille de l'historique des erreurs
+                    if len(config['refresh_errors']) > 5:
+                        config['refresh_errors'] = config['refresh_errors'][-5:]
+                    user_integration.config = config
+                    user_integration.save()
+            except Exception as save_error:
+                logger.error(f"[REFRESH TOKEN] Erreur lors de l'enregistrement de l'échec: {str(save_error)}")
+                
             return False
             
     def _parse_date(self, date_text):
@@ -1078,23 +1197,14 @@ class HubSpotHandler:
                 logger.error("[DEBUG ENSURE_CONTACT] Intégration HubSpot manquante")
                 return None
             
-            # Récupérer le token HubSpot
-            access_token = user_integration.access_token or user_integration.config.get('access_token')
-            
-            if not access_token:
-                logger.error("[DEBUG ENSURE_CONTACT] Token d'accès HubSpot manquant")
-                return None
-                
-            # Vérifier la validité du token
-            token_valid = self._verify_token(access_token)
+            # Assurer que nous avons un token valide avant de créer le contact
+            token_valid = self._ensure_valid_token()
             if not token_valid:
-                refreshed = self._refresh_hubspot_token()
-                if refreshed:
-                    user_integration = self._get_hubspot_integrations()
-                    access_token = user_integration.access_token or user_integration.config.get('access_token')
-                else:
-                    logger.error("[DEBUG ENSURE_CONTACT] Token invalide et non rafraîchissable")
-                    return None
+                logger.error("[DEBUG ENSURE_CONTACT] Impossible d'obtenir un token valide")
+                return None
+            
+            # Récupérer le token HubSpot (qui a pu être rafraîchi)
+            access_token = user_integration.access_token or user_integration.config.get('access_token')
                 
             # Créer le contact
             url = "https://api.hubapi.com/crm/v3/objects/contacts"
@@ -1105,10 +1215,10 @@ class HubSpotHandler:
             
             # Préparer les données du contact
             properties = {
-                "email": email,
+                "email": email
             }
             
-            # Ajouter les champs supplémentaires s'ils sont fournis
+            # Ajouter les informations supplémentaires si disponibles
             if first_name:
                 properties["firstname"] = first_name
             if last_name:
@@ -1120,41 +1230,43 @@ class HubSpotHandler:
                 "properties": properties
             }
             
-            logger.info(f"[DEBUG ENSURE_CONTACT] Envoi de la requête de création de contact: {data}")
+            # Créer le contact
+            logger.info(f"[DEBUG ENSURE_CONTACT] Envoi de la requête pour créer un contact: {data}")
             response = requests.post(url, headers=headers, json=data)
             
-            # Log de la réponse pour le débogage
-            try:
-                response_content = response.json()
-                logger.info(f"[DEBUG ENSURE_CONTACT] Réponse de création de contact (code: {response.status_code}): {response_content}")
-            except:
-                logger.info(f"[DEBUG ENSURE_CONTACT] Réponse non-JSON (code: {response.status_code}): {response.text[:200]}")
-                
-            # Gestion des erreurs d'authentification
+            # Si on a une erreur d'authentification, essayer de rafraîchir le token
             if response.status_code in [401, 403]:
+                logger.info("[DEBUG ENSURE_CONTACT] Erreur d'authentification, tentative de rafraîchissement...")
                 refreshed = self._refresh_hubspot_token()
                 if refreshed:
-                    logger.info("[DEBUG ENSURE_CONTACT] Token rafraîchi, nouvelle tentative de création de contact")
+                    # Récupérer le nouveau token et réessayer
                     user_integration = self._get_hubspot_integrations()
                     access_token = user_integration.access_token or user_integration.config.get('access_token')
                     
                     headers["Authorization"] = f"Bearer {access_token}"
                     response = requests.post(url, headers=headers, json=data)
-                    
-                    try:
-                        response_content = response.json()
-                        logger.info(f"[DEBUG ENSURE_CONTACT] Seconde réponse après rafraîchissement (code: {response.status_code}): {response_content}")
-                    except:
-                        logger.info(f"[DEBUG ENSURE_CONTACT] Seconde réponse non-JSON (code: {response.status_code}): {response.text[:200]}")
+                else:
+                    logger.error("[DEBUG ENSURE_CONTACT] Échec du rafraîchissement du token")
+                    return None
             
-            response.raise_for_status()
-            
-            # Contact créé avec succès
-            new_contact = response.json()
-            logger.info(f"[DEBUG ENSURE_CONTACT] Contact créé avec succès: {new_contact.get('id')}")
-            
-            # Rechercher le contact complet pour avoir toutes les propriétés
-            return self._check_contact_exists(email)
+            if response.status_code >= 200 and response.status_code < 300:
+                new_contact = response.json()
+                logger.info(f"[DEBUG ENSURE_CONTACT] Contact créé avec succès: {new_contact.get('id')}")
+                return new_contact
+            else:
+                # Récupérer les détails de l'erreur
+                try:
+                    error_data = response.json()
+                    error_msg = error_data.get('message', 'Erreur inconnue')
+                    # Si c'est une erreur de contact existant, réessayer de le récupérer
+                    if "Contact already exists" in error_msg:
+                        logger.info("[DEBUG ENSURE_CONTACT] Contact existe déjà selon HubSpot, nouvelle tentative de récupération")
+                        return self._check_contact_exists(email)
+                    else:
+                        logger.error(f"[DEBUG ENSURE_CONTACT] Erreur lors de la création du contact: {error_msg}")
+                except:
+                    logger.error(f"[DEBUG ENSURE_CONTACT] Erreur non-JSON lors de la création du contact: {response.text[:200]}")
+                return None
             
         except Exception as e:
             logger.error(f"[DEBUG ENSURE_CONTACT] Erreur lors de la création du contact: {str(e)}")
@@ -1270,3 +1382,65 @@ class HubSpotHandler:
         
         logger.info(f"[DETECTION] Service le plus adapté: {best_service} (score: {best_score}) pour: '{text}'")
         return best_service
+
+    def _ensure_valid_token(self):
+        """Vérifie et assure qu'un token valide est disponible avant les appels API
+        
+        Cette méthode va vérifier proactivement si le token est sur le point d'expirer
+        et le rafraîchir si nécessaire, avant qu'une erreur d'API ne se produise.
+        
+        Returns:
+            bool: True si un token valide est disponible, False sinon
+        """
+        from datetime import datetime
+        
+        try:
+            # Récupérer l'intégration HubSpot active
+            user_integration = self._get_hubspot_integrations()
+            
+            if not user_integration:
+                logger.error("[TOKEN] Pas d'intégration HubSpot trouvée")
+                return False
+                
+            config = user_integration.config
+            if not isinstance(config, dict):
+                logger.error("[TOKEN] Configuration de l'intégration non valide")
+                return False
+            
+            # Récupérer le token d'accès
+            access_token = user_integration.access_token or config.get('access_token')
+            if not access_token:
+                logger.error("[TOKEN] Pas de token d'accès disponible")
+                return False
+            
+            # Vérifier si le token est proche de l'expiration
+            if 'token_expiry' in config:
+                try:
+                    expiry_time = datetime.fromisoformat(config['token_expiry'])
+                    if datetime.now() >= expiry_time:
+                        logger.info("[TOKEN] Token expiré ou sur le point d'expirer, rafraîchissement proactif")
+                        return self._refresh_hubspot_token()
+                except (ValueError, TypeError):
+                    # En cas de problème avec le format de date, vérifier complètement le token
+                    logger.warning("[TOKEN] Format de date d'expiration invalide, vérification complète du token")
+                    valid = self._verify_token(access_token)
+                    if not valid:
+                        logger.info("[TOKEN] Token invalide, tentative de rafraîchissement")
+                        return self._refresh_hubspot_token()
+            else:
+                # Si nous n'avons pas de date d'expiration, faire une vérification occasionnelle
+                if not hasattr(self, '_last_token_check') or (datetime.now() - self._last_token_check).total_seconds() > 300:
+                    # Mettre à jour la dernière vérification
+                    self._last_token_check = datetime.now()
+                    # Vérifier le token
+                    valid = self._verify_token(access_token)
+                    if not valid:
+                        logger.info("[TOKEN] Token invalide, tentative de rafraîchissement")
+                        return self._refresh_hubspot_token()
+            
+            # Si nous arrivons ici, le token est considéré comme valide
+            return True
+            
+        except Exception as e:
+            logger.error(f"[TOKEN] Erreur lors de la vérification du token: {str(e)}")
+            return False
