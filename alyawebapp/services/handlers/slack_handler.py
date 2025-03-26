@@ -290,7 +290,7 @@ class SlackHandler:
                 self.slack_integration.access_token = slack_handler.access_token
                 self.slack_integration.save()
                 logger.info("Token Slack mis à jour avec succès dans la base de données")
-            
+                
             # Récupérer la liste des canaux
             channels = slack_handler.get_channels()
             
@@ -499,8 +499,6 @@ class SlackHandler:
                         raise ValueError("Problème d'authentification persistant avec Slack. Veuillez réautoriser l'application Slack.")
                     else:
                         raise ValueError("Problème d'authentification avec Slack. Veuillez reconfigurer votre intégration Slack.")
-                else:
-                    raise ValueError(f"Erreur Slack: {error}")
                     
             return result
             

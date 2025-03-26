@@ -321,4 +321,4 @@ class SlackHandler(BaseIntegration):
             return response.json().get('channels', [])
         except Exception as e:
             logger.error(f"Erreur lors de la récupération des canaux Slack: {str(e)}")
-            return []
+            return [] 

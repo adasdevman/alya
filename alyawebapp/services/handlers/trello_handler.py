@@ -219,9 +219,9 @@ class TrelloHandler:
             if not self._verify_board_exists(active_board_id):
                 logger.warning(f"[TRELLO] Tableau {active_board_id} non accessible")
                 return f"❌ Le tableau Trello configuré n'est pas accessible. Veuillez vérifier que le tableau existe et que vous avez les permissions nécessaires."
-            
+
             logger.info(f"[TRELLO] Tableau validé, traitement de la requête")
-            
+
             # Si c'est une demande de tâches en retard
             if "tâches en retard" in message.lower():
                 overdue_tasks = self.get_overdue_tasks()
@@ -462,14 +462,95 @@ class TrelloHandler:
         try:
             logger.info(f"[TRELLO] Extraction des informations de tâche à partir de: '{text}'")
             
-            # Extraire le nom de la tâche 
-            # D'abord rechercher entre guillemets simples ou doubles
-            name_match = re.search(r"['']([^'']*)['']|[\"]([^\"]*)[\"]", text)
+            # Fonction utilitaire pour normaliser les guillemets
+            def normalize_quotes(input_text):
+                # Convertir tous les types de guillemets simples en apostrophe standard
+                for quote in [''', ''', '′', '‛', '´', '`']:
+                    input_text = input_text.replace(quote, "'")
+                
+                # Convertir tous les types de guillemets doubles en guillemet standard
+                for quote in ['"', '"', '″', '″', '‟']:
+                    input_text = input_text.replace(quote, '"')
+                
+                # Convertir les guillemets français
+                input_text = input_text.replace('«', '"').replace('»', '"')
+                
+                return input_text
             
-            if name_match:
-                # Prendre le premier groupe non-None (soit guillemets simples ou doubles)
-                name = next((g for g in name_match.groups() if g is not None), None)
-            else:
+            # Normaliser les guillemets dans le texte pour améliorer la détection
+            normalized_text = normalize_quotes(text)
+            logger.info(f"[TRELLO] Texte normalisé: '{normalized_text}'")
+            
+            # Extraire le nom de la tâche avec des patterns améliorés
+            name_patterns = [
+                # Pattern pour créer/ajouter une tâche avec guillemet simple - Plus spécifique en premier
+                r"(?:créer|cree|ajoute[rz]?)\s+(?:une\s+)?(?:tâche|tache|carte)\s+'([^']+)'",
+                
+                # Pattern pour créer/ajouter une tâche avec n'importe quel type de guillemet
+                r"(?:créer|cree|ajoute[rz]?)\s+(?:une\s+)?(?:tâche|tache|carte)\s+['\"]([^'\"]+)['\"]",
+                
+                # Pattern spécifique pour nouvelle tâche et nova tâche
+                r"(?:nouvelle|nova)\s+(?:tâche|tache|carte)\s+['\"]([^'\"]+)['\"]",
+                
+                # Pattern simplifié pour guillemets simples - uniquement le texte entre guillemets
+                r"'([^']+)'",
+                
+                # Pattern général pour guillemets mixtes (simples ou doubles)
+                r"['\"]([^'\"]+)['\"]",
+                
+                # Patterns pour titre explicite entre guillemets
+                r"(?:tâche|carte|todo|ticket)\s+['\"]([^'\"]+)['\"]",
+                
+                # Pattern pour titre en début de phrase
+                r"^['\"]([^'\"]+)['\"]"
+            ]
+            
+            name = None
+            for pattern in name_patterns:
+                name_match = re.search(pattern, normalized_text, re.IGNORECASE)
+                if name_match:
+                    name = name_match.group(1).strip()
+                    logger.info(f"[TRELLO] Nom de tâche trouvé avec pattern '{pattern}': '{name}'")
+                    break
+                else:
+                    logger.debug(f"[TRELLO] Pattern '{pattern}' non trouvé dans '{normalized_text}'")
+            
+            # Si un nom a été trouvé, vérifier s'il ne contient pas d'instructions de création
+            if name:
+                # Liste d'indicateurs d'instructions qui ne devraient pas faire partie du titre
+                instruction_indicators = [
+                    "dans la colonne", "dans colonne", "assigne", "à faire", 
+                    "sur trello", "avec échéance", "pour", "dans la liste",
+                    "dans", "colonne", "sur", "trello", "assigné", "échéance"
+                ]
+                
+                # Chercher ces indicateurs dans le titre pour extraire uniquement le vrai titre
+                for indicator in instruction_indicators:
+                    if indicator in name.lower():
+                        # Extraire seulement la partie avant l'indicateur
+                        indicator_pos = name.lower().find(indicator)
+                        if indicator_pos > 0:
+                            clean_name = name[:indicator_pos].strip()
+                            logger.info(f"[TRELLO] Titre nettoyé de l'instruction '{indicator}': '{clean_name}'")
+                            name = clean_name
+            
+                # Vérifier si le nom ne contient pas encore d'autres mots-clés problématiques
+                suspicious_words = ["colonne", "liste", "assigne", "trello"]
+                contains_suspicious = any(word in name.lower() for word in suspicious_words)
+                
+                if contains_suspicious:
+                    # Si le titre contient encore des mots suspicieux, on peut essayer de diviser
+                    # et prendre seulement la première partie qui semble être le titre réel
+                    words = name.split()
+                    for i, word in enumerate(words):
+                        if any(sus in word.lower() for sus in suspicious_words) and i > 0:
+                            clean_name = " ".join(words[:i]).strip()
+                            logger.info(f"[TRELLO] Titre nettoyé des mots suspicieux: '{clean_name}'")
+                            name = clean_name
+                            break
+            
+            # Si toujours pas de nom, essayer avec des patterns alternatifs sans guillemets
+            if not name:
                 # Si pas de guillemets, essayer de trouver le nom de tâche basé sur des motifs usuels
                 task_patterns = [
                     r"tâche\s+(?:intitulée\s+)?['']?([^''.,]+)['']?",
@@ -478,35 +559,35 @@ class TrelloHandler:
                 ]
                 
                 for pattern in task_patterns:
-                    pattern_match = re.search(pattern, text, re.IGNORECASE)
+                    pattern_match = re.search(pattern, normalized_text, re.IGNORECASE)
                     if pattern_match:
                         name = pattern_match.group(1).strip()
+                        logger.info(f"[TRELLO] Nom de tâche trouvé avec pattern alternatif '{pattern}': '{name}'")
                         break
-                else:
-                    name = None
-            
+
             if not name:
                 logger.warning(f"[TRELLO] Nom de tâche non trouvé dans: '{text}'")
                 return None  # Si pas de nom clairement identifié, on ne peut pas créer la tâche
 
-            logger.info(f"[TRELLO] Nom de tâche trouvé: '{name}'")
+            logger.info(f"[TRELLO] Nom de tâche final: '{name}'")
 
             # Extraire la colonne - AMÉLIORATION : délimiteurs plus précis et gestion des guillemets problématiques
             column_patterns = [
-                # Essayer d'abord de trouver entre guillemets avec différentes variantes
-                r"dans\s+(?:la\s+)?(?:colonne\s+)?[''\"](.*?)['\"\s](?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)",
-                r"dans\s+(?:la\s+)?(?:colonne\s+)?[''\"]([^'\"]+)[''\"]",
+                # Patterns qui indiquent clairement qu'il s'agit d'une colonne
+                r"dans\s+(?:la\s+)?(?:colonne\s+)?['\"](.+?)['\"](?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)",
+                r"dans\s+(?:la\s+)?(?:colonne\s+)?['\"]([^'\"]+)['\"]",
                 # Ensuite sans guillemets
                 r"dans\s+(?:la\s+)?(?:colonne\s+)?([^,\.\"\']+?)(?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)",
-                r"colonne\s+[''\"]?([^'\".,]+?)(?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)",
-                r"liste\s+[''\"]?([^'\".,]+?)(?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)"
+                r"colonne\s+['\"]?([^'\".,]+?)(?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)",
+                r"liste\s+['\"]?([^'\".,]+?)(?:\s+sur|\s+et|\s+pour|\s+à|\s+avec|$)"
             ]
             
             list_name = "À faire"  # Valeur par défaut
             for pattern in column_patterns:
-                column_match = re.search(pattern, text, re.IGNORECASE)
+                column_match = re.search(pattern, normalized_text, re.IGNORECASE)
                 if column_match:
                     list_name = column_match.group(1).strip()
+                    logger.info(f"[TRELLO] Liste détectée avec pattern '{pattern}': '{list_name}'")
                     # Arrêter dès qu'on trouve une correspondance
                     break
             
@@ -534,7 +615,7 @@ class TrelloHandler:
             
             assignee = None
             for pattern in assignee_patterns:
-                assignee_match = re.search(pattern, text, re.IGNORECASE)
+                assignee_match = re.search(pattern, normalized_text, re.IGNORECASE)
                 if assignee_match:
                     assignee = assignee_match.group(1).strip()
                     logger.info(f"[TRELLO] Assigné détecté avec pattern '{pattern}': '{assignee}'")
@@ -543,9 +624,9 @@ class TrelloHandler:
             # Recherche spécifique pour les noms fréquents
             if not assignee:
                 for name in ["marie", "franck", "adas", "franckadas"]:
-                    if name in text.lower():
+                    if name in normalized_text.lower():
                         # Chercher le nom complet, potentiellement composé
-                        name_match = re.search(r"[àa]\s+([A-Za-z]+(?:\s+[A-Za-z]+){0,2})", text, re.IGNORECASE)
+                        name_match = re.search(r"[àa]\s+([A-Za-z]+(?:\s+[A-Za-z]+){0,2})", normalized_text, re.IGNORECASE)
                         if name_match:
                             assignee = name_match.group(1).strip()
                             logger.info(f"[TRELLO] Assigné détecté avec recherche spécifique: '{assignee}'")
@@ -569,7 +650,7 @@ class TrelloHandler:
             }
             
             for day, weekday in day_patterns.items():
-                if day in text.lower():
+                if day in normalized_text.lower():
                     # Calculer le prochain jour de la semaine correspondant
                     today = datetime.now()
                     days_until = (weekday - today.weekday()) % 7
@@ -580,12 +661,12 @@ class TrelloHandler:
                     break
                     
             if not due_date:
-                if "demain" in text.lower():
+                if "demain" in normalized_text.lower():
                     tomorrow = datetime.now() + timedelta(days=1)
                     tomorrow = tomorrow.replace(hour=23, minute=59, second=59)
                     due_date = tomorrow.strftime("%Y-%m-%dT%H:%M:%S.000Z")
                     logger.info(f"[TRELLO] Date d'échéance: demain ({tomorrow.strftime('%d/%m/%Y')})")
-                elif "semaine prochaine" in text.lower():
+                elif "semaine prochaine" in normalized_text.lower():
                     next_week = datetime.now() + timedelta(days=7)
                     next_week = next_week.replace(hour=23, minute=59, second=59)
                     due_date = next_week.strftime("%Y-%m-%dT%H:%M:%S.000Z")
