@@ -499,7 +499,7 @@ class SlackHandler:
                         raise ValueError("Problème d'authentification persistant avec Slack. Veuillez réautoriser l'application Slack.")
                     else:
                         raise ValueError("Problème d'authentification avec Slack. Veuillez reconfigurer votre intégration Slack.")
-                    
+            
             return result
             
         except requests.exceptions.RequestException as e:
