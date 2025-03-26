@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 """
-Script pour mettre à jour la configuration des intégrations Slack existantes.
+Script pour mettre à jour la configuration des intégrations Gmail existantes.
 
-Ce script ajoute les champs nécessaires (client_id, client_secret, redirect_uri)
-aux configurations des intégrations Slack existantes pour permettre
-le rafraîchissement automatique des tokens.
+Ce script ajoute les champs nécessaires (client_id, client_secret, redirect_uri, scopes)
+aux configurations des intégrations Gmail existantes pour permettre
+l'authentification et le rafraîchissement automatique des tokens.
 
 Usage:
-    python update_slack_config.py
+    python update_gmail_config.py
 """
 
 import os
@@ -24,12 +24,12 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler("slack_update_config.log"),
+        logging.FileHandler("gmail_update_config.log"),
         logging.StreamHandler(sys.stdout)
     ]
 )
 
-logger = logging.getLogger("slack_config_update")
+logger = logging.getLogger("gmail_config_update")
 
 # Charger les variables d'environnement depuis .env
 try:
@@ -58,26 +58,28 @@ if not DATABASE_URL:
         logger.critical("Impossible de construire l'URL de connexion à la base de données. Vérifiez vos variables d'environnement.")
         sys.exit(1)
 
-# Récupérer les identifiants Slack depuis les variables d'environnement
-SLACK_CLIENT_ID = os.getenv('SLACK_CLIENT_ID')
-SLACK_CLIENT_SECRET = os.getenv('SLACK_CLIENT_SECRET')
-SLACK_REDIRECT_URI = os.getenv('SLACK_REDIRECT_URI')
+# Récupérer les identifiants Gmail depuis les variables d'environnement
+GMAIL_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+GMAIL_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+GMAIL_REDIRECT_URI = os.getenv('GOOGLE_REDIRECT_URI')
+GMAIL_SCOPES = os.getenv('GMAIL_SCOPES', 'https://www.googleapis.com/auth/gmail.modify')
 
-def update_slack_configs():
-    """Met à jour la configuration des intégrations Slack"""
+def update_gmail_configs():
+    """Met à jour la configuration des intégrations Gmail"""
     conn = None
     
     try:
-        # Vérifier si les identifiants Slack sont disponibles
-        if not SLACK_CLIENT_ID or not SLACK_CLIENT_SECRET or not SLACK_REDIRECT_URI:
-            print("❌ Identifiants Slack non trouvés dans les variables d'environnement.")
-            print("Les variables attendues sont SLACK_CLIENT_ID, SLACK_CLIENT_SECRET et SLACK_REDIRECT_URI.")
+        # Vérifier si les identifiants Gmail sont disponibles
+        if not GMAIL_CLIENT_ID or not GMAIL_CLIENT_SECRET or not GMAIL_REDIRECT_URI:
+            print("❌ Identifiants Gmail non trouvés dans les variables d'environnement.")
+            print("Les variables attendues sont GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET et GOOGLE_REDIRECT_URI.")
             print("Veuillez les ajouter dans votre fichier .env ou les définir dans l'environnement.")
             return False
         else:
-            print(f"✅ Client ID récupéré: {SLACK_CLIENT_ID}")
-            print(f"✅ Client Secret récupéré: {SLACK_CLIENT_SECRET[:3]}...{SLACK_CLIENT_SECRET[-3:]}")
-            print(f"✅ Redirect URI récupéré: {SLACK_REDIRECT_URI}")
+            print(f"✅ Client ID récupéré: {GMAIL_CLIENT_ID}")
+            print(f"✅ Client Secret récupéré: {GMAIL_CLIENT_SECRET[:5]}...{GMAIL_CLIENT_SECRET[-5:]}")
+            print(f"✅ Redirect URI récupéré: {GMAIL_REDIRECT_URI}")
+            print(f"✅ Scopes récupérés: {GMAIL_SCOPES}")
         
         # Connexion à la base de données
         print(f"🔄 Connexion à la base de données PostgreSQL...")
@@ -86,20 +88,20 @@ def update_slack_configs():
         
         print("✅ Connexion établie")
         
-        # Trouver l'intégration Slack
-        cursor.execute("SELECT id, name FROM alyawebapp_integration WHERE name ILIKE '%slack%'")
+        # Trouver l'intégration Gmail
+        cursor.execute("SELECT id, name FROM alyawebapp_integration WHERE name ILIKE '%gmail%' OR name ILIKE '%google%mail%'")
         integrations = cursor.fetchall()
         
         if not integrations:
-            print("❌ Aucune intégration Slack trouvée")
+            print("❌ Aucune intégration Gmail trouvée")
             return False
         
-        print(f"✅ Intégration(s) Slack trouvée(s): {[i[1] for i in integrations]}")
+        print(f"✅ Intégration(s) Gmail trouvée(s): {[i[1] for i in integrations]}")
         
         updated_count = 0
         config_count = 0
         
-        # Pour chaque intégration Slack
+        # Pour chaque intégration Gmail
         for integration_id, integration_name in integrations:
             # Trouver toutes les intégrations utilisateur pour cette intégration
             cursor.execute("""
@@ -128,19 +130,24 @@ def update_slack_configs():
                     was_updated = False
                     
                     if 'client_id' not in config or not config['client_id']:
-                        config['client_id'] = SLACK_CLIENT_ID
+                        config['client_id'] = GMAIL_CLIENT_ID
                         was_updated = True
                         print(f"  ✓ Ajout de client_id à UserIntegration {ui_id}")
                     
                     if 'client_secret' not in config or not config['client_secret']:
-                        config['client_secret'] = SLACK_CLIENT_SECRET
+                        config['client_secret'] = GMAIL_CLIENT_SECRET
                         was_updated = True
                         print(f"  ✓ Ajout de client_secret à UserIntegration {ui_id}")
                     
                     if 'redirect_uri' not in config or not config['redirect_uri']:
-                        config['redirect_uri'] = SLACK_REDIRECT_URI
+                        config['redirect_uri'] = GMAIL_REDIRECT_URI
                         was_updated = True
                         print(f"  ✓ Ajout de redirect_uri à UserIntegration {ui_id}")
+                        
+                    if 'scopes' not in config or not config['scopes']:
+                        config['scopes'] = GMAIL_SCOPES
+                        was_updated = True
+                        print(f"  ✓ Ajout de scopes à UserIntegration {ui_id}")
                     
                     # Mise à jour de la base de données si des changements ont été faits
                     if was_updated:
@@ -194,10 +201,10 @@ def update_slack_configs():
             conn.close()
 
 if __name__ == "__main__":
-    print("=== MISE À JOUR DES CONFIGURATIONS SLACK ===")
-    result = update_slack_configs()
+    print("=== MISE À JOUR DES CONFIGURATIONS GMAIL ===")
+    result = update_gmail_configs()
     if result:
-        print("\n✅ La mise à jour des configurations Slack s'est terminée avec succès!")
-        print("\nVous pouvez maintenant utiliser les intégrations Slack avec le système de rafraîchissement automatique des tokens.")
+        print("\n✅ La mise à jour des configurations Gmail s'est terminée avec succès!")
+        print("\nVous pouvez maintenant utiliser les intégrations Gmail avec le système d'authentification complet.")
     else:
         print("\n❌ L'opération a échoué. Veuillez vérifier les messages d'erreur.") 

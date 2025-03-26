@@ -214,3 +214,41 @@ if not all([MAILCHIMP_CLIENT_ID, MAILCHIMP_CLIENT_SECRET, MAILCHIMP_REDIRECT_URI
     logger.warning("⚠️ Configuration Mailchimp incomplète!")
     logger.debug(f"MAILCHIMP_CLIENT_ID: {MAILCHIMP_CLIENT_ID}")
     logger.debug(f"MAILCHIMP_REDIRECT_URI: {MAILCHIMP_REDIRECT_URI}")
+
+# Slack Configuration
+SLACK_CLIENT_ID = os.getenv('SLACK_CLIENT_ID')
+SLACK_CLIENT_SECRET = os.getenv('SLACK_CLIENT_SECRET')
+SLACK_REDIRECT_URI = os.getenv('SLACK_REDIRECT_URI')
+SLACK_API_URL = 'https://slack.com/api'
+
+# Vérification de la configuration Slack
+if not all([SLACK_CLIENT_ID, SLACK_CLIENT_SECRET, SLACK_REDIRECT_URI]):
+    logger.warning("⚠️ Configuration Slack incomplète!")
+    logger.debug(f"SLACK_CLIENT_ID: {SLACK_CLIENT_ID}")
+    logger.debug(f"SLACK_REDIRECT_URI: {SLACK_REDIRECT_URI}")
+
+# Google Drive Configuration
+GOOGLE_CLIENT_DRIVE_ID = os.getenv('GOOGLE_CLIENT_DRIVE_ID')
+GOOGLE_CLIENT_DRIVE_SECRET = os.getenv('GOOGLE_CLIENT_DRIVE_SECRET')
+GOOGLE_REDIRECT_DRIVE_URI = os.getenv('GOOGLE_REDIRECT_DRIVE_URI')
+GOOGLE_DRIVE_SCOPES = os.getenv('GOOGLE_SCOPES', 'https://www.googleapis.com/auth/drive.file')
+GOOGLE_DRIVE_API_URL = 'https://www.googleapis.com/drive/v3'
+
+# Vérification de la configuration Google Drive
+if not all([GOOGLE_CLIENT_DRIVE_ID, GOOGLE_CLIENT_DRIVE_SECRET, GOOGLE_REDIRECT_DRIVE_URI]):
+    logger.warning("⚠️ Configuration Google Drive incomplète!")
+    logger.debug(f"GOOGLE_CLIENT_DRIVE_ID: {GOOGLE_CLIENT_DRIVE_ID}")
+    logger.debug(f"GOOGLE_REDIRECT_DRIVE_URI: {GOOGLE_REDIRECT_DRIVE_URI}")
+
+# Gmail Configuration
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+GOOGLE_REDIRECT_URI = os.getenv('GOOGLE_REDIRECT_URI', 'https://alya-166a.onrender.com/integration/gmail/callback')
+GMAIL_API_URL = 'https://gmail.googleapis.com/gmail/v1'
+GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/gmail.readonly']
+
+# Vérification de la configuration Gmail
+if not all([GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET]):
+    logger.warning("⚠️ Configuration Gmail incomplète!")
+    logger.debug(f"GOOGLE_CLIENT_ID: {GOOGLE_CLIENT_ID}")
+    logger.debug(f"GOOGLE_REDIRECT_URI: {GOOGLE_REDIRECT_URI}")
